@@ -9,9 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/js-cookie": "^3.0.0",
+    "@types/styled-components": "^5.1.15",
+    "axios": "^0.23.0",
+    "babel-plugin-styled-components": "^1.13.2",
+    "js-cookie": "^3.0.1",
     "next": "11.1.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "sass": "^1.42.1",
+    "styled-components": "^5.3.1"
   },
   "devDependencies": {
     "@types/react": "17.0.24",
