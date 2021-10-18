@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         <HomePageLayout>
           <IntroPage>
             <aside>
-              <h1>Mental Health Online Care</h1>
+              <h1>Elsie Interactive Mental Health Online Care</h1>
               <div className="actions">
                 <PrimaryButton>Book Now</PrimaryButton>
                 <SecondaryButton>How it works</SecondaryButton>

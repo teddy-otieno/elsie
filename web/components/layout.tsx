@@ -32,7 +32,7 @@ export class TopNavigation extends React.PureComponent {
     return (
       <TopNavigationContainer>
         <div>
-          <h3>Oasis</h3>
+          <h3>Elsie Interactive</h3>
         </div>
         <div>
           <ul>
