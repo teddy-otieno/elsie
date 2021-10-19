@@ -1,9 +1,11 @@
+import ReactCalendar from 'react-calendar';
 import axios, { AxiosRequestConfig } from 'axios';
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import Image from "next/image";
 import { DashboardLayout } from '../../components/dashboard';
-import { NewPost, NewsFeedContainer, PostCardContainer } from '../../components/styles/dashboard';
+import 'react-calendar/dist/Calendar.css';
+import { NewPost, NewsFeedContainer, PostCardContainer, CalendarContainer, EventCardContainer } from '../../components/styles/dashboard';
 import { SERVER_URL } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
 
@@ -22,13 +24,15 @@ type Comment = {
 	comment: string
 }
 
+type User = {
+	f_name: string;
+	l_name: string;
+	username: string;
+}
+
 type Patient = {
 	id: number;
-	user: {
-		f_name: string;
-		l_name: string;
-		username: string;
-	}
+	user: User
 }
 
 type Post = {
@@ -45,6 +49,28 @@ type NewsFeedProps = {
 
 type NewsFeedState = {
 	posts: Array<Post> 
+}
+
+type Psychiatrist = {
+	qualification: string;
+	univerity: string;
+	user: User
+}
+
+type Event = {
+	title: string;
+	description: string;
+	time: string;
+	owner: Psychiatrist;
+}
+
+type CalendarState = {
+	events: Map<string, Event[]>;
+	selected_date: string;
+}
+
+type CalendarProps = {
+	token: string;
 }
 
 const PostCard: React.FC<{post: Post}> = ({post}) => {
@@ -124,26 +150,106 @@ class NewFeed extends React.PureComponent<NewsFeedProps, NewsFeedState> {
 	}
 }
 
-class Calendar extends React.PureComponent {
+type EventCardProps = {
+    title?: string;
+    text: string;
+}
+
+const EventCard: React.FC<EventCardProps> = ({title, text}) => {
+    return (
+        <EventCardContainer>
+           {text} 
+        </EventCardContainer>
+   )
+}
+
+class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
+
+	constructor(props: CalendarProps) {	
+		super(props);
+
+		this.state = {
+			events: new Map(),
+		}
+	}
+
+	load_events = async (date: Date) => {
+		const { token } = this.props;
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+
+			let date_string = date.toISOString().substring(0, 10);
+			let response = await axios.get<Event[]>(`${SERVER_URL}/api/patient/event/?date=${date_string}`, config);
+			let date_map = new Map(this.state.events);
+			let new_events: Event[] = [];
+
+			if(date_map.get(date_string) === undefined) {
+				let new_events = response.data;
+			} else {
+				let new_events = [...date_map.get(date_string)!!, response.data];
+			}
+			date_map.set(date_string, new_events);
+			this.setState({ ...this.state, events: date_map });
+
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
 	render() {
+		const {selected_date, events} = this.state;
+		const event_cards = events.get(selected_date)?.map((value: Event, index: number) => {
+			return <EventCard key={index} text={value.title}/>
+		});
+
 		return(
-			<div>Calendar</div>
+			<CalendarContainer>
+			    <ReactCalendar
+				onClickDay={(value, _) => {
+					this.load_events(value)
+					this.setState({...this.state, selected_date: value.toISOString().substring(0, 10)});
+				}}
+				/>	
+                <div>
+                    <h3>Events</h3>
+                    <div className="event-container">
+					{event_cards?.length === 0 || event_cards === undefined ? (
+						<span className="dimmed-text">Not events</span>
+						) : (event_cards)
+					}
+                    </div>
+                </div>
+			</CalendarContainer>
 		)
 	}
 }
 
 class PatientDashboard extends React.Component<PatientDashboardProps> {
+	create_new_appointment = async () => { 
+		//TODO(Teddy) direct to the create appointments 
+	}
+
 	render() {
 
 		const {f_name } = this.props;
 
 		let feed = <NewFeed token={this.props.token} f_name={f_name} />
-		let calendar = <Calendar />
+		let calendar = <Calendar token={this.props.token} />
 
 		console.log(this.props);
 
 		return (
-			<DashboardLayout center={feed} end={calendar} />
+			<DashboardLayout 
+				center={feed} 
+				end={calendar} 
+				primary_action={this.create_new_appointment}
+				primary_action_label="Create appointment"
+				title="Dashboard"
+			/>
 		);
 	}
 }

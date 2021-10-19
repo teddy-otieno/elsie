@@ -1,12 +1,82 @@
 import styled from 'styled-components';
-import { BACKGROUND_ALT, LIGHT_FONT, LIGHT_GREY, PRIMARY_COLOR, SHADOW_COLOR, SURFACE } from './theme';
+import { BACKGROUND, BACKGROUND_ALT, FONT, LIGHT_FONT, LIGHT_GREY, PRIMARY_COLOR, SHADOW_COLOR, SURFACE } from './theme';
 
+export const DashboardTopNavigationContainer = styled.header`
+	display: grid;
+	grid-template-columns: 1fr 0.25fr;
+	position: sticky;
+	top: 0pt;
+	height: 45pt;
+	background-color: ${SURFACE};
+	border-bottom: 1pt solid ${LIGHT_GREY};
+	width: 100%;
+	z-index: 2;
+	box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
+
+	div:first-child {
+		display: flex;
+		align-items: center;
+		padding: 0pt 4pt;
+		
+		h3 {
+			font-weight: 500;
+			color: ${PRIMARY_COLOR};
+		}
+	}
+
+	div:nth-child(2) {
+		display: flex;
+		align-items: center;
+		padding: 0pt 4pt;
+
+		justify-content: flex-end;
+		padding: 6pt 8pt;
+
+		button {
+			padding: 8pt 12pt;
+			font-size: 0.9em;
+		}
+	}
+`;
 export const DashboardContainer = styled.section`
 	.content {
 		display: grid;
 		grid-template-columns: 200pt 1fr 300pt;
 		min-height: calc(100vh - 45pt);
 		column-gap: 100pt;
+	}
+`;
+
+export const SideNavigationContainer = styled.nav`
+	display: flex;
+	flex-direction: column;
+	background-color: ${BACKGROUND};
+	border-right: 1pt solid ${LIGHT_GREY};
+	position: sticky;
+	top: 45pt;
+	height: calc(100vh - 45pt);
+
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+
+		li {
+
+			a {
+				display: block;
+				text-decoration: none;
+				padding: 16pt 0;
+				color: inherit;
+				text-align: center;
+				transition: all .4s ease;
+			}
+
+			a:hover {
+				color: ${PRIMARY_COLOR};
+				background-color: ${BACKGROUND_ALT};
+			}
+		}
 	}
 `;
 
@@ -64,15 +134,15 @@ export const PostCardContainer = styled.div`
 		padding: 4pt;
 		display: grid;
 		grid-template-columns: 32pt 1fr;
-		column-gap: 12pt;
+		column-gap: 8pt;
 		/* justify-items: center; */
 		align-items: center;
 
 		div:first-child {
 			border-radius: 50%;
 			margin-right: 8pt;
-			height: 32pt;
-			width: 32pt;
+			height: 24pt;
+			width: 24pt;
 			border: 2pt solid ${PRIMARY_COLOR};
 		}
 
@@ -98,4 +168,24 @@ export const PostCardContainer = styled.div`
 			background-color: ${BACKGROUND_ALT};
 		}
 	}
+`;
+
+export const CalendarContainer = styled.div`
+	display: grid;
+	position: sticky;
+	height: calc(100vh - 45pt);
+	top: 45pt;
+	padding: 8pt 4pt;
+
+    .events-container {
+        padding: 4pt;
+    }
+
+`;
+
+export const EventCardContainer = styled.div`
+    display: flex;
+    border: 1pt solid ${LIGHT_GREY};
+    padding: 8pt 4pt;
+    margin-bottom: 4pt;
 `;
