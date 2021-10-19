@@ -57,6 +57,8 @@ class MyUser(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
+    objects = UserManager()
+
 class Psychiatrist(models.Model):
     qualifications = models.CharField(max_length=256)
     university = models.CharField(max_length=256)

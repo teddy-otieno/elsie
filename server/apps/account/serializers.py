@@ -17,19 +17,20 @@ class ObtainAccessTokenSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
 
         response_data = { 
-            "token": data["access"], 
-            "is_who": is_who(self.user), 
-            "user_data": dict(get_account(self.user))
-        }
+                "token": data["access"], 
+                "is_who": is_who(self.user), 
+                "user_data": dict(get_account(self.user))
+                }
         print(response_data)
 
         return response_data
 
 class UserSerializer(serializers.ModelSerializer):
 
-	class Meta:
-		model = MyUser
-		fields = [
+    class Meta:
+        model = MyUser
+        fields = [
+                "id",
                 "email", 
                 "f_name", 
                 "l_name", 
@@ -38,9 +39,10 @@ class UserSerializer(serializers.ModelSerializer):
                 "phone_number",
                 "username"
                 ]
-		extra_kwargs = {
-			"password": {"write_only": True},
-		}
+        read_only_fields = ["id"]
+        extra_kwargs = {
+                "password": {"write_only": True},
+                }
 
 
 class PsychiatrisSerializer(serializers.ModelSerializer):
@@ -55,7 +57,7 @@ class PsychiatrisSerializer(serializers.ModelSerializer):
         password = user.pop("password")
         assert(password is not None)
 
-        user_instance = MyUser.objects.create(**user)
+        user_instance = MyUser.objects.create_psychiatrist_user(**user)
         user_instance.set_password(password)
         user_instance.save()
 
@@ -72,7 +74,7 @@ class PatientSerializer(serializers.ModelSerializer):
         password = user.pop("password")
         assert(password is not None)
 
-        user_instance = MyUser.objects.create(**user)
+        user_instance = MyUser.objects.create_patient_user(**user)
         user_instance.set_password(password)
         user_instance.save()
 
