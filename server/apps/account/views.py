@@ -21,13 +21,17 @@ class AccessTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def create_patient_account(request, **kwargs):
-
     serializer = PatientSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save()
+        patient_instance = serializer.save()
+        token_pair = ObtainAccessTokenSerializer.get_token(patient_instance.user)
+        auth_data = {
+            "token" : str(token_pair.access_token),
+            "is_whom" : is_who(patient_instance.user)
+        }
 
-        return Response()
+        return Response(status=status.HTTP_201_CREATED, data=auth_data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={ "errors": serializer.errors })
 
@@ -40,7 +44,6 @@ def create_counsellor_account(request, **kwargs):
         return Response()
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={ "errors": serializer.errors })
-    return Response()
 
 
 @api_view(['GET'])

@@ -5,7 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import MyUser, Psychiatrist, Patient
 
 def is_who(user: MyUser) -> str:
-    return "patient" if user.is_patient else "business"
+    return "patient" if user.is_patient else "psychiatrist"
 
 
 def get_account(user: MyUser) -> Dict[str, Any]: 
@@ -71,11 +71,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.pop("user")
-        password = user.pop("password")
-        assert(password is not None)
-
         user_instance = MyUser.objects.create_patient_user(**user)
-        user_instance.set_password(password)
-        user_instance.save()
 
         return self.Meta.model.objects.create(**validated_data, user=user_instance)
+repr(PatientSerializer)

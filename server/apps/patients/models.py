@@ -14,9 +14,9 @@ class PostLike(models.Model):
 
 
 class Comment(models.Model):
-    post    = models.ForeignKey('patients.Post', on_delete=models.CASCADE, related_name="comments")
-    comment = models.CharField(max_length=2048)
-    patient = models.ForeignKey('account.Patient', on_delete=models.CASCADE, related_name="patient_comments")
+    post        = models.ForeignKey('patients.Post', on_delete=models.CASCADE, related_name="comments")
+    comment     = models.CharField(max_length=2048)
+    patient     = models.ForeignKey('account.Patient', on_delete=models.CASCADE, related_name="patient_comments")
 
 
 class Event(models.Model):
@@ -25,3 +25,17 @@ class Event(models.Model):
     description = models.CharField(max_length=4096)
     is_public   = models.BooleanField(default=False)
     owner       = models.ForeignKey('account.Psychiatrist', on_delete=models.CASCADE)
+
+class Community(models.Model):
+    avatar  = models.ImageField()
+    name    = models.CharField(max_length=1024)
+
+class CommunityMember(models.Model):
+    member          = models.OneToOneField(to="account.Patient", on_delete=models.CASCADE, related_name="member_of")
+    community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="community_members")
+    joined_on       = models.DateTimeField(auto_now_add=True)
+
+class CommunityMessage(models.Model):
+    message         = models.CharField(max_length=4096)
+    sender          = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="messages")
+    community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="chat_room")

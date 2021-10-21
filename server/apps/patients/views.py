@@ -3,17 +3,21 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
-
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .serializers import EventSerailizer, FeedPostSerailizer, PostSerializer
-from .models import Post, Event
+from .serializers import (
+    EventSerailizer, 
+    FeedPostSerailizer, 
+    PostSerializer, 
+    CommunitySerializer
+        )
+from .models import Post, Event, Community
 
 # Create your views here.
 
 class PatientPostViewSet(ModelViewSet):
-    serializer_class = PostSerializer
-    authentication_classes = [JWTAuthentication]
+    serializer_class        = PostSerializer
+    authentication_classes  = [JWTAuthentication]
 
 
     def get_queryset(self):
@@ -29,19 +33,15 @@ def generate_newsfeed(request, *args, **kwargs):
 
     # return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class PublicEventViewSet(ReadOnlyModelViewSet):
     serializer_class = EventSerailizer
 
     def get_queryset(self):
         return Event.objects.filter(is_public=True)
 
-
-
-
 class EventsViewSet(ModelViewSet):
-    serializer_class = EventSerailizer
-    authentication = [JWTAuthentication]
+    serializer_class    = EventSerailizer
+    authentication      = [JWTAuthentication]
 
     def get_queryset(self):
         date_string = self.request.query_params.get('date', None)
@@ -50,3 +50,10 @@ class EventsViewSet(ModelViewSet):
         
         date = datetime.strptime(date_string, "%Y-%m-%d").date()
         return Event.objects.filter(date=date)
+
+class CommunityViewSet(ModelViewSet):
+    serializer_class    = CommunitySerializer
+    authentication      = [JWTAuthentication]
+
+    def get_queryset(self):
+        return Community.objects.all()
