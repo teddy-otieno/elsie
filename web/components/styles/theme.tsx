@@ -8,6 +8,7 @@ export const SHADOW_COLOR = "#00000018";
 export const LIGHT_FONT = "#adb5bd"
 export const LIGHT_GREY = "#dee2e6";
 export const SURFACE = "#FFFFFF";
+export const ERROR = "#ff4d6d"
 
 // Typography
 export const FONT = "";

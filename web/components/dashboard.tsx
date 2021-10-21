@@ -1,14 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
-import { DashboardContainer, DashboardTopNavigationContainer, SideNavigationContainer } from './styles/dashboard';
+import Image from 'next/image';
+import { 
+	DashboardContainer, 
+	DashboardTopNavigationContainer, 
+	SideNavigationContainer, 
+	CommunityChatContainer, 
+	CommunityMemberContainer 
+} from './styles/dashboard';
 import { PrimaryButton, SecondaryButton } from './styles/component';
 
 type DashboardProps = {
 	center: any;
-	end: any
+	end?: any
 	title: string;
-	primary_action: () => void;
-	primary_action_label: string;
+	primary_action?: () => void;
+	primary_action_label?: string;
 };
 
 class __DashboardLayout extends React.Component<DashboardProps> {
@@ -36,16 +43,16 @@ class SideNavigation extends React.PureComponent {
 			<SideNavigationContainer>
 				<ul>
 					<li>
-						<Link href="patient/">Dashboard</Link>
+						<Link href="/patient/">Dashboard</Link>
 					</li>
 					<li>
-						<Link href="patient/community">Community</Link>
+						<Link href="/patient/appointment">Appointments</Link>
 					</li>
 					<li>
-						<Link href="patient/appointment">Appointments</Link>
+						<Link href="/patient/community">Community</Link>
 					</li>
 					<li>
-						<Link href="patient/not_sure">NotSure</Link>
+						<Link href="/patient/not_sure">NotSure</Link>
 					</li>
 					{/* <li>
 						<Link></Link>
@@ -82,3 +89,47 @@ class DashboardTopNavigation extends React.PureComponent<DashboardTopNavigationP
 
 
 export const DashboardLayout = __DashboardLayout;
+
+type CommunityCardProps = {
+	avatar: string;
+	name: string;
+}
+
+const CommunityCard: React.FC<CommunityCardProps> = ({avatar, name}) => {
+	return (
+		<div>
+			<Image src={avatar} width={20} height={20} alt="Community Avatar"/>
+			<p>{}</p>
+		</div>
+   )
+}
+
+class __CommunityChat extends React.PureComponent {
+
+	componentDidMount() {
+
+	}
+
+	render() {
+		return (
+			<CommunityChatContainer>
+				<div className="communities"></div>
+				<div className="chat"></div>
+			</CommunityChatContainer>
+	   )
+	}
+}
+
+export const CommunityChat = __CommunityChat;
+
+
+class __CommunityMembers extends React.PureComponent {
+
+	render() {
+		return (
+			<CommunityMemberContainer></CommunityMemberContainer>	
+	   );
+	}
+}
+
+export const CommunityMembers = __CommunityMembers;

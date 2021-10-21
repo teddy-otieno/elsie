@@ -5,7 +5,6 @@ from apps.account.serializers import PatientSerializer, PsychiatrisSerializer
 from .models import Post, Comment, Event
 
 class CommentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Comment
         fields = ["comment", "patient"]

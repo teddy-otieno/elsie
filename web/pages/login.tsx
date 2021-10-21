@@ -4,7 +4,7 @@ import Layout, { TextField, TopNavigation } from "../components/layout";
 import { PrimaryButton } from "../components/styles/component";
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import PublicRouterInstance, {withRouter} from 'next/router';
+import {withRouter} from 'next/router';
 
 import { SERVER_URL } from "../utils";
 

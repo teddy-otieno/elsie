@@ -1,6 +1,16 @@
 import styled, { css } from 'styled-components';
 
-import {BACKGROUND, BACKGROUND_ALT, LIGHT_FONT, LIGHT_GREY, PRIMARY_COLOR, SECONDARY_COLOR, SHADOW_COLOR, SURFACE} from './theme';
+import {
+	BACKGROUND, 
+	BACKGROUND_ALT, 
+	LIGHT_FONT, 
+	LIGHT_GREY, 
+	PRIMARY_COLOR, 
+	SECONDARY_COLOR, 
+	SHADOW_COLOR, 
+	SURFACE,
+	ERROR
+	} from './theme';
 
 export const LayoutContainer = styled.div`
   padding: 0;
@@ -8,7 +18,7 @@ export const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${BACKGROUND_ALT};
+  background-color: ${BACKGROUND};
 
   .dimmed-text {
     margin: 0;
@@ -71,10 +81,10 @@ export const TopNavigationContainer = styled.header`
 
 const common_styles = css`
   border: none;
-  padding: 12pt 20pt;
+  padding: 10pt 30pt;
   font: inherit;
   cursor: pointer;
-  border-radius: 8pt;
+  border-radius: 4pt;
   transition: box-shadow .4s ease;
 `;
 
@@ -133,18 +143,25 @@ export const TextFieldContainer = styled.span`
   flex-direction: column;
   margin-bottom: 4pt;
   width: 100%;
+  box-sizing: border-box;
 
   input {
     font: inherit;
     padding: 8pt;
-    border: 1pt solid ${LIGHT_GREY};
+    border: 2pt solid ${LIGHT_GREY};
+		border-radius: 2pt;
   }
 
   p {
-    font-size: 0.8em;
+    font-size: 0.9em;
+		font-weight: 500;
     margin: 0;
     margin-bottom: 2pt;
-    color: ${LIGHT_FONT};
   }
+
+	.error {
+		color: ${ERROR};
+		margin-top: 4pt;
+	}
     
 `;

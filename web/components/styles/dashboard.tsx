@@ -180,7 +180,6 @@ export const CalendarContainer = styled.div`
     .events-container {
         padding: 4pt;
     }
-
 `;
 
 export const EventCardContainer = styled.div`
@@ -188,4 +187,21 @@ export const EventCardContainer = styled.div`
     border: 1pt solid ${LIGHT_GREY};
     padding: 8pt 4pt;
     margin-bottom: 4pt;
+`;
+
+export const CommunityChatContainer  = styled.div`
+	display: grid;
+	grid-template-columns: 100pt 1fr;
+
+	.commmunities {
+
+	}
+
+	.chat {
+
+	}
+`;
+
+export const CommunityMemberContainer = styled.div`
+	
 `;
