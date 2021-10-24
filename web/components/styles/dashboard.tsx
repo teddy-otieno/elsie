@@ -1,5 +1,15 @@
 import styled from 'styled-components';
-import { BACKGROUND, BACKGROUND_ALT, FONT, LIGHT_FONT, LIGHT_GREY, PRIMARY_COLOR, SHADOW_COLOR, SURFACE } from './theme';
+import { BACKGROUND, 
+	BACKGROUND_ALT, 
+	FONT, 
+	LIGHT_FONT, 
+	LIGHT_GREY, 
+	PRIMARY_COLOR, 
+	SHADOW_COLOR, 
+	SURFACE, 
+	PRIMARY_VARIANT,
+	ERROR
+} from './theme';
 
 export const DashboardTopNavigationContainer = styled.header`
 	display: grid;
@@ -38,10 +48,16 @@ export const DashboardTopNavigationContainer = styled.header`
 		}
 	}
 `;
-export const DashboardContainer = styled.section`
+
+type DashContainerProps = {
+	show_end: boolean;
+}
+
+export const DashboardContainer = styled.section<DashContainerProps>`
 	.content {
 		display: grid;
-		grid-template-columns: 200pt 1fr 300pt;
+
+		${(props) => props.show_end ? "grid-template-columns: 200pt 1fr 300pt" : "grid-template-columns: 200pt 1fr"};
 		min-height: calc(100vh - 45pt);
 		column-gap: 100pt;
 	}
@@ -204,4 +220,158 @@ export const CommunityChatContainer  = styled.div`
 
 export const CommunityMemberContainer = styled.div`
 	
+`;
+
+export const AppointmentPageContainer = styled.div`
+	height: 100%; width: 100%;
+
+	h1 {
+		font-weight: 500;
+	}
+	.content {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		padding: 8pt;
+		box-sizing: border-box;
+		column-gap: unset !important;
+	}
+`;
+
+export const AppointmentCardContainer =  styled.div`
+	border: 1pt solid ${LIGHT_GREY};
+	height: 200pt;
+	width: 240pt;
+	padding: 16pt;
+	box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
+	border-radius: 8pt;
+	margin-right: 4pt;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 32pt 1fr 32pt;
+
+	grid-template-areas: 
+		"header header"
+		"time time"
+		"status status";
+
+
+	.psychiatrist {
+		grid-area: header;
+		.avatar {
+			height: 32pt;
+			width: 32pt;
+			background-color: grey;
+			border-radius: 50%;
+		}
+
+		.empty {
+			text-align: center;
+			font-weight: 500;
+			color: ${ERROR};
+		}
+	}
+
+	.time {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-area: time;
+		align-items: center;
+
+		.labeled-text {
+			h5 {
+				font-weight: 500;
+				color: ${LIGHT_FONT};
+				margin: 0; margin-bottom: 4pt;
+			}
+
+			p {
+				justify-self: flex-end;
+			}
+		}
+	}
+
+	.status {
+		grid-area: status;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.status-label {
+			background-color: ${PRIMARY_VARIANT};
+			color: ${PRIMARY_COLOR};
+			padding: 4pt 16pt;
+			border-radius: 4pt;
+			text-align:center;
+		}
+
+		.video-call {
+			background-color: ${PRIMARY_VARIANT};
+			padding: 8pt;
+			cursor: pointer;
+			border-radius: 50%;
+			display: flex;
+			align-items: center; justify-content: center;
+		}
+
+		.video-call:hover {
+			svg {
+				fill: ${PRIMARY_COLOR};
+			}
+		}
+	}
+`;
+
+export const CreateAppointmentDialogContainer = styled.div`
+	height: calc(100vh - 45pt); width: 100%;
+	background-color: #00000023;
+	top: 45pt;
+	left: 0;
+	position: absolute;
+	z-index; 3;
+
+	display: flex; 
+	align-items: center; justify-content: center;
+
+	.dialog-content {
+		background-color: ${SURFACE};
+		height: 60%; width: 50%;
+		border-radius: 8pt;
+		padding: 16pt;
+
+		display: grid;
+		grid-template-rows: 1fr 32pt;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+
+		grid-template-areas: 
+		"calendar calendar desc desc"
+		"calendar calendar action action";
+
+		.react-calendar {
+			grid-area: calendar;
+		}
+
+		.desc {
+			grid-area: desc;
+			padding: 8pt;
+
+			h4 {
+				font-weight: 500;
+			}
+
+			.time {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				column-gap: 4pt;
+			}
+		}
+
+		.action {
+			grid-area: action;
+			display: flex;
+			align-items: center; justify-content: space-between;
+			padding: 4pt;
+		}
+	}
 `;

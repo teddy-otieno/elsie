@@ -10,7 +10,7 @@ import { SERVER_URL } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
 
 
-type PatientDashboardProps = {
+export type PatientDashboardProps = {
 	username: string;
 	f_name: string;
 	l_name: string;
@@ -51,7 +51,7 @@ type NewsFeedState = {
 	posts: Array<Post> 
 }
 
-type Psychiatrist = {
+export type Psychiatrist = {
 	qualification: string;
 	univerity: string;
 	user: User
@@ -246,8 +246,6 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 			<DashboardLayout 
 				center={feed} 
 				end={calendar} 
-				primary_action={this.create_new_appointment}
-				primary_action_label="Create appointment"
 				title="Dashboard"
 			/>
 		);

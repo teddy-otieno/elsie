@@ -8,18 +8,18 @@ import {SERVER_URL} from '../utils';
 import {withRouter} from 'next/router';
 
 type SignUpPageState = {
-username: string;
-password: string;
-confirm_password: string;
-email_address: string;
-phone_number: string;
-f_name: string;
-l_name: string;
-date_of_birth: string;
+	username: string;
+	password: string;
+	confirm_password: string;
+	email_address: string;
+	phone_number: string;
+	f_name: string;
+	l_name: string;
+	date_of_birth: string;
 }
 
 type SignUpProps = {
-router: any;
+	router: any;
 }
 
 class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
@@ -75,14 +75,12 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 		try {
 			let response = await axios.post<any>(`${SERVER_URL}/api/auth/new-patient/`, data);
 			Cookies.set("token", response.data["token"]);
-
-			let is_whom = response.data['is_whom']
-
-				if (is_whom == "patient") {
-					router.push("patient/")
-				} else {
-					router.push("psychiatrist")
-				}
+			let is_whom = response.data['is_whom'];
+			if (is_whom == "patient") {
+				router.push("patient/")
+			} else {
+				router.push("psychiatrist")
+			}
 		} catch (e) {
 			console.log(e);
 		}

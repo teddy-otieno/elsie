@@ -18,12 +18,13 @@ type DashboardProps = {
 	primary_action_label?: string;
 };
 
+//TODO center should fill the available space if no end component is provided
 class __DashboardLayout extends React.Component<DashboardProps> {
 	render() {
 		const {center, end, title, primary_action, primary_action_label} = this.props;
 
 		return (
-			<DashboardContainer>
+			<DashboardContainer show_end={end !== undefined}>
 				<DashboardTopNavigation title={title} primary_action={primary_action} action_label={primary_action_label} />
 				<div className="content">
 					<SideNavigation />
@@ -70,21 +71,19 @@ type DashboardTopNavigationProps = {
 	title: string; 
 };
 
-class DashboardTopNavigation extends React.PureComponent<DashboardTopNavigationProps> {
-	render() {
-		const {title, action_label, primary_action} = this.props;
-
+const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, action_label, primary_action}) => {
 		return (
 			<DashboardTopNavigationContainer>
 				<div>
 					<h3>{title}</h3>
 				</div>
 				<div>
-					{(action_label !== undefined && primary_action !== undefined) && <SecondaryButton>{action_label}</SecondaryButton> }
+					{
+						(action_label !== undefined && primary_action !== undefined) && <SecondaryButton onClick={(e) => { e.preventDefault(); primary_action?.(); }}>{action_label}</SecondaryButton> 
+					}
 				</div>
 			</DashboardTopNavigationContainer>
 		);
-	}
 }
 
 

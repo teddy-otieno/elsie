@@ -7,7 +7,8 @@ import {
 		LayoutContainer, 
 		PrimaryButton, 
 		TopNavigationContainer, 
-		TextFieldContainer
+		TextFieldContainer,
+		SecondaryButton
 } from './styles/component';
 
 interface ILayoutProps {
@@ -26,11 +27,26 @@ class Layout extends React.PureComponent {
 
 export default Layout;
 
+type TopNavState = {
+	show_avatar_menu: boolean;
+}
 
-export class TopNavigation extends React.PureComponent {
+export class TopNavigation extends React.PureComponent<{}, TopNavState> {
+
+	constructor(props: {}) {
+		super(props);
+		this.state ={
+			show_avatar_menu: false,
+		};
+	}
+
+	on_avatar_click = () => {
+		this.setState({ ...this.state, show_avatar_menu: !this.state.show_avatar_menu});
+	}
+
 	render() {
 		return (
-				<TopNavigationContainer>
+				<TopNavigationContainer show_url={this.state.show_avatar_menu}>
 					<div>
 						<h3>Elsie Interactive</h3>
 					</div>
@@ -46,7 +62,12 @@ export class TopNavigation extends React.PureComponent {
 								<Link href='/donate'>Donate</Link>
 							</li>
 							<li>
-								<Link href='/login'>Login</Link>
+								<div className="avatar" onClick={this.on_avatar_click}>
+								</div>
+								<div className="account-menu" >
+									<Link href='/login'>Login</Link>
+									<Link href='/register'>Register</Link>
+								</div>
 							</li>
 					</ul>
 				</div>

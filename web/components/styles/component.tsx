@@ -41,7 +41,12 @@ export const LayoutContainer = styled.div`
     }
 `;
 
-export const TopNavigationContainer = styled.header`
+
+type TopNavigationContainerProps =  {
+	show_url: boolean;
+}
+
+export const TopNavigationContainer = styled.header<TopNavigationContainerProps>`
   position: sticky;
   top: 0;
   width: 100%;
@@ -65,18 +70,48 @@ export const TopNavigationContainer = styled.header`
       width: 64pt;
       padding: 8pt;
       margin-right: 8pt;
+			position: relative;
       a {
         color: inherit;
         text-decoration: none;
       }
 
-      &:hover {
-        a {
-          color: ${PRIMARY_COLOR};
-        }
-      }
+			a:hover {
+				color: ${PRIMARY_COLOR};
+			}
     }
   }
+
+	.avatar {
+		height: 32pt;
+		width: 32pt;
+		background-color: ${PRIMARY_COLOR};
+		border-radius: 50%;
+		position: relative;
+		cursor: pointer;
+	}
+
+	.avatar:hover {
+		box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
+	}
+
+	.account-menu {
+		position: absolute;
+		width: 100pt;
+		background-color: white;
+		border: 1pt solid ${LIGHT_GREY};
+		box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
+		padding: 4pt;
+		border-radius: 4pt;
+		left: -100%;
+		${(props) => props.show_url ? "display: flex" : "display: none"};
+		flex-direction: column;
+	}
+
+	a {
+		padding: 4pt 8pt;
+		text-align: center;
+	}
 `;
 
 const common_styles = css`
@@ -150,10 +185,11 @@ export const TextFieldContainer = styled.span`
     padding: 8pt;
     border: 2pt solid ${LIGHT_GREY};
 		border-radius: 2pt;
+		width: 100%;
   }
 
   p {
-    font-size: 0.9em;
+    font-size: 0.8em;
 		font-weight: 500;
     margin: 0;
     margin-bottom: 2pt;
@@ -162,6 +198,7 @@ export const TextFieldContainer = styled.span`
 	.error {
 		color: ${ERROR};
 		margin-top: 4pt;
+		font-size: 0.8em;
 	}
     
 `;
