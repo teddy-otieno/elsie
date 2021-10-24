@@ -6,6 +6,7 @@ from .views import (
     PatientPostViewSet, 
     PublicEventViewSet, 
     CommunityViewSet,
+    AppointmentViewsSet,
     generate_newsfeed,
 )
 
@@ -15,6 +16,7 @@ def _router_urls():
     router.register('public_events', PublicEventViewSet, basename="public_event")
     router.register('event', EventsViewSet, basename="event")
     router.register('community', CommunityViewSet, basename="community")
+    router.register('appointment', AppointmentViewsSet, basename="appointnment")
     return router.urls
 
 urlpatterns = [

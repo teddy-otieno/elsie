@@ -6,12 +6,14 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
+    AppointmentSerializer,
     EventSerailizer, 
     FeedPostSerailizer, 
     PostSerializer, 
-    CommunitySerializer
+    CommunitySerializer,
+    AppointmentSerializer
         )
-from .models import Post, Event, Community
+from .models import Post, Event, Community, Appointment
 
 # Create your views here.
 
@@ -57,3 +59,19 @@ class CommunityViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Community.objects.all()
+
+
+class AppointmentViewsSet(ModelViewSet):
+    serializer_class = AppointmentSerializer
+    authentication = [JWTAuthentication]
+
+    #TODO filter
+
+    def get_queryset(self):
+        return Appointment.objects.filter(starter__user=self.request.user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({'user': self.request.user})
+
+        return context

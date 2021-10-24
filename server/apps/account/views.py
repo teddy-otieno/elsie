@@ -40,8 +40,7 @@ def create_counsellor_account(request, **kwargs):
     serializer = PsychiatrisSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-
-        return Response()
+        return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={ "errors": serializer.errors })
 

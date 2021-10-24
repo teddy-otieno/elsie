@@ -39,3 +39,17 @@ class CommunityMessage(models.Model):
     message         = models.CharField(max_length=4096)
     sender          = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="messages")
     community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="chat_room")
+
+class Appointment(models.Model):
+    APPOINTMENT_STATUS = [
+            ("PENDING", "PENDING"),
+            ("EXPIRED", "EXPIRED"),
+            ("DRAFT", "DRAFT"),
+            ("DONE", "DONE")
+            ]
+
+    starter     = models.ForeignKey(to="account.Patient", on_delete=models.CASCADE, related_name="patient_appointments");
+    status      = models.CharField(max_length=10, choices=APPOINTMENT_STATUS, default="PENDING")
+    with_who    = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="appointment_with", null=True, blank=True)
+    time        = models.DateTimeField()
+    created_time = models.DateTimeField(auto_now_add=True)
