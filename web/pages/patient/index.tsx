@@ -86,9 +86,9 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
 				{/* <h5>{post.title}</h5>
 				<p>{post.text}</p> */}
 				<h4 className="post-title">{post.text}</h4>
-				<p>Hello goodmorning and how are you today. What are you doing and what are you seeing whatt are we saying and wy I'm I typing. A story a story is being told and what story is best if it doesnt come rom you. What do you tell them zen? what is zen what is to feel when you dont know how to feel. And what is it to see whaen you are blink. Mumbo jambo. Being writen here</p>
+				<p></p>
 			</div>
-			<div className='actions'>
+			<div className="actions">
 				<span>Like</span>
 				<span>Comment</span>
 				<span>Share</span>
@@ -170,6 +170,7 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 
 		this.state = {
 			events: new Map(),
+			selected_date: ""
 		}
 	}
 

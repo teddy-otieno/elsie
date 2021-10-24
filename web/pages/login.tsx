@@ -44,8 +44,11 @@ class LoginPage extends React.PureComponent<LoginPageProps,LoginPageState> {
     try {
       let response = await axios.post<any>(`${SERVER_URL}/api/auth/token/`, data);
       Cookie.set('token', response.data.token);
-
-      this.props.router.push('patient/')
+			if(response.data['is_who'] === "psychiatrist") {
+				this.props.router.push('counsellor/')
+			} else {
+				this.props.router.push('patient/')
+			}
     } catch(e) {
       console.log(e);
 

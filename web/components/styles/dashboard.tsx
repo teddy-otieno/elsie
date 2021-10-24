@@ -54,6 +54,18 @@ type DashContainerProps = {
 }
 
 export const DashboardContainer = styled.section<DashContainerProps>`
+	.labeled-text {
+		h5 {
+			font-weight: 500;
+			color: ${LIGHT_FONT};
+			margin: 0; margin-bottom: 4pt;
+		}
+
+		p {
+			justify-self: flex-end;
+		}
+	}
+
 	.content {
 		display: grid;
 
@@ -279,17 +291,6 @@ export const AppointmentCardContainer =  styled.div`
 		grid-area: time;
 		align-items: center;
 
-		.labeled-text {
-			h5 {
-				font-weight: 500;
-				color: ${LIGHT_FONT};
-				margin: 0; margin-bottom: 4pt;
-			}
-
-			p {
-				justify-self: flex-end;
-			}
-		}
 	}
 
 	.status {
@@ -373,5 +374,98 @@ export const CreateAppointmentDialogContainer = styled.div`
 			align-items: center; justify-content: space-between;
 			padding: 4pt;
 		}
+	}
+`;
+
+
+export const AvailableAppointmentsContainer = styled.div`
+	display: flex;
+	height: 100%;
+	width: 100%;
+	padding: 8pt;
+	flex-wrap: wrap;
+`;
+
+type AvailableAppointmentsContainerProps = {
+	activated: boolean;
+}
+
+export const AvailableAppointmentCardContainer = styled.div<AvailableAppointmentsContainerProps>`
+	border: 1pt solid ${LIGHT_GREY};
+	height: 200pt;
+	width: 200pt;
+	padding: 16pt;
+	box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
+	border-radius: 8pt;
+	margin: 4pt;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 48pt 1fr 48pt;
+
+	grid-template-areas: 
+		"avatar name name name"
+		"date date time time"
+		"pick pick pick action";
+
+	.avatar {
+		grid-area: avatar;
+		background-color: grey;
+		height: 32pt;
+		width: 32pt;
+		border-radius: 50%;
+		align-self: center; justify-self: center;
+	}
+
+	.name {
+		grid-area: name;
+		align-self: center; justify-self: flex-start;
+	}
+
+	.time {
+		grid-area: time;
+	}
+
+	.date {
+		grid-area: date;
+	}
+
+	.date, time {
+		font-size: 0.9em;
+	}
+
+	.status {
+		grid-area: pick;
+		background-color: ${PRIMARY_VARIANT};
+		color: ${PRIMARY_COLOR};
+		padding: 4pt 16pt;
+		border-radius: 4pt;
+		text-align:center;
+		margin: 4pt;
+		height: 32pt;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.confirm {
+		grid-area: action;
+		display:flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		border-radius: 50%;
+		border: 1pt solid ${PRIMARY_VARIANT};
+		transition: box-shadow .4s ease;
+		margin: 4pt;
+		${(props) => props.activated ? `background-color: ${PRIMARY_COLOR}`: ""};
+
+		svg {
+			${(props) => props.activated ? `fill: ${SURFACE}` : ""};
+		}
+	}
+
+	.confirm:hover { 
+		box-shadow: 0 0 8pt ${SHADOW_COLOR};
 	}
 `;

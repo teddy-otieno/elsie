@@ -31,14 +31,13 @@ export const LayoutContainer = styled.div`
     justify-content: space-between;
   }
 
+	.big-sub-title {
+		font-size: 2em;
 
-    .big-sub-title {
-      font-size: 2em;
-
-      span {
-        color: ${PRIMARY_COLOR};
-      }
-    }
+		span {
+			color: ${PRIMARY_COLOR};
+		}
+	}
 `;
 
 
@@ -177,7 +176,7 @@ export const TextFieldContainer = styled.span`
   display: flex;
   flex-direction: column;
   margin-bottom: 4pt;
-  width: 100%;
+  width: 95%;
   box-sizing: border-box;
 
   input {

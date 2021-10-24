@@ -66,7 +66,8 @@ export class TopNavigation extends React.PureComponent<{}, TopNavState> {
 								</div>
 								<div className="account-menu" >
 									<Link href='/login'>Login</Link>
-									<Link href='/register'>Register</Link>
+									<Link href='/sign_up'>Register</Link>
+									<Link href={{pathname: "/sign_up/", query: { acc: 'psy' }}}>Register Psychiatrist</Link>
 								</div>
 							</li>
 					</ul>
@@ -117,7 +118,7 @@ export const TextField: React.FC<TextFieldProps> = ({ label, value, set_value, v
 						}
 				}}
 				/>
-				{(error?.length !== undefined && error !== 0) && <p className="error">{error}</p>}
+				{(error?.length !== 0) && <p className="error">{error}</p>}
 			</TextFieldContainer>
 			);
 }

@@ -128,7 +128,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 				<div className="dialog-content">
 					<ReactCalendar 
 						value={date} 
-						onChange={(value) => this.setState({...this.state, date: value})}
+						onChange={(value: Date) => this.setState({...this.state, date: value})}
 						minDate={new Date()}
 					/>	
 					<div className="desc">
