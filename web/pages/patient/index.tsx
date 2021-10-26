@@ -230,9 +230,7 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 }
 
 class PatientDashboard extends React.Component<PatientDashboardProps> {
-	create_new_appointment = async () => { 
-		//TODO(Teddy) direct to the create appointments 
-	}
+	create_new_appointment = async () => { }
 
 	render() {
 

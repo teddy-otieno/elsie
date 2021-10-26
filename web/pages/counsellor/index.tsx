@@ -45,7 +45,7 @@ const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appoi
 	return (
 		<AvailableAppointmentCardContainer activated={active}>
 			<div className="avatar"></div>
-			<div className="name">{"Teddy Juma"}</div>
+			<div className="name">{"John Doe"}</div>
 			<div className=" date labeled-text">
 				<h5>Date</h5>
 				<p>{time_object.toDateString()}</p>

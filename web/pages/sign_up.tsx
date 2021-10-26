@@ -31,16 +31,16 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 		super(props);
 
 		this.state = {
-			username: "teddyj",
-			password: "helloworld",
-			confirm_password: "helloworld",
-			email_address: "tedd.juma32@gmail.com",
-			phone_number: "+254758551230",
-			f_name: "teddy",
-			l_name: "juma",
-			date_of_birth: "1998-05-19",
-			qualificatoin: "Masters is psychology",
-			university: "Multimedia University of Keny"
+			username: "",
+			password: "",
+			confirm_password: "",
+			email_address: "",
+			phone_number: "",
+			f_name: "",
+			l_name: "",
+			date_of_birth: "",
+			qualificatoin: "",
+			university: ""
 		};
 	}
 
