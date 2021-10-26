@@ -54,7 +54,7 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 			<SideNavigationContainer>
 				<ul>
 					<li>
-						<Link href={`${prefix}/`}>Dashboard</Link>
+						<Link href={`/${prefix}`}>Dashboard</Link>
 					</li>
 					<li>
 						<Link href={`/${prefix}/appointment`}>Appointments</Link>
@@ -62,12 +62,6 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 					<li>
 						<Link href={`/${prefix}/community`}>Community</Link>
 					</li>
-					<li>
-						<Link href={`/${prefix}/not_sure`}>NotSure</Link>
-					</li>
-					{/* <li>
-						<Link></Link>
-					</li> */}
 				</ul>
 			</SideNavigationContainer>
 		)

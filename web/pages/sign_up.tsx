@@ -103,7 +103,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			if (is_whom == "patient") {
 				router.push("patient/")
 			} else {
-				router.push("psychiatrist")
+				router.push("counsellor")
 			}
 		} catch (e) {
 			console.log(e);
