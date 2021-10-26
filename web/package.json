@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/eslint-plugin-next": "^12.0.0",
     "@types/js-cookie": "^3.0.0",
     "@types/react-calendar": "^3.4.3",
     "@types/styled-components": "^5.1.15",
@@ -23,9 +24,9 @@
   },
   "devDependencies": {
     "@types/react": "17.0.24",
+    "babel-plugin-styled-components": "latest",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
-    "typescript": "4.4.3",
-		"babel-plugin-styled-components": "latest"
+    "typescript": "4.4.3"
   }
 }

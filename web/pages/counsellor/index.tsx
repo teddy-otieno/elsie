@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import Image from "next/image"
 
 import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import { Psychiatrist } from '../patient/index';
 import { DashboardLayout } from '../../components/dashboard';
 import { AvailableAppointmentsContainer, AvailableAppointmentCardContainer } from '../../components/styles/dashboard';
 import { Appointment } from "../patient/appointment";
+import UserAvatar from "../../assets/user.jpg";
 
 
 type AvailableAppointmentCardProp = {
@@ -42,10 +44,13 @@ const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appoi
 
 	}
 
+	let starter = appointment.starter.user;
 	return (
-		<AvailableAppointmentCardContainer activated={active}>
-			<div className="avatar"></div>
-			<div className="name">{"John Doe"}</div>
+		<AvailableAppointmentCardContainer is_booked={active}>
+			<Image className="avatar" src={UserAvatar} height={100} width={100} alt="Appointment Start avatar"/> 
+			<div className="name">
+				<span>{`${starter.f_name} ${starter.l_name}`}</span>
+			</div>
 			<div className=" date labeled-text">
 				<h5>Date</h5>
 				<p>{time_object.toDateString()}</p>

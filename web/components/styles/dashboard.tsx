@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import { BACKGROUND, 
 	BACKGROUND_ALT, 
 	FONT, 
@@ -269,35 +269,57 @@ export const AppointmentPageContainer = styled.div`
 		padding: 8pt;
 		box-sizing: border-box;
 		column-gap: unset !important;
+		flex-wrap: wrap;
 	}
 `;
 
-export const AppointmentCardContainer =  styled.div`
-	border: 1pt solid ${LIGHT_GREY};
+type AppointmentCardProps = {
+	is_booked: boolean;
+}
+
+export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
+	border: 1pt solid ${(props) => props.is_booked ? PRIMARY_COLOR : LIGHT_GREY};
 	height: 200pt;
 	width: 240pt;
 	padding: 16pt;
-	box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
 	border-radius: 8pt;
 	margin-right: 4pt;
 
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 32pt 1fr 1fr;
 	grid-template-rows: 32pt 1fr 32pt;
+	transition: all .4s ease;
+
+	&:hover {
+		box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
+		transform: translateY(-3pt);
+	}
 
 	grid-template-areas: 
-		"header header"
-		"time time"
-		"status status";
+		"header header header"
+		"time time time"
+		"status status status";
 
 
 	.psychiatrist {
 		grid-area: header;
-		.avatar {
-			height: 32pt;
-			width: 32pt;
-			background-color: grey;
-			border-radius: 50%;
+
+		.title {
+			display: grid;
+			grid-template-columns: 32pt 1fr;
+			column-gap: 8pt;
+			align-items: center;
+			width: 100%;
+
+			div:first-child {
+				height: 32pt;
+				width: 32pt;
+				border-radius: 50%;
+			}
+
+			span {
+
+			}
 		}
 
 		.empty {
@@ -330,19 +352,30 @@ export const AppointmentCardContainer =  styled.div`
 		}
 
 		.video-call {
-			background-color: ${PRIMARY_VARIANT};
+			background-color: ${(props) => props.is_booked ? PRIMARY_VARIANT: LIGHT_GREY};
 			padding: 8pt;
 			cursor: pointer;
 			border-radius: 50%;
 			display: flex;
 			align-items: center; justify-content: center;
-		}
 
-		.video-call:hover {
 			svg {
-				fill: ${PRIMARY_COLOR};
+				fill: ${(props) => props.is_booked ? "inherit" : "grey"};
 			}
 		}
+		
+		${(props) => {
+			if(props.is_booked) {
+
+				return css`
+					.video-call:hover {
+						svg {
+							fill: ${PRIMARY_COLOR};
+						}
+					}
+				`;
+			}
+		}}
 	}
 `;
 
@@ -359,13 +392,13 @@ export const CreateAppointmentDialogContainer = styled.div`
 
 	.dialog-content {
 		background-color: ${SURFACE};
-		height: 60%; width: 50%;
+		min-height: 60%; width: fit-content;
 		border-radius: 8pt;
 		padding: 16pt;
 
 		display: grid;
 		grid-template-rows: 1fr 32pt;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
+		grid-template-columns: 150pt 150pt 150pt 150pt;
 
 		grid-template-areas: 
 		"calendar calendar desc desc"
@@ -409,21 +442,22 @@ export const AvailableAppointmentsContainer = styled.div`
 `;
 
 type AvailableAppointmentsContainerProps = {
-	activated: boolean;
+	is_booked: boolean;
 }
 
 export const AvailableAppointmentCardContainer = styled.div<AvailableAppointmentsContainerProps>`
-	border: 1pt solid ${LIGHT_GREY};
+	border: 1pt solid ${(props) => props.is_booked ? PRIMARY_COLOR : LIGHT_GREY};
 	height: 200pt;
 	width: 200pt;
 	padding: 16pt;
-	box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
 	border-radius: 8pt;
 	margin: 4pt;
 
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-template-rows: 48pt 1fr 48pt;
+	grid-template-columns: 32pt 1fr 1fr 48pt;
+	grid-template-rows: 32pt 1fr 48pt;
+	row-gap: 16pt;
+	column-gap: 4pt;
 
 	grid-template-areas: 
 		"avatar name name name"
@@ -433,8 +467,8 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 	.avatar {
 		grid-area: avatar;
 		background-color: grey;
-		height: 32pt;
-		width: 32pt;
+		height: 24pt;
+		width: 24t;
 		border-radius: 50%;
 		align-self: center; justify-self: center;
 	}
@@ -442,6 +476,11 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 	.name {
 		grid-area: name;
 		align-self: center; justify-self: flex-start;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		padding: 0 16pt;
 	}
 
 	.time {
@@ -450,6 +489,7 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 
 	.date {
 		grid-area: date;
+		font-size: unset !important;
 	}
 
 	.date, time {
@@ -480,10 +520,10 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 		border: 1pt solid ${PRIMARY_VARIANT};
 		transition: box-shadow .4s ease;
 		margin: 4pt;
-		${(props) => props.activated ? `background-color: ${PRIMARY_COLOR}`: ""};
+		${(props) => props.is_booked ? `background-color: ${PRIMARY_COLOR}`: ""};
 
 		svg {
-			${(props) => props.activated ? `fill: ${SURFACE}` : ""};
+			${(props) => props.is_booked ? `fill: ${SURFACE}` : ""};
 		}
 	}
 

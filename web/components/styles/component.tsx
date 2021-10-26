@@ -38,6 +38,7 @@ export const LayoutContainer = styled.div`
 			color: ${PRIMARY_COLOR};
 		}
 	}
+
 `;
 
 
@@ -59,6 +60,9 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
   border-bottom: 1pt solid ${LIGHT_GREY};
   z-index: 2;
 
+	.color-text {
+		color: ${PRIMARY_COLOR};
+	}
 
   ul {
     padding: 0;

@@ -3,13 +3,15 @@ import axios from 'axios';
 import ReactCalendar from 'react-calendar';
 import { GetServerSideProps } from 'next';
 import { withRouter } from 'next/router';
+import Image from "next/image";
+
 import {TextField} from '../../components/layout';
 import { PrimaryButton, SecondaryButton } from "../../components/styles/component";
 import { DashboardLayout } from '../../components/dashboard';
 import { AppointmentPageContainer, AppointmentCardContainer, CreateAppointmentDialogContainer } from '../../components/styles/dashboard';
 import {SERVER_URL} from '../../utils';
-import {PatientDashboardProps, Psychiatrist} from './index';
-
+import {PatientDashboardProps, Psychiatrist, Patient} from './index';
+import UserAvatar from "../../assets/user.jpg";
 
 import 'react-calendar/dist/Calendar.css';
 
@@ -17,7 +19,7 @@ export type Appointment = {
 		id: number;
     status: string;
     time: string;
-    starter: number;
+    starter: Patient;
     with_who: Psychiatrist;
 }
 
@@ -30,12 +32,17 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 		if(with_who === null) {
 				return <h3 className="empty">Pending Psychiatrist approval</h3>
 		} else {
-				return <div className="avatar"></div>
+			return (
+				<div className="title">
+					<Image className="avatar" src={UserAvatar} width={100} height={100} alt="Avatar"/>
+					<span><span className="color-text">Dr.</span> {`${with_who.user.f_name} ${with_who.user.l_name}`}</span>
+				</div>
+					)
 		}
 	};
 
 	return (
-		<AppointmentCardContainer>
+		<AppointmentCardContainer is_booked={status === "BOOKED"}>
 
 			<div className="psychiatrist">
 				{show_psychiatrist()}
@@ -53,7 +60,7 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 			</div>
 
 			<div className="status">
-				<span className="status-label">Appointment</span>
+				<span className="status-label">{status}</span>
 				<span className="video-call">
 					{VIDEO_CALL_ICON}
 				</span>
@@ -70,6 +77,7 @@ type AppointmentComponentProps = {
 	token: string;
 	show_dialog: boolean;
 	set_show_dialog: (value: boolean) => void;
+	router: any;
 }
 
 
@@ -82,7 +90,7 @@ type CreateAppointmentState = {
 type CreateAppointmentDialogProps = {
 	token: string;
 	router: any;
-
+	close_dialog: () => void;
 	on_cancel: () => void;
 }
 
@@ -114,7 +122,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 
 		try {
 			let response = axios.post<Appointment>(`${SERVER_URL}/api/patient/appointment/`, request_data, config);
-			this.props.router.push("/patient/appointment");
+			this.props.close_dialog();
 		} catch(e) {
 			console.log("")
 		}
@@ -163,7 +171,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 
 const CreateAppointmentDialog = withRouter(__CreateAppointmentDialog);
 
-class AppointmentComponent extends React.Component<AppointmentComponentProps, AppointmentComponentState> {
+class __AppointmentComponent extends React.Component<AppointmentComponentProps, AppointmentComponentState> {
 	constructor(props: AppointmentComponentProps) {
 		super(props);
 
@@ -203,12 +211,22 @@ class AppointmentComponent extends React.Component<AppointmentComponentProps, Ap
 				<div className="content">
 					{appointments_cards}
 				</div>
-				{ this.props.show_dialog && <CreateAppointmentDialog token={this.props.token} on_cancel={() => this.props.set_show_dialog(false)}/> }
+				{ this.props.show_dialog && 
+					<CreateAppointmentDialog 
+						token={this.props.token} 
+						on_cancel={() => this.props.set_show_dialog(false)} 
+						close_dialog={() => {
+							this.props.set_show_dialog(false) 
+							this.props.router.reload()
+							}}
+						/> 
+					}
 			</AppointmentPageContainer>
 				)
 	}
 }
 
+const AppointmentComponent = withRouter(__AppointmentComponent)
 
 type AppointmentPageState = {
 	show_dialog: boolean;
