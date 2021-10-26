@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'apps.account',
     'apps.patients',
+    'apps.psychiatrist',
 ]
 
 MIDDLEWARE = [

@@ -28,7 +28,8 @@ class Event(models.Model):
 
 class Community(models.Model):
     avatar  = models.ImageField()
-    name    = models.CharField(max_length=1024)
+    name    = models.CharField(max_length=1024, unique=True)
+    creator  = models.ForeignKey(to='account.Psychiatrist', on_delete=models.CASCADE)
 
 class CommunityMember(models.Model):
     member          = models.OneToOneField(to="account.Patient", on_delete=models.CASCADE, related_name="member_of")
@@ -37,7 +38,7 @@ class CommunityMember(models.Model):
 
 class CommunityMessage(models.Model):
     message         = models.CharField(max_length=4096)
-    sender          = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="messages")
+    sender          = models.ForeignKey(to="account.MyUser", on_delete=models.CASCADE, related_name="messages")
     community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="chat_room")
 
 class Appointment(models.Model):
@@ -45,7 +46,8 @@ class Appointment(models.Model):
             ("PENDING", "PENDING"),
             ("EXPIRED", "EXPIRED"),
             ("DRAFT", "DRAFT"),
-            ("DONE", "DONE")
+            ("DONE", "DONE"),
+            ("BOOKED", "BOOKED")
             ]
 
     starter     = models.ForeignKey(to="account.Patient", on_delete=models.CASCADE, related_name="patient_appointments");

@@ -7,6 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
     AppointmentSerializer,
+    CommunityMessageSerializer,
     EventSerailizer, 
     FeedPostSerailizer, 
     PostSerializer, 
@@ -75,3 +76,20 @@ class AppointmentViewsSet(ModelViewSet):
         context.update({'user': self.request.user})
 
         return context
+
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+def messages_view(request, id):
+
+    if request.method == "GET":
+        message_queryset = CommunityMessage.objects.filter(community=id)
+        data = CommunityMessageSerializer(instance=message_queryset, many=True).data
+        return Response(status=status.HTTP_200_OK, data=data)
+
+    else:
+        serializer = CommunityMessageSerializer(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            data = CommunityMessageSerializer(instance=instance).data
+            return Response(status=status.HTTP_201_CREATED, data=data)

@@ -20,5 +20,6 @@ from django.urls.conf import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('apps.account.urls')),
-    path('api/patient/', include('apps.patients.urls'))
+    path('api/patient/', include('apps.patients.urls')),
+    path('api/psychiatrist/', include('apps.psychiatrist.urls'))
 ]

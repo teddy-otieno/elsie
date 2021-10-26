@@ -54,12 +54,9 @@ class PsychiatrisSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.pop("user")
-        password = user.pop("password")
-        assert(password is not None)
-
         user_instance = MyUser.objects.create_psychiatrist_user(**user)
-        user_instance.set_password(password)
-        user_instance.save()
+
+        return self.Meta.model.objects.create(**validated_data, user=user_instance)
 
 class PatientSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -74,4 +71,3 @@ class PatientSerializer(serializers.ModelSerializer):
         user_instance = MyUser.objects.create_patient_user(**user)
 
         return self.Meta.model.objects.create(**validated_data, user=user_instance)
-repr(PatientSerializer)

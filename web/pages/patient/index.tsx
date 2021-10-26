@@ -24,7 +24,7 @@ type Comment = {
 	comment: string
 }
 
-type User = {
+export type User = {
 	f_name: string;
 	l_name: string;
 	username: string;
@@ -248,6 +248,7 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 				center={feed} 
 				end={calendar} 
 				title="Dashboard"
+				prefix={"patient"}
 			/>
 		);
 	}

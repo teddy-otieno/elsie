@@ -66,7 +66,7 @@ class LoginPage extends React.PureComponent<LoginPageProps,LoginPageState> {
           <form>
             <h3>Login</h3>
             <TextField label="Username" value={username} set_value={(val) => {this.setState({...this.state, username: val})}} />
-            <TextField label="Password" value={password} set_value={(val) => {this.setState({...this.state, password: val})}} />
+            <TextField label="Password" input_type={"password"}  value={password} set_value={(val) => {this.setState({...this.state, password: val})}} />
             {error_message !== null && <p className="error_message">{error_message}</p>}
             <PrimaryButton onClick={this.login_user}>Login</PrimaryButton>
           </form>

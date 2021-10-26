@@ -71,7 +71,6 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 
 		${(props) => props.show_end ? "grid-template-columns: 200pt 1fr 300pt" : "grid-template-columns: 200pt 1fr"};
 		min-height: calc(100vh - 45pt);
-		column-gap: 100pt;
 	}
 `;
 
@@ -219,14 +218,37 @@ export const EventCardContainer = styled.div`
 
 export const CommunityChatContainer  = styled.div`
 	display: grid;
-	grid-template-columns: 100pt 1fr;
+	grid-template-columns: 200pt 1fr;
 
-	.commmunities {
-
+	.communities {
+		border-right: 1pt solid ${LIGHT_GREY};
+		height: calc(100vh - 45pt);
 	}
 
 	.chat {
 
+	}
+`;
+
+export const CommunityCardContainer = styled.div`
+	display: grid;
+	grid-template-columns: 32pt 1fr;
+	column-gap: 4pt;
+	border-bottom: 1pt solid ${LIGHT_GREY};
+	padding: 4pt;
+	height 32pt;
+	align-items: center;
+	cursor: pointer;
+
+	.avatar {
+		background-color: ${LIGHT_GREY};
+		height: 100%;
+		width: 100%;
+		border-radius: 50%;
+	}
+
+	&:hover {
+		background-color: ${PRIMARY_VARIANT};
 	}
 `;
 
@@ -469,3 +491,4 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 		box-shadow: 0 0 8pt ${SHADOW_COLOR};
 	}
 `;
+

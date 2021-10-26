@@ -155,7 +155,7 @@ class PendingAppointments extends React.Component<AvailableAppointmentProps, Ava
 	}
 }
 
-type CounsellorPageProps = {
+export type CounsellorPageProps = {
 	psychiatrist: Psychiatrist;
 	token: string;
 }
@@ -170,6 +170,7 @@ class CounsellorPage extends React.Component<CounsellorPageProps> {
 				</div>
 				}
 			title="Dashboard"
+			prefix={"counsellor"}
 		/>
 	}
 }

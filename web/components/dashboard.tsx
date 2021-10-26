@@ -1,6 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import axios from 'axios';
+
+import { SERVER_URL } from "../utils";
 import { 
 	DashboardContainer, 
 	DashboardTopNavigationContainer, 
@@ -9,6 +12,8 @@ import {
 	CommunityMemberContainer 
 } from './styles/dashboard';
 import { PrimaryButton, SecondaryButton } from './styles/component';
+import { CommunityCardContainer } from "./styles/dashboard";
+import { User } from "../pages/patient/index";
 
 type DashboardProps = {
 	center: any;
@@ -16,18 +21,19 @@ type DashboardProps = {
 	title: string;
 	primary_action?: () => void;
 	primary_action_label?: string;
+	prefix: string;
 };
 
 //TODO center should fill the available space if no end component is provided
 class __DashboardLayout extends React.Component<DashboardProps> {
 	render() {
-		const {center, end, title, primary_action, primary_action_label} = this.props;
+		const {prefix, center, end, title, primary_action, primary_action_label} = this.props;
 
 		return (
 			<DashboardContainer show_end={end !== undefined}>
 				<DashboardTopNavigation title={title} primary_action={primary_action} action_label={primary_action_label} />
 				<div className="content">
-					<SideNavigation />
+					<SideNavigation prefix={prefix} />
 					<div>{center}</div>
 					<div>{end}</div>
 				</div>
@@ -37,23 +43,27 @@ class __DashboardLayout extends React.Component<DashboardProps> {
 }
 
 
-//TODO(teddy) Mark active links.
-class SideNavigation extends React.PureComponent {
+type SideNavigationProps = {
+	prefix: string;
+}
+
+class SideNavigation extends React.PureComponent<SideNavigationProps> {
 	render() {
+		const { prefix } = this.props;
 		return (
 			<SideNavigationContainer>
 				<ul>
 					<li>
-						<Link href="/patient/">Dashboard</Link>
+						<Link href={`${prefix}/`}>Dashboard</Link>
 					</li>
 					<li>
-						<Link href="/patient/appointment">Appointments</Link>
+						<Link href={`/${prefix}/appointment`}>Appointments</Link>
 					</li>
 					<li>
-						<Link href="/patient/community">Community</Link>
+						<Link href={`/${prefix}/community`}>Community</Link>
 					</li>
 					<li>
-						<Link href="/patient/not_sure">NotSure</Link>
+						<Link href={`/${prefix}/not_sure`}>NotSure</Link>
 					</li>
 					{/* <li>
 						<Link></Link>
@@ -89,30 +99,97 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 
 export const DashboardLayout = __DashboardLayout;
 
-type CommunityCardProps = {
+type Community = {
 	avatar: string;
 	name: string;
+	id?: number;
 }
 
-const CommunityCard: React.FC<CommunityCardProps> = ({avatar, name}) => {
+type Message = {
+	message: string;
+	sender: User;
+}
+
+type CommunityCardProps = {
+	community: Community
+	on_click: (community_id: number) => void;
+}
+
+const CommunityCard: React.FC<CommunityCardProps> = ({community, on_click}) => {
+	const avatar = community.avatar === null ? 
+		(<div className="avatar"></div>)
+		: (<Image src={community.avatar} width={20} height={20} alt="Community Avatar"/>)
 	return (
-		<div>
-			<Image src={avatar} width={20} height={20} alt="Community Avatar"/>
-			<p>{}</p>
-		</div>
+		<CommunityCardContainer onClick={() => community.id !== undefined && on_click(community.id)}>
+			{avatar}
+			<span>{community.name}</span>
+		</CommunityCardContainer>
    )
 }
 
-class __CommunityChat extends React.PureComponent {
+type CommunityChatProps = {
+	token: string;
+}
 
-	componentDidMount() {
+type CommunityChatState = {
+	communities: Community[]
+}
+
+class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityChatState> {
+
+	constructor(props: CommunityChatProps) {
+		super(props);
+
+		this.state = {
+			communities: []
+		}
+	}
+
+	load_communities = async () => {
+		
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`
+				}
+			}
+			let response = await axios.get<Community[]>(`${SERVER_URL}/api/patient/community/`)
+			this.setState({...this.state, communities: response.data})
+
+		} catch(e) {
+			console.log(e);
+		}
 
 	}
 
+	load_community_messages = async (community_id: number) => {
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`,
+			 }
+			}
+			let response = await axios.get(`${SERVER_URL}/api/patient/messages/${community_id}`, config);
+
+		} catch(e) {
+
+		}
+	}
+
+	componentDidMount() {
+		this.load_communities();
+	}
+
 	render() {
+		const { communities } = this.state;
+
+		let communities_list = communities
+			.map((value: Community, index: number) => <CommunityCard community={value} key={index}  on_click={this.load_community_messages}/>)
 		return (
 			<CommunityChatContainer>
-				<div className="communities"></div>
+				<div className="communities">
+					{ communities_list }
+				</div>
 				<div className="chat"></div>
 			</CommunityChatContainer>
 	   )
@@ -123,7 +200,6 @@ export const CommunityChat = __CommunityChat;
 
 
 class __CommunityMembers extends React.PureComponent {
-
 	render() {
 		return (
 			<CommunityMemberContainer></CommunityMemberContainer>	

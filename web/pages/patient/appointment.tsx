@@ -233,6 +233,7 @@ class AppointmentPage extends React.Component<PatientDashboardProps, Appointment
 				primary_action_label="Create appointment"
 				title="Dashboard"
 				center={<AppointmentComponent set_show_dialog={(value) => this.setState({...this.state, show_dialog: value})} token={token} show_dialog={this.state.show_dialog}/>}
+				prefix={"patient"}
 			/>
 				)
 	}
