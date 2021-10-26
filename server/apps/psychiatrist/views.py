@@ -13,7 +13,7 @@ from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer
 @authentication_classes([JWTAuthentication])
 def get_available_appointments(request):
 
-    appointment_queryset = Appointment.objects.filter(status="PENDING")
+    appointment_queryset = Appointment.objects.filter(status="PENDING").order_by('-status')
     return Response(data=PsychiatristAppointmentSerializer(instance=appointment_queryset, many=True).data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])

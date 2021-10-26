@@ -39,8 +39,15 @@ def create_patient_account(request, **kwargs):
 def create_counsellor_account(request, **kwargs):
     serializer = PsychiatrisSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+        therapist_instance = serializer.save()
+        token_pair = ObtainAccessTokenSerializer.get_token(therapist_instance.user)
+        auth_data = {
+                "token": str(token_pair.access_token),
+                "is_whom": is_who(therapist_instance.user)
+                }
+
+        print(auth_data)
+        return Response(status=status.HTTP_201_CREATED, data=auth_data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={ "errors": serializer.errors })
 
@@ -49,7 +56,7 @@ def create_counsellor_account(request, **kwargs):
 @authentication_classes([JWTAuthentication])
 def is_auth(request):
     response_data = { 
-        #"is_who": is_who(request.user), 
+        "is_whom": is_who(request.user), 
         "user_data": dict(get_account(request.user))
     }
     return Response(data=response_data)

@@ -85,11 +85,11 @@ class CommunitySerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     with_who = PsychiatrisSerializer(read_only=True)
+    starter = PatientSerializer(read_only=True)
 
     class Meta:
         model = Appointment
         exclude = ["created_time"]
-        read_only_fields = ["starter"]
 
     def create(self, validated_data):
         return self.Meta.model.objects.create(**validated_data, starter=Patient.objects.get(user=self.context["user"]))

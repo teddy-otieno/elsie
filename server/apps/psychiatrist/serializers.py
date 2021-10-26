@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
-from apps.account.serializers import PsychiatrisSerializer
+from apps.account.serializers import PsychiatrisSerializer, PatientSerializer
 from apps.patients.models import Appointment, Community
 from apps.account.models import Psychiatrist
 
 class PsychiatristAppointmentSerializer(serializers.ModelSerializer):
+    starter = PatientSerializer(read_only=True)
+
     class Meta:
         model = Appointment
         fields = "__all__"

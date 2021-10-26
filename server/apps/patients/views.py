@@ -69,7 +69,7 @@ class AppointmentViewsSet(ModelViewSet):
     #TODO filter
 
     def get_queryset(self):
-        return Appointment.objects.filter(starter__user=self.request.user)
+        return Appointment.objects.filter(starter__user=self.request.user).order_by('status')
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
