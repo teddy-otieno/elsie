@@ -32,15 +32,15 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 
 		this.state = {
 			username: "",
-			password: "",
-			confirm_password: "",
+			password: "helloworld",
+			confirm_password: "helloworld",
 			email_address: "",
-			phone_number: "",
-			f_name: "",
-			l_name: "",
-			date_of_birth: "",
-			qualificatoin: "",
-			university: ""
+			phone_number: "254758551230",
+			f_name: "doe",
+			l_name: "john",
+			date_of_birth: "1978-05-20",
+			qualificatoin: "Masters in psychology",
+			university: "MMU"
 		};
 	}
 
@@ -101,9 +101,9 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			Cookies.set("token", response.data["token"]);
 			let is_whom = response.data['is_whom'];
 			if (is_whom == "patient") {
-				router.push("patient/")
+				router.push("/patient/")
 			} else {
-				router.push("counsellor")
+				router.push("/counsellor/")
 			}
 		} catch (e) {
 			console.log(e);

@@ -201,3 +201,17 @@ export const TextFieldContainer = styled.span`
 	}
     
 `;
+
+
+
+export const AccessDeniedPageContainer = styled.main`
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	span {
+		font-size: 1.8em;
+	}
+`;

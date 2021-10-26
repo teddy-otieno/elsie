@@ -6,17 +6,15 @@ import Image from "next/image";
 import { DashboardLayout } from '../../components/dashboard';
 import 'react-calendar/dist/Calendar.css';
 import { NewPost, NewsFeedContainer, PostCardContainer, CalendarContainer, EventCardContainer } from '../../components/styles/dashboard';
-import { SERVER_URL } from '../../utils';
+import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
 
 
 export type PatientDashboardProps = {
-	username: string;
-	f_name: string;
-	l_name: string;
 	token: string;
-	date_of_birth: string;
-	phone_number: string;
+	is_whom: string;
+	user_data: User;
+	is_valid: boolean;
 };
 
 type Comment = {
@@ -234,21 +232,27 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 
 	render() {
 
-		const {f_name } = this.props;
+		const { user_data, is_valid } = this.props;
 
-		let feed = <NewFeed token={this.props.token} f_name={f_name} />
+		let feed = <NewFeed token={this.props.token} f_name={user_data.f_name} />
 		let calendar = <Calendar token={this.props.token} />
 
 		console.log(this.props);
 
-		return (
-			<DashboardLayout 
-				center={feed} 
-				end={calendar} 
-				title="Dashboard"
-				prefix={"patient"}
-			/>
-		);
+
+		if(is_valid) {
+
+			return (
+				<DashboardLayout 
+					center={feed} 
+					end={calendar} 
+					title="Dashboard"
+					prefix={"patient"}
+				/>
+			);
+		} else {
+			return <AccessDeniedPage />
+		}
 	}
 }
 
@@ -266,7 +270,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	try {
 		let response = await axios.get<PatientDashboardProps>(`${SERVER_URL}/api/auth/is_auth/`, config);
-		return {props: {...response.data, token: auth_token}};
+		return {props: {...response.data, token: auth_token, is_valid: response.data["is_whom"] == "patient"}};
 
 	} catch(e) {
 		context.res.writeHead(302, {"Location": `/`}).end("body");
@@ -276,3 +280,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	}
 }
+

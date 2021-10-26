@@ -3,7 +3,7 @@ import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
-import { SERVER_URL } from '../../utils';
+import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import { Psychiatrist } from '../patient/index';
 import { DashboardLayout } from '../../components/dashboard';
 import { AvailableAppointmentsContainer, AvailableAppointmentCardContainer } from '../../components/styles/dashboard';
@@ -158,20 +158,28 @@ class PendingAppointments extends React.Component<AvailableAppointmentProps, Ava
 export type CounsellorPageProps = {
 	psychiatrist: Psychiatrist;
 	token: string;
+	is_whom: string;
+	is_valid: boolean;
 }
 
 class CounsellorPage extends React.Component<CounsellorPageProps> {
 	render() {
-		return <DashboardLayout 
-			center={ 
-				<div>
-					<AvailableAppointments token={this.props.token}/> 
-					<PendingAppointments token={this.props.token} />
-				</div>
-				}
-			title="Dashboard"
-			prefix={"counsellor"}
-		/>
+		const { is_valid } = this.props;
+
+		if(is_valid) {
+			return <DashboardLayout 
+				center={ 
+					<div>
+						<AvailableAppointments token={this.props.token}/> 
+						<PendingAppointments token={this.props.token} />
+					</div>
+					}
+				title="Dashboard"
+				prefix={"counsellor"}
+			/>
+		} else {
+			return <AccessDeniedPage />
+		}
 	}
 }
 
@@ -189,7 +197,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	try {
 		let response = await axios.get<CounsellorPageProps>(`${SERVER_URL}/api/auth/is_auth/`, config);
-		return { props: {psychiatrist: response.data, token: auth_token} };
+
+		return { props: {psychiatrist: response.data, token: auth_token, is_valid: response.data["is_whom"] === "psychiatrist"} };
 
 	} catch(e) {
 		console.log(e);
