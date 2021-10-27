@@ -153,7 +153,7 @@ type CounsellorCardProps = {
 	name: string;
 }
 
-const CounselorCard: React.FC<CounsellorPageProps> = ({ name }) => {
+const CounselorCard: React.FC<CounsellorCardProps> = ({ name }) => {
   return (
     <CounsellorCardContainer>
       <Image src={Psychiatris1} width={300} height={300} alt="doctor"/>
