@@ -72,12 +72,12 @@ const Home: NextPage = () => {
             </span>
           </div>
           <div className="content">
-            <CounselorCard />
-            <CounselorCard />
-            <CounselorCard />
+            <CounselorCard name="Dr. Jame Wachira" />
+            <CounselorCard name="Dr. Wambui Anastacia"/>
+            <CounselorCard name="Dr. Sylvia"/>
           </div>
         </BestCounselorPage>
-        <FeedbackPage>
+{/*        <FeedbackPage>
           <div className="section-title">
             <h1 className="big-sub-title">What do <span>people</span> think of us?</h1>
           </div> 
@@ -85,7 +85,7 @@ const Home: NextPage = () => {
             <FeedbackCard/>
             <FeedbackCard/>
           </div>
-        </FeedbackPage>
+        </FeedbackPage> */}
         <NewsletterSection>
           <h1 className="big-sub-title">Hi, how can we <span>help you?</span></h1>
           <p>Please fill in the start from beside your privacy and confidentiality are safe under the protection of Psychologoical Code of Ethics</p>
@@ -149,11 +149,15 @@ const reasons_list: Array<ListCardProps> = [
   }
 ]
 
-const CounselorCard: React.FC = () => {
+type CounsellorCardProps = {
+	name: string;
+}
+
+const CounselorCard: React.FC<CounsellorPageProps> = ({ name }) => {
   return (
     <CounsellorCardContainer>
       <Image src={Psychiatris1} width={300} height={300} alt="doctor"/>
-      <p>Dr. John Doe</p>
+      <p>{name}</p>
     </CounsellorCardContainer>
   )
 }

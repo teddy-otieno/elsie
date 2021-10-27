@@ -60,7 +60,7 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 						<Link href={`/${prefix}/appointment`}>Appointments</Link>
 					</li>
 					<li>
-						<Link href={`/${prefix}/community`}>Community</Link>
+						<Link href={`/${prefix}/community`}>Help Groups</Link>
 					</li>
 				</ul>
 			</SideNavigationContainer>

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import {SignUpContainer} from '../components/styles/sign';
 import Layout, {TextField, TopNavigation} from '../components/layout';
 import {PrimaryButton} from "../components/styles/component";
-import {SERVER_URL} from '../utils';
+import {SERVER_URL, is_not_empty} from '../utils';
 import {withRouter, NextRouter} from 'next/router';
 
 type SignUpPageState = {
@@ -19,6 +19,7 @@ type SignUpPageState = {
 
 	qualificatoin: string;
 	university: string;
+	error: string;
 }
 
 type SignUpProps = {
@@ -40,7 +41,8 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			l_name: "john",
 			date_of_birth: "1978-05-20",
 			qualificatoin: "Masters in psychology",
-			university: "MMU"
+			university: "MMU",
+			error: ""
 		};
 	}
 
@@ -63,7 +65,20 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 		} = this.state;
 
 
+
+		if(
+			is_not_empty(username) || 
+			is_not_empty(email_address) ||
+			is_not_empty(f_name) ||
+			is_not_empty(l_name) ||
+			is_not_empty(date_of_birth) ||
+			is_not_empty(l_name)
+		) {
+				this.setState({...this.state, error: "Please fill all the fields"})
+		}
+
 		if(password !== confirm_password) {
+			this.setState({...this.state, error: "passwords dont match"})
 			return
 		}
 
@@ -151,7 +166,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 								<TextField label={"Last Name"} value={l_name} set_value={(value) => this.setState({...this.state, l_name: value})}/>
 							</div>
 							<div className="double-fields-container">
-								<TextField label={"Email Address"} value={email_address} set_value={(value) => this.setState({...this.state, email_address: value})}/>
+								<TextField label={"*Email Address"} value={email_address} set_value={(value) => this.setState({...this.state, email_address: value})}/>
 								<TextField 
 									label={"Phone Number"} 
 									value={phone_number} 
@@ -161,7 +176,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 									/>
 							</div>
 							<div className="double-fields-container">
-								<TextField label={"Username"} value={username} set_value={(value) => this.setState({...this.state, username: value})}/>
+								<TextField label={"*Username"} value={username} set_value={(value) => this.setState({...this.state, username: value})}/>
 								<TextField 
 									label={"Date Of Birth"} 
 									value={date_of_birth} 
@@ -190,7 +205,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 								set_value={(value) => this.setState({...this.state, confirm_password: value})}
 								/>
 							</div>
-
+							{this.state.error !== "" && <p>{this.state.error}</p>}
 							<PrimaryButton onClick={this.sign_up_user}>Register</PrimaryButton>
 						</form>
 						</SignUpContainer>

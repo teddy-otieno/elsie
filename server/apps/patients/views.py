@@ -22,15 +22,18 @@ class PatientPostViewSet(ModelViewSet):
     serializer_class        = PostSerializer
     authentication_classes  = [JWTAuthentication]
 
-
     def get_queryset(self):
         return Post.objects.filter(patient__user=self.request.user)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["user"] = self.request.user
+        return  context
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 def generate_newsfeed(request, *args, **kwargs):
-    posts_queryset = Post.objects.all()
+    posts_queryset = Post.objects.all().order_by("-created_at")
     serializer = FeedPostSerailizer(instance=posts_queryset, many=True)
     return Response(data=serializer.data)
 

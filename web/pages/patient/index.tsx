@@ -1,11 +1,15 @@
-import ReactCalendar from 'react-calendar';
-import axios, { AxiosRequestConfig } from 'axios';
-import { GetServerSideProps } from 'next';
-import React from 'react';
-import Image from "next/image";
+import ReactCalendar from 'react-calendar'
+import axios, { AxiosRequestConfig } from 'axios'
+import { GetServerSideProps } from 'next'
+import React, { useState } from 'react'
+import Image from "next/image"
+import { withRouter } from "next/router"
+
 import { DashboardLayout } from '../../components/dashboard';
+import { TextField, TextArea } from '../../components/layout';
 import 'react-calendar/dist/Calendar.css';
-import { NewPost, NewsFeedContainer, PostCardContainer, CalendarContainer, EventCardContainer } from '../../components/styles/dashboard';
+import { NewPost, NewsFeedContainer, PostCardContainer, CalendarContainer, EventCardContainer, CreatePostComponentContainer } from '../../components/styles/dashboard';
+import { SecondaryButton, PrimaryButton } from "../../components/styles/component";
 import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
 
@@ -15,6 +19,7 @@ export type PatientDashboardProps = {
 	is_whom: string;
 	user_data: User;
 	is_valid: boolean;
+	router: any;
 };
 
 type Comment = {
@@ -42,11 +47,13 @@ type Post = {
 
 type NewsFeedProps = {
 	f_name: string,
-	token: string
+	token: string,
+	router: any;
 }
 
 type NewsFeedState = {
 	posts: Array<Post> 
+	show_dialog: boolean;
 }
 
 export type Psychiatrist = {
@@ -96,6 +103,55 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
 	)
 }
 
+type CreatePostComponentPros = {
+	on_close: () => void;
+	token: string;
+}
+
+type PostDetails = {
+
+}
+
+const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_close}) => {
+	const [title, set_title] = useState("Things will get better")
+	const [text, set_text] = useState("Things will get better someday")
+
+	const publish_post = async () => {
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+			 }
+			}
+
+			let data = {
+				"text": text,
+				"title": title
+			}
+
+			let response = await axios.post(`${SERVER_URL}/api/patient/post/`, data, config)
+			on_close();
+		} catch(e) {
+			console.log(e)
+		}
+	}
+
+	return (
+		<CreatePostComponentContainer>
+			<form>
+				<h3>Write your own post</h3>
+				<TextField 
+					value={title} 
+					set_value={(value) => set_title(value)}
+					label={"Title"}
+				/>
+				<TextArea value={text} set_value={(val) => set_text(val)}/>
+				<SecondaryButton onClick={(e) => {e.preventDefault(); on_close()}} style={{gridArea: "cancel"}}>Cancel</SecondaryButton>
+				<PrimaryButton style={{gridArea: "post"}} onClick={ (e) => {e.preventDefault(); publish_post();} }>Post</PrimaryButton>
+			</form>
+		</CreatePostComponentContainer>
+	)
+}
 
 class NewFeed extends React.PureComponent<NewsFeedProps, NewsFeedState> {
 
@@ -103,7 +159,8 @@ class NewFeed extends React.PureComponent<NewsFeedProps, NewsFeedState> {
 		super(props);
 
 		this.state = {
-			posts: []
+			posts: [],
+			show_dialog: false,
 		};
 	}
 
@@ -136,13 +193,13 @@ class NewFeed extends React.PureComponent<NewsFeedProps, NewsFeedState> {
 
 		return(
 			<NewsFeedContainer>
-				<NewPost>
+				<NewPost onClick={() => this.setState({...this.state, show_dialog: true})}>
 					<span>
 						<p>{`Whats On Your Mind, ${this.props.f_name}?`}</p>
 					</span>
 				</NewPost>
 				{posts}
-
+				{this.state.show_dialog && <CreatePostComponent token={this.props.token} on_close={() => {this.setState({...this.state, show_dialog: false}); this.props.router.reload()}} />}
 			</NewsFeedContainer>
 		)
 	}
@@ -187,9 +244,9 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 			let new_events: Event[] = [];
 
 			if(date_map.get(date_string) === undefined) {
-				let new_events = response.data;
+				new_events = response.data;
 			} else {
-				let new_events = [...date_map.get(date_string)!!, response.data];
+				new_events = [...date_map.get(date_string)!!, ...response.data];
 			}
 			date_map.set(date_string, new_events);
 			this.setState({ ...this.state, events: date_map });
@@ -234,7 +291,7 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 
 		const { user_data, is_valid } = this.props;
 
-		let feed = <NewFeed token={this.props.token} f_name={user_data.f_name} />
+		let feed = <NewFeed router={this.props.router} token={this.props.token} f_name={user_data.f_name} />
 		let calendar = <Calendar token={this.props.token} />
 
 		console.log(this.props);
@@ -256,7 +313,7 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 	}
 }
 
-export default PatientDashboard;
+export default withRouter(PatientDashboard)
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 

@@ -10,6 +10,7 @@ import {
 		TextFieldContainer,
 		SecondaryButton
 } from './styles/component';
+import {LIGHT_GREY} from './styles/theme';
 
 interface ILayoutProps {
 
@@ -121,4 +122,20 @@ export const TextField: React.FC<TextFieldProps> = ({ label, value, set_value, v
 				{(error?.length !== 0) && <p className="error">{error}</p>}
 			</TextFieldContainer>
 			);
+}
+
+export const TextAreaStyle = styled.textarea`
+	border: 2pt solid ${LIGHT_GREY};
+`;
+
+type TextAreaProps = {
+	value: string;
+	set_value: (val: string) => void;
+}
+
+export const TextArea: React.FC<TextAreaProps> = ({value, set_value}) => {
+	return <TextAreaStyle 
+		value={value} 
+		onChange={(event) => set_value(event.target.value)}
+	/>
 }

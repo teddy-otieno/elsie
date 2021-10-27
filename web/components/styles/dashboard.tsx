@@ -110,7 +110,7 @@ export const SideNavigationContainer = styled.nav`
 export const NewsFeedContainer = styled.div`
 	width: 100%;
 	height: 100%;
-	padding: 8pt;
+	padding: 16pt 10%;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -155,7 +155,7 @@ export const PostCardContainer = styled.div`
 	padding: 4pt 12pt;
 	border-radius: 8pt;
 	box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
-	margin-bottom: 4pt;
+	margin-bottom: 8pt;
 
 	.user {
 		padding: 4pt;
@@ -532,3 +532,62 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 	}
 `;
 
+
+export const CreatePostComponentContainer = styled.div`
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-color: #00000033;
+	z-index: 3;
+	top: 0;
+	left: 0;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	form {
+		height: 50%;
+		width: 50%;
+		background-color: white;
+		padding: 8pt;
+		border-radius: 8pt;
+
+		display: grid;
+		grid-template-columns: 1fr 100pt 100pt;
+		grid-template-rows: 32pt 54pt 1fr 32pt;
+
+		row-gap: 4pt;
+		column-gap: 4pt;
+
+		grid-template-areas:
+			"header		header		header"
+			"title		title		title"
+			"content	content content"
+			"space		cancel	post";
+
+		h3 {
+			grid-area: header;
+			text-align: center;
+			font-weight: 500;
+			color: ${PRIMARY_COLOR}
+		}
+
+		span:first-child {
+			grid-area: title;
+		 }
+
+		 textarea {
+			 grid-area: content;
+			 font: inherit;
+		 }
+
+			button:first-child {
+				grid-area: cancel;
+		 }
+
+			button:nth-child(2) {
+				grid-area: post;
+		 }
+	}
+`;

@@ -130,7 +130,11 @@ const button_hover_styles = css`
   box-shadow: 2pt 2pt 16pt ${PRIMARY_COLOR};
 `;
 
-export const PrimaryButton = styled.button`
+type PrimaryButtonProps = {
+	disable?: boolean;
+}
+
+export const PrimaryButton = styled.button<PrimaryButtonProps>`
   ${common_styles}
   background-color: ${PRIMARY_COLOR};
   color: ${SURFACE};
@@ -219,3 +223,5 @@ export const AccessDeniedPageContainer = styled.main`
 		font-size: 1.8em;
 	}
 `;
+
+

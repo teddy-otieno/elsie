@@ -9,18 +9,24 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ["comment", "patient"]
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
+    comments = CommentSerializer(many=True, required=False)
 
     class Meta:
         model = Post
-        fields = "__all__"
+        exclude = ["patient"] 
 
 
     def create(self, validated_data):
-        print(validated_data)
-        comments = validated_data.pop("comments")
-        post_instance = Post.objects.create(**validated_data)
-        comments = [Comment.objects.create(**comment, post=post_instance) for comment in comments]
+        comments = None
+        if "comment" in validated_data:
+            comments = validated_data.pop("comments")
+
+        patient = Patient.objects.get(user=self.context["user"])
+        post_instance = Post.objects.create(**validated_data, patient=patient)
+
+        if comments is not None:
+            comments = [Comment.objects.create(**comment, post=post_instance) for comment in comments]
+
         return post_instance
 
 
