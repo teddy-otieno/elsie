@@ -6,7 +6,7 @@ export const redirect_to = (context: any, path: string, reason: string = "") => 
 	context.res.writeHead(302, {"Location": path}).end("body");
 }
 
-export const SERVER_URL = "http://localhost:8000"
+export const SERVER_URL = "http://127.0.0.1:8000"
 
 export const AccessDeniedPage: React.FC = () => {
 	return (

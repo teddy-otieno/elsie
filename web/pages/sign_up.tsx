@@ -33,15 +33,15 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 
 		this.state = {
 			username: "",
-			password: "helloworld",
-			confirm_password: "helloworld",
+			password: "",
+			confirm_password: "",
 			email_address: "",
-			phone_number: "254758551230",
-			f_name: "doe",
-			l_name: "john",
-			date_of_birth: "1978-05-20",
-			qualificatoin: "Masters in psychology",
-			university: "MMU",
+			phone_number: "",
+			f_name: "",
+			l_name: "",
+			date_of_birth: "",
+			qualificatoin: "",
+			university: "",
 			error: ""
 		};
 	}
