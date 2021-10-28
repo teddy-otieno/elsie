@@ -14,7 +14,14 @@ from .serializers import (
     CommunitySerializer,
     AppointmentSerializer
         )
-from .models import Post, Event, Community, Appointment
+from .models import (
+    Post, 
+    Event, 
+    Community, 
+    Appointment, 
+    CommunityMessage, 
+    CommunityMember
+        )
 
 # Create your views here.
 
@@ -48,6 +55,7 @@ class PublicEventViewSet(ReadOnlyModelViewSet):
 class EventsViewSet(ModelViewSet):
     serializer_class    = EventSerailizer
     authentication      = [JWTAuthentication]
+
 
     def get_queryset(self):
         date_string = self.request.query_params.get('date', None)
@@ -86,13 +94,29 @@ class AppointmentViewsSet(ModelViewSet):
 def messages_view(request, id):
 
     if request.method == "GET":
-        message_queryset = CommunityMessage.objects.filter(community=id)
+        message_queryset = CommunityMessage.objects.filter(community=id).order_by('-sent_at')
         data = CommunityMessageSerializer(instance=message_queryset, many=True).data
         return Response(status=status.HTTP_200_OK, data=data)
 
     else:
-        serializer = CommunityMessageSerializer(data=request.data)
+        serializer = CommunityMessageSerializer(data=request.data, context={"user": request.user, "community": Community.objects.get(pk=id)})
         if serializer.is_valid():
             instance = serializer.save()
             data = CommunityMessageSerializer(instance=instance).data
             return Response(status=status.HTTP_201_CREATED, data=data)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+def register_member_to_community(request, community_id: int, *args, **kwargs):
+        try:
+            CommunityMember.objects.get_or_create(
+                    community=Community.objects.get(pk=community_id),
+                    member=request.user
+                    )
+        except Community.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response()

@@ -7,7 +7,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.patients.models import Appointment, Community
 from apps.account.models import Psychiatrist
-from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer
+from apps.psychiatrist.models import Questionnaire
+from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -48,4 +49,17 @@ class CommunityViewset(ModelViewSet):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context["user"] = self.request.user
+        return context
+
+
+class QuestionaireViewSet(ModelViewSet):
+    serializer_class = QuestionnaireSerializer
+    authentication_classes = [JWTAuthentication]
+
+    def get_queryset(self):
+        return Questionnaire.objects.all()
+
+    def get_serializer_context(self):
+        context =super().get_serializer_context()
+        context['user'] = self.request.user
         return context

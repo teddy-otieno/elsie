@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.account.serializers import PatientSerializer, PsychiatrisSerializer 
+from apps.account.serializers import PatientSerializer, PsychiatrisSerializer , UserSerializer
 from apps.account.models import Patient
 from .models import Post, Comment, Event, Community, CommunityMember, CommunityMessage, Appointment
 
@@ -55,17 +55,21 @@ class EventSerailizer(serializers.ModelSerializer):
 
 
 class CommunityMemberSerializer(serializers.ModelSerializer):
-    member = PatientSerializer(read_only=True)
+    member = UserSerializer(read_only=True)
 
     class Meta:
         model = CommunityMember
         fields = ["member"]
 
 class CommunityMessageSerializer(serializers.ModelSerializer):
-
+    sender = UserSerializer(read_only=True)
     class Meta:
         model = CommunityMessage
-        fields = "__all__"
+        fields = ["message", "sent_at", "sender", "community"]
+        read_only_fields = ["sent_at", "community"]
+
+    def create(self, validated_data):
+        return CommunityMessage.objects.create(**validated_data, sender=self.context["user"], community=self.context["community"])
 
 class CommunitySerializer(serializers.ModelSerializer):
     community_members = CommunityMemberSerializer(many=True)

@@ -33,13 +33,14 @@ class Community(models.Model):
     creator  = models.ForeignKey(to='account.Psychiatrist', on_delete=models.CASCADE)
 
 class CommunityMember(models.Model):
-    member          = models.OneToOneField(to="account.Patient", on_delete=models.CASCADE, related_name="member_of")
+    member          = models.ForeignKey(to="account.MyUser", on_delete=models.CASCADE, related_name="member_of")
     community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="community_members")
     joined_on       = models.DateTimeField(auto_now_add=True)
 
 class CommunityMessage(models.Model):
     message         = models.CharField(max_length=4096)
     sender          = models.ForeignKey(to="account.MyUser", on_delete=models.CASCADE, related_name="messages")
+    sent_at         = models.DateTimeField(auto_now_add=True)
     community       = models.ForeignKey(to="patients.Community", on_delete=models.CASCADE, related_name="chat_room")
 
 class Appointment(models.Model):
