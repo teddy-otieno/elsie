@@ -17,3 +17,4 @@ export const AccessDeniedPage: React.FC = () => {
 }
 
 export const is_not_empty = (text: string) => text !== "";
+export const is_empty = (text: string) => text == "";

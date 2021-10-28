@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import {SignUpContainer} from '../components/styles/sign';
 import Layout, {TextField, TopNavigation} from '../components/layout';
 import {PrimaryButton} from "../components/styles/component";
-import {SERVER_URL, is_not_empty} from '../utils';
+import {SERVER_URL, is_not_empty, is_empty} from '../utils';
 import {withRouter, NextRouter} from 'next/router';
 
 type SignUpPageState = {
@@ -67,12 +67,12 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 
 
 		if(
-			is_not_empty(username) || 
-			is_not_empty(email_address) ||
-			is_not_empty(f_name) ||
-			is_not_empty(l_name) ||
-			is_not_empty(date_of_birth) ||
-			is_not_empty(l_name)
+			is_empty(username) || 
+			is_empty(email_address) ||
+			is_empty(f_name) ||
+			is_empty(l_name) ||
+			is_empty(date_of_birth) ||
+			is_empty(l_name)
 		) {
 				this.setState({...this.state, error: "Please fill all the fields"})
 		}

@@ -226,7 +226,63 @@ export const CommunityChatContainer  = styled.div`
 	}
 
 	.chat {
+		flex-direction: column;
+		background-color: #eeeeee;
+		width: 100%;
+		display: grid;
+		grid-template-rows: 1fr 48pt;
+		height: calc(100vh- 45pt);
 
+		.prev-messages {
+			padding: 8pt;
+			display: flex;
+			flex-direction: column-reverse;
+			overflow-y: auto;
+		}
+
+		.message-input {
+			display: grid;
+			grid-template-columns: 1fr;
+			background-color: ${PRIMARY_VARIANT};
+			padding: 5pt;
+
+			input {
+				font: inherit;
+				border: 1pt solid ${LIGHT_GREY};
+				border-radius: 32pt;
+				padding: 0 8pt;
+			}
+		}
+	}
+`;
+
+type MessageBubbleProps = {
+	is_sender: boolean;
+}
+
+export const MessageBubbleContainer = styled.div<MessageBubbleProps>`
+	display: grid;
+	grid-template-column: 1fr 1fr;
+	grid-template-areas: "left right";
+	width: 100%;
+	margin-bottom: 4pt;
+
+	.message {
+		grid-area: ${(props) => props.is_sender ? "right" : "left"};
+		justify-self: ${(props) => props.is_sender ? "flex-end" : "flex-start"};
+		background-color: ${SURFACE};
+		padding: 4pt 8pt;
+		border-radius: 8pt;
+		box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
+		width: fit-content;
+		display: flex;
+		flex-direction: column;
+
+		span:first-child {
+			font-size: 0.7em;
+			color: ${LIGHT_GREY};
+			text-align: ${(props) => props.is_sender ? "right" : "left"};
+		 }
 	}
 `;
 
@@ -253,7 +309,14 @@ export const CommunityCardContainer = styled.div`
 `;
 
 export const CommunityMemberContainer = styled.div`
-	
+	height: 100%;
+	width: 100%;
+	padding: 4pt;
+	overflow-y: auto;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 `;
 
 export const AppointmentPageContainer = styled.div`

@@ -10,7 +10,7 @@ import {
 		TextFieldContainer,
 		SecondaryButton
 } from './styles/component';
-import {LIGHT_GREY} from './styles/theme';
+import {LIGHT_GREY, SURFACE, BACKGROUND_ALT, SHADOW_COLOR, PRIMARY_COLOR} from './styles/theme';
 
 interface ILayoutProps {
 
@@ -95,17 +95,18 @@ export const InputWithAction: React.FC<InputWithActionProps> = () => {
 type TextFieldProps = {
 	label: string;
 	value: string;
+	className?: string;
 	input_type?: string;
 	set_value: (val: string) => void;
 	validation?: (val: string) => boolean;
 	on_error_message?: string;
 };
 
-export const TextField: React.FC<TextFieldProps> = ({ label, value, set_value, validation, on_error_message, input_type  }: TextFieldProps) => {
+export const TextField: React.FC<TextFieldProps> = ({ className, label, value, set_value, validation, on_error_message, input_type  }: TextFieldProps) => {
 	const [error, set_error] = useState<string|undefined>("");
 
 	return (
-			<TextFieldContainer>
+			<TextFieldContainer className={className}>
 				<p>{label}</p>
 				<input
 					value={value}
@@ -138,4 +139,92 @@ export const TextArea: React.FC<TextAreaProps> = ({value, set_value}) => {
 		value={value} 
 		onChange={(event) => set_value(event.target.value)}
 	/>
+}
+
+
+export const DropDownMenuStyle =  styled.div`
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	margin-bottom: 8pt;
+
+	.item {
+		border: 1pt solid ${LIGHT_GREY};
+		width: 100%;
+		padding: 10pt 8pt;
+		background-color: ${SURFACE};
+		box-sizing: border-box;
+	}
+
+	.menu {
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		top: 100%;
+		width: 100%;
+		background-color: ${SURFACE};
+		padding: 4pt;
+		border-radius: 8pt;
+		box-sizing: border-box;
+		box-shadow: 4pt 4pt 8pt ${SHADOW_COLOR};
+
+		span {
+			display: flex;
+			width: 100%;
+			padding: 10pt 8pt;
+			cursor: pointer;
+			box-sizing: border-box;
+		}
+
+		span:hover {
+			background-color: ${BACKGROUND_ALT};
+		}
+	}
+
+`
+
+type DropDownMenuProps = {
+	items: string[]
+	value?: number;
+	on_item_select: (id: number) => void;
+}
+
+export const DropDownMenu: React.FC<DropDownMenuProps> = ({ items, on_item_select, value }) => {
+	const [selected_item, set_selected] = useState(value ?? 0);
+	const [show_menu, set_show_menu] = useState(false);
+
+	return <DropDownMenuStyle className="drop-down">
+		<span className="item" onClick={() => set_show_menu(!show_menu)}>{items[selected_item]}</span>
+		{show_menu && <div className="menu">
+			{items.map((val: string, index: number) => {
+			 	return <span 
+				 key={index} 
+				 onClick={() => {
+					 set_selected(index); 
+					 set_show_menu(false)
+					 on_item_select(index)
+					}}>{val}</span>
+			})
+			}
+		</div>}
+	</DropDownMenuStyle>
+}
+
+
+
+const RadioButtonStyles = styled.div<{is_clicked: boolean}>`
+	height:24pt;
+	width: 24pt;
+	border: ${ (props) =>  props.is_clicked ? "none"  :  `1pt solid ${LIGHT_GREY}`};
+	border-radius: 50%;
+
+	background-color: ${(props) => props.is_clicked ? PRIMARY_COLOR : "white"};
+`;
+
+export const RadioButton: React.FC<{is_clicked?: boolean, on_click: () => void}> = ({is_clicked, on_click}) => {
+	return <RadioButtonStyles is_clicked={is_clicked === true} onClick={on_click}>
+		
+	</RadioButtonStyles>;
 }

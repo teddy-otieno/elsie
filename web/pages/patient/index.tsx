@@ -14,7 +14,7 @@ import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
 
 
-export type PatientDashboardProps = {
+export interface PatientDashboardProps {
 	token: string;
 	is_whom: string;
 	user_data: User;

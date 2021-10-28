@@ -160,7 +160,7 @@ class PendingAppointments extends React.Component<AvailableAppointmentProps, Ava
 	}
 }
 
-export type CounsellorPageProps = {
+export interface CounsellorPageProps {
 	psychiatrist: Psychiatrist;
 	token: string;
 	is_whom: string;

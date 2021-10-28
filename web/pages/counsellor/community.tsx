@@ -6,18 +6,40 @@ import { DashboardLayout } from "../../components/dashboard";
 import { CommunitiesContainer } from "../../components/styles/psychiatrist";
 import { CounsellorPageProps } from "./index";
 import { SERVER_URL } from "../../utils";
-import { CommunityChat, CommunityMembers } from "../../components/dashboard";
+import { CommunityChat, CommunityMembers, Message } from "../../components/dashboard";
+import {User} from "../patient/index";
 
-export default class Community extends React.Component<CounsellorPageProps> {
+type CommunityPageState = {
+	community_id: number
+	members: User[]
+	messages: Message []
+	communit_id: number
+}
+
+interface CommunityPageProps extends CounsellorPageProps {
+	router: any;
+}
+export default class Community extends React.Component<CommunityPageProps, CommunityPageState> {
 	render() {
+		const { community_id, members } = this.state;
+		const { psychiatrist, token } = this.props;
+
+		let user_data = psychiatrist.user;
+
 		return <DashboardLayout 
-			title="Help Groups"
+			title={"Community"}
+			center={<CommunityChat 
+					set_community_members={(members) => this.setState({...this.state, members: members})}
+					set_community_id={(id) => this.setState({...this.state, community_id: id})} 
+					messages={this.state.messages}
+					set_messages={(messages: Message[]) => this.setState({...this.state, messages: messages})}
+					community_id={community_id} 
+					token={this.props.token} 
+					current_user={user_data}/>
+				}
+			end={<CommunityMembers community_id={community_id} current_user={user_data}  token={token} on_create={() => this.props.router.reload()} members={members}/>}
 			prefix={"counsellor"}
-			center={<CommunityChat token={this.props.token}/>}
-			end={<CommunityMembers />}
-			primary_action={() => {}}
-			primary_action_label={"Create Community"}
-		/>;
+		/>
 	}
 }
 
