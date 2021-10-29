@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.patients.models import Appointment, Community
-from apps.account.models import Psychiatrist
+from apps.account.models import MyUser, Psychiatrist
 from apps.psychiatrist.models import Questionnaire
 from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer
 
@@ -63,3 +64,22 @@ class QuestionaireViewSet(ModelViewSet):
         context =super().get_serializer_context()
         context['user'] = self.request.user
         return context
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def get_patients_stats(request):
+    patients_query_set = MyUser.objects.filter(is_patient=True)
+
+    total_patients = len(patients_query_set)
+
+    last_week = datetime.now() - timedelta(days=7)
+    past_number = len(patients_query_set.filter(created_at__lt=last_week))
+    recent_activity = len(patients_query_set.filter(created_at__gt=last_week))
+
+    data = {
+        "recent_logins": recent_activity,
+        "total_patient": total_patients,
+        "percentage": (recent_activity / past_number if past_number > 0 else 1) * 100
+    }
+
+    return Response(data=data)

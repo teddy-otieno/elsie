@@ -99,11 +99,13 @@ def messages_view(request, id):
         return Response(status=status.HTTP_200_OK, data=data)
 
     else:
-        serializer = CommunityMessageSerializer(data=request.data, context={"user": request.user, "community": Community.objects.get(pk=id)})
+        community_instance = Community.objects.get(pk=id)
+        serializer = CommunityMessageSerializer(data=request.data, context={"user": request.user, "community": community_instance})
         if serializer.is_valid():
             instance = serializer.save()
             data = CommunityMessageSerializer(instance=instance).data
-            return Response(status=status.HTTP_201_CREATED, data=data)
+            CommunityMember.objects.get_or_create(community=community_instance, member=request.user)
+            return Response(status=status.HTTP_201_CREATED, data=CommunityMessageSerializer(instance=instance).data)
 
         return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 

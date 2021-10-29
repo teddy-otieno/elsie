@@ -51,6 +51,7 @@ class MyUser(AbstractUser):
     is_psychiatrist = models.BooleanField(default=False)
     staff       	= models.BooleanField(default=False)
     admin       	= models.BooleanField(default=False)
+    created_at      = models.DateTimeField(auto_created=True)
     date_of_birth   = models.DateField()
     phone_number    = models.CharField(max_length=14, null=True, blank=True)
     
