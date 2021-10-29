@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { GetServerSideProps } from 'next';
 import { withRouter } from 'next/router';
-import {CounsellorPageProps} from './index';
+import {CounsellorPageProps} from './appointment';
 import { SERVER_URL, AccessDeniedPage } from '../../utils';
 
 import { DashboardLayout } from '../../components/dashboard';
@@ -111,7 +111,6 @@ export default class MorePage extends React.PureComponent<CounsellorPageProps, Q
 			return <AccessDeniedPage />
 		}
 	}
-
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

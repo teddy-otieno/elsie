@@ -127,7 +127,7 @@ const common_styles = css`
 `;
 
 const button_hover_styles = css`
-  box-shadow: 2pt 2pt 16pt ${PRIMARY_COLOR};
+  box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
 `;
 
 type PrimaryButtonProps = {
@@ -189,17 +189,18 @@ export const TextFieldContainer = styled.span`
 
   input {
     font: inherit;
-    padding: 8pt;
-    border: 2pt solid ${LIGHT_GREY};
+    padding: 12pt 8pt;
+    border: 1pt solid ${LIGHT_GREY};
 		border-radius: 2pt;
 		width: 100%;
   }
 
   p {
-    font-size: 0.8em;
+    font-size: 0.9em;
 		font-weight: 500;
     margin: 0;
     margin-bottom: 2pt;
+    color: ${LIGHT_FONT};
   }
 
 	.error {

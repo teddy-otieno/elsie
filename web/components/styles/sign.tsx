@@ -1,14 +1,28 @@
 import styled from 'styled-components';
-import { SURFACE } from './theme';
+import { ERROR, LIGHT_FONT, PRIMARY_COLOR, SHADOW_COLOR, SURFACE } from './theme';
 import SmilePhoto from '../../assets/smile.jpg';
 
 export const LoginPageContainer = styled.div`
-	height: calc(100vh - 45pt);
+	height: 100vh;
 	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+	display: grid;
+	grid-template-columns: 30% 1fr;
+	background-image: url("/bridge.jpg");
+	background-color: #000000af;
+	background-size: cover;
+	background-blend-mode: darken;
+	transition: all .4s ease;
+
+	.title {
+		color: ${SURFACE};
+		margin: 0;
+		margin-bottom: 4pt;
+		align-self: center;
+		justify-self: center;
+		font-size: 3em;
+		text-align: center;
+		font-family: 'Playfair Display SC',serif
+	}
 
 	form {
 		background-color: ${SURFACE};
@@ -16,15 +30,24 @@ export const LoginPageContainer = styled.div`
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 30%;
+		justify-content: center;
+		height: 100%;
+		box-shadow: 4pt 4pt 8pt ${SHADOW_COLOR};
+		transition: all .4s ease;
+		box-sizing: border-box;
 
-		h3 {
+
+		h4, .title {
 			text-align: center;
 			font-weight: 500;
 		}
 
 		button {
 			width: 90%;
+		}
+
+		.error_message {
+			color: ${ERROR};
 		}
 	}
 `;

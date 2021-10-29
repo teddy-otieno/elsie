@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LIGHT_GREY, PRIMARY_COLOR, SURFACE, SHADOW_COLOR, BACKGROUND, BACKGROUND_ALT } from './theme';
+import { LIGHT_GREY, PRIMARY_COLOR, SURFACE, SHADOW_COLOR, BACKGROUND, BACKGROUND_ALT, LIGHT_FONT } from './theme';
 
 
 export const CommunitiesContainer = styled.div`
@@ -221,4 +221,60 @@ export const RangeContainer = styled.div`
 			}
 		}
 	}
+`;
+
+
+export const InfoDashContainer = styled.div`
+	padding: 16pt;
+	display: flex;
+`;
+
+const DashCardContainer = styled.div`
+	min-height: 200pt;
+	width: 200pt;
+	border: 1pt solid ${SHADOW_COLOR};
+	border-radius: 8pt;
+	padding: 8pt;
+	transition: all .4s ease;
+	font-size: 1.1em;
+
+	h4 {
+		text-align: center;
+		font-weight: 500;
+		color: ${PRIMARY_COLOR};
+	}
+	.labeled-text {
+		display: grid;
+		grid-template-columns: 1fr .4fr;
+		column-gap: 8pt;
+		padding: 8pt;
+
+		span:first-child {
+			color: ${LIGHT_FONT};
+		}
+
+		.highlight {
+			color: ${PRIMARY_COLOR};
+			font-weight: bold;
+		}
+	}
+
+	&:hover {
+		box-shadow: 4pt 4pt 8pt ${SHADOW_COLOR};
+		transform: translateY(-5pt)
+	}
+
+`;
+
+export const YourQuestionnairesContainer = styled(DashCardContainer)`
+
+	display: grid;
+	grid-template-rows: 1fr 1fr 48pt;
+	span {
+		display: block;
+	}
+`;
+
+export const PatientsCardContainer = styled(DashCardContainer)`
+
 `;

@@ -61,15 +61,24 @@ class LoginPage extends React.PureComponent<LoginPageProps,LoginPageState> {
 
     return (
       <Layout>
-        <TopNavigation/>
         <LoginPageContainer>
           <form>
-            <h3>Login</h3>
-            <TextField label="Username" value={username} set_value={(val) => {this.setState({...this.state, username: val})}} />
-            <TextField label="Password" input_type={"password"}  value={password} set_value={(val) => {this.setState({...this.state, password: val})}} />
+            <h4>Welcome Back</h4>
+            <TextField 
+              label="Username" 
+              on_focus={() => this.setState({...this.state, error_message: null})} 
+              value={username} 
+              set_value={(val) => {this.setState({...this.state, username: val})}} />
+            <TextField 
+              label="Password" 
+              input_type={"password"}  
+              on_focus={() => this.setState({...this.state, error_message: null})} 
+              value={password} set_value={(val) => {this.setState({...this.state, password: val})}} />
             {error_message !== null && <p className="error_message">{error_message}</p>}
             <PrimaryButton onClick={this.login_user}>Login</PrimaryButton>
           </form>
+          
+          <h2 className="title">Elsie Interactive Hospital</h2>
         </LoginPageContainer>
 
       </Layout>

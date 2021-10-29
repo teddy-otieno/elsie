@@ -223,6 +223,17 @@ export const CommunityChatContainer  = styled.div`
 	.communities {
 		border-right: 1pt solid ${LIGHT_GREY};
 		height: calc(100vh - 45pt);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 4pt 0;
+
+		.create {
+			color: ${PRIMARY_COLOR};
+			width: 90%;
+			padding: 8pt 0;
+			text-align: center;
+		}
 	}
 
 	.chat {
@@ -292,9 +303,11 @@ export const CommunityCardContainer = styled.div`
 	column-gap: 4pt;
 	border-bottom: 1pt solid ${LIGHT_GREY};
 	padding: 4pt;
-	height 32pt;
+	height: 36pt;
 	align-items: center;
 	cursor: pointer;
+	width: 100%;
+	box-sizing: border-box;
 
 	.avatar {
 		background-color: ${LIGHT_GREY};
@@ -313,10 +326,24 @@ export const CommunityMemberContainer = styled.div`
 	width: 100%;
 	padding: 4pt;
 	overflow-y: auto;
+	box-sizing: border-box;
 
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	padding: 4pt;
+
+	h5 {
+		color: ${LIGHT_FONT};
+		font-weight: 500;
+		font-size: 0.9em;
+	}
+	span {
+		display: block;
+		border-bottom: 1pt solid ${LIGHT_GREY};
+		width: 100%;
+		padding: 8pt 0;
+	}
 `;
 
 export const AppointmentPageContainer = styled.div`
@@ -448,7 +475,7 @@ export const CreateAppointmentDialogContainer = styled.div`
 	top: 45pt;
 	left: 0;
 	position: absolute;
-	z-index; 3;
+	z-index: 3;
 
 	display: flex; 
 	align-items: center; justify-content: center;
@@ -498,7 +525,7 @@ export const CreateAppointmentDialogContainer = styled.div`
 
 export const AvailableAppointmentsContainer = styled.div`
 	display: flex;
-	height: 100%;
+	min-height: 50vh;
 	width: 100%;
 	padding: 8pt;
 	flex-wrap: wrap;
@@ -652,5 +679,56 @@ export const CreatePostComponentContainer = styled.div`
 			button:nth-child(2) {
 				grid-area: post;
 		 }
+	}
+`;
+
+
+export const CreateNewCommunityContainer = styled.div`
+	position: fixed;
+	top: 0;
+	height: 100vh;
+	width: 100%;
+	background-color: #0000003f;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	div:first-child {
+		height: 36%;
+		width: 30%;
+		background-color: white;
+		padding: 16pt;
+		border-radius: 8pt;
+
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: 1fr 1fr 32pt;
+		column-gap: 8pt;
+		grid-template-areas: 
+			"header header"
+			"name name"
+			"cancel accept"
+			;
+
+		.create {
+			grid-area: name;
+		}
+
+		h4 {
+			grid-area: header;
+			text-align: center;
+			font-weight: 500;
+			font-size: 1.2em;
+			color: ${PRIMARY_COLOR};
+		}
+
+		.main {
+			grid-area: accept;
+		}
+
+		.cancel {
+			grid-area: cancel;
+		}
 	}
 `;

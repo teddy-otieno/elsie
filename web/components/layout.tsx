@@ -100,9 +100,10 @@ type TextFieldProps = {
 	set_value: (val: string) => void;
 	validation?: (val: string) => boolean;
 	on_error_message?: string;
+	on_focus?: () => void;
 };
 
-export const TextField: React.FC<TextFieldProps> = ({ className, label, value, set_value, validation, on_error_message, input_type  }: TextFieldProps) => {
+export const TextField: React.FC<TextFieldProps> = ({ className, label, value, set_value, validation, on_error_message, input_type, on_focus  }: TextFieldProps) => {
 	const [error, set_error] = useState<string|undefined>("");
 
 	return (
@@ -112,6 +113,7 @@ export const TextField: React.FC<TextFieldProps> = ({ className, label, value, s
 					value={value}
 					onChange={(event) => set_value(event.target.value) } 
 					type={input_type === undefined ? "text" : input_type}
+					onFocus={on_focus}
 					onBlur={(event) => {
 						if(validation?.(event.target.value) === false && on_error_message !== undefined) {
 							set_error(on_error_message);

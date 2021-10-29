@@ -59,7 +59,7 @@ type NewsFeedState = {
 export type Psychiatrist = {
 	qualification: string;
 	univerity: string;
-	user: User
+	user_data: User
 }
 
 type Event = {

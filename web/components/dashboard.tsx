@@ -16,12 +16,13 @@ import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboa
 import { User } from "../pages/patient/index";
 
 type DashboardProps = {
-	center: any;
+	center: any
 	end?: any
 	title: string;
 	primary_action?: () => void;
 	primary_action_label?: string;
-	prefix: string;
+	prefix: string
+	dialog?: any
 };
 
 //TODO center should fill the available space if no end component is provided
@@ -36,6 +37,7 @@ class __DashboardLayout extends React.Component<DashboardProps> {
 					<SideNavigation prefix={prefix} />
 					<div>{center}</div>
 					<div>{end}</div>
+					{this.props.dialog}
 				</div>
 			</DashboardContainer>
 		);
@@ -96,11 +98,15 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 
 export const DashboardLayout = __DashboardLayout;
 
-type Community = {
+type Member = {
+	member: User
+}
+
+export type Community = {
 	avatar: string;
 	name: string;
 	id?: number;
-	community_members: User[]
+	community_members: Member[]
 }
 
 export type Message = {
@@ -132,24 +138,14 @@ type CommunityChatProps = {
 	current_user: User,
 	community_id: number,
 	set_community_id: (id: number) => void;
-	set_community_members: (members: User[]) => void;
 	messages: Message[],
 	set_messages: (messages: Message[]) => void;
-}
-
-type CommunityChatState = {
+	create_community?: () => void;
 	communities: Community[],
+	set_communities: (a: Community[]) => void;
 }
 
-class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityChatState> {
-	constructor(props: CommunityChatProps) {
-		super(props);
-
-		this.state = {
-			communities: [],
-		}
-	}
-
+class __CommunityChat extends React.PureComponent<CommunityChatProps> {
 	load_communities = async () => {
 		const { community_id } = this.props;
 
@@ -160,7 +156,7 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 				}
 			}
 			let response = await axios.get<Community[]>(`${SERVER_URL}/api/patient/community/`, config)
-			this.setState({...this.state, communities: response.data})
+			this.props.set_communities(response.data)
 
 		} catch(e) {
 			console.log(e);
@@ -168,8 +164,11 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 
 	}
 
-	componentDidUpdate(prevProps: CommunityChatProps, prevState: CommunityChatState) {
+	componentDidUpdate(prevProps: CommunityChatProps) {
+
+		if(prevProps.community_id !== this.props.community_id) {
 			this.load_community_messages();
+		}
 	}
 
 	load_community_messages = async () => {
@@ -223,13 +222,11 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 	}
 
 	render() {
-		const { communities } = this.state;
-		const { messages, community_id } = this.props;
+		const { messages, community_id, communities} = this.props;
 
 		let communities_list = communities
 			.map((value: Community, index: number) => 
 			<CommunityCard community={value} key={index}  on_click={(val) => {
-				this.props.set_community_members(this.state.communities.find((val: Community) => val.id === community_id)?.community_members ?? []);
 				this.props.set_community_id(val)
 				}}/>)
 
@@ -240,6 +237,11 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 		return (
 			<CommunityChatContainer>
 				<div className="communities">
+					{this.props.create_community !== undefined && 
+						<SecondaryButton 
+							onClick={(e) => {e.preventDefault(); this.props.create_community!!();}} 
+							className="create"
+						>Start Help Group</SecondaryButton> }
 					{ communities_list }
 				</div>
 				<div className="chat">
@@ -295,7 +297,7 @@ type CommunityMemberProps = {
 	current_user: User;
 	token: string;
 	on_create: () => void;
-	members: User[];
+	members: Member[];
 }
 
 type CommunityMemberState = {
@@ -304,39 +306,21 @@ type CommunityMemberState = {
 
 class __CommunityMembers extends React.PureComponent<CommunityMemberProps, CommunityMemberState> {
 
-	constructor(props: CommunityMemberProps) {
-		super(props);
-
-		this.state ={
-			members: []
-		}
-	}
-
-	add_user_to_current_community = async (community_id: number) => {
-
-		try {
-			let config = {
-				headers: {
-					Authorization: `Bearer ${this.props.token}`
-				 }
-			}
-			let response = await axios.get(`${SERVER_URL}/api/patient/register_member/${community_id}/`, config)
-			this.props.on_create()
-		} catch(e) {
-			console.log(e)
-		}
-	}
-
 	is_member = (): boolean => {
-		return this.props.members.find((member: User) => this.props.current_user.username === member.username) != undefined
+		return this.props.members.find((member: Member) => this.props.current_user.username === member.member.username) != undefined
 	}
 
 	render() {
-		const {community_id} = this.props;
+		const {community_id, members} = this.props;
+
+		let member_names = members.map((val: Member, i: number) => {
+			return <span key={i}>{`${val.member.f_name} ${val.member.l_name}`}</span>
+		})
 
 		return (
 			<CommunityMemberContainer>
-				{(this.props.community_id > 0 && !this.is_member()) && <SecondaryButton onClick={(e) =>{e.preventDefault(); this.add_user_to_current_community(community_id)}}>+ Join Community</SecondaryButton>}
+				<h5>Community Members</h5>
+				{member_names}
 			</CommunityMemberContainer>	
 	   );
 	}

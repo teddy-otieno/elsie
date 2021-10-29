@@ -8,7 +8,7 @@ import { PrimaryButton, SecondaryButton } from '../../components/styles/componen
 
 import { CreateQuestionaireComponent, NewQuestionsContainer, QuestionComponentContainer, RangeContainer } from '../../components/styles/psychiatrist';
 import { SERVER_URL } from '../../utils';
-import { CounsellorPageProps } from '../counsellor';
+import { CounsellorPageProps } from '../counsellor/appointment';
 import { Psychiatrist } from '../patient';
 
 type Question = {
