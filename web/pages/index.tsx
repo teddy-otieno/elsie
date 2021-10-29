@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image';
+import {useRouter} from 'next/router';
 import Layout, {InputWithAction, TopNavigation} from '../components/layout';
 import { 
   HomePageLayout, 
@@ -20,6 +21,7 @@ import SampleUserImage from "../assets/user.jpg";
 
 const Home: NextPage = () => {
 
+  const router = useRouter();
   let reasons = reasons_list.map((value: ListCardProps, index: number) => {
     return <ListCard key={index} {...value} />
   });
@@ -38,8 +40,7 @@ const Home: NextPage = () => {
             <aside>
               <h1>Elsie Interactive Mental Health Online Care</h1>
               <div className="actions">
-                <PrimaryButton>Book Now</PrimaryButton>
-                <SecondaryButton>How it works</SecondaryButton>
+                <PrimaryButton onClick={(e) => {e.preventDefault(); router.push("/sign_up");} }>Book Now</PrimaryButton>
               </div>
             </aside>
             <section>
