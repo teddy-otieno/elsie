@@ -48,10 +48,7 @@ export class TopNavigation extends React.PureComponent<{}, TopNavState> {
 	render() {
 		return (
 				<TopNavigationContainer show_url={this.state.show_avatar_menu}>
-					<div>
 						<h3>Elsie Interactive</h3>
-					</div>
-					<div>
 						<ul>
 							<li>
 							<Link href='/'>Home</Link>
@@ -64,6 +61,7 @@ export class TopNavigation extends React.PureComponent<{}, TopNavState> {
 							</li>
 							<li>
 								<div className="avatar" onClick={this.on_avatar_click}>
+									<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
 								</div>
 								<div className="account-menu" >
 									<Link href='/login'>Login</Link>
@@ -72,7 +70,6 @@ export class TopNavigation extends React.PureComponent<{}, TopNavState> {
 								</div>
 							</li>
 					</ul>
-				</div>
 				</TopNavigationContainer>
 				)
 	}

@@ -52,7 +52,8 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
   width: 100%;
   height: 45pt;
   padding: 0pt 12pt;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
@@ -65,15 +66,18 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
 	}
 
   ul {
+    justify-self: flex-end;
     padding: 0;
     margin: 0;
     list-style: none;
     display: flex;
     li {
-      width: 64pt;
       padding: 8pt;
       margin-right: 8pt;
 			position: relative;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
       a {
         color: inherit;
         text-decoration: none;
@@ -92,6 +96,14 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
 		border-radius: 50%;
 		position: relative;
 		cursor: pointer;
+    display: flex;
+     
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      fill: white;
+    }
 	}
 
 	.avatar:hover {
@@ -100,19 +112,20 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
 
 	.account-menu {
 		position: absolute;
-		width: 100pt;
+		width: 160pt;
 		background-color: white;
 		border: 1pt solid ${LIGHT_GREY};
 		box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
 		padding: 4pt;
 		border-radius: 4pt;
-		left: -100%;
+		left: -300%;
+    top: 100%;
 		${(props) => props.show_url ? "display: flex" : "display: none"};
 		flex-direction: column;
 	}
 
 	a {
-		padding: 4pt 8pt;
+		padding: 8pt 8pt;
 		text-align: center;
 	}
 `;
@@ -139,6 +152,13 @@ export const PrimaryButton = styled.button<PrimaryButtonProps>`
   background-color: ${PRIMARY_COLOR};
   color: ${SURFACE};
 
+  ${(props) => {
+    if(props.disable)
+    return css`
+      background-color: ${LIGHT_GREY};
+      pointer-events: none;
+    `;
+  }}
   &:hover {
     ${button_hover_styles}
   }

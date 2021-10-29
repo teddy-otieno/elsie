@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LIGHT_GREY, PRIMARY_COLOR, SURFACE, SHADOW_COLOR, BACKGROUND, BACKGROUND_ALT, LIGHT_FONT } from './theme';
+import { LIGHT_GREY, PRIMARY_COLOR, SURFACE, SHADOW_COLOR, BACKGROUND, BACKGROUND_ALT, LIGHT_FONT, PRIMARY_VARIANT, ERROR } from './theme';
 
 
 export const CommunitiesContainer = styled.div`
@@ -277,4 +277,37 @@ export const YourQuestionnairesContainer = styled(DashCardContainer)`
 
 export const PatientsCardContainer = styled(DashCardContainer)`
 
+`;
+
+export const QuestionnaireCardContainer = styled(DashCardContainer)`
+	cursor: pointer;	
+	height: 200pt;
+	display: grid;
+	grid-template-rows: 48pt 1fr 48pt;
+
+	h5 {
+		font-weight: 500;
+		color: ${LIGHT_FONT};
+	}
+
+	.status {
+		color: ${ERROR};
+		align-self: center;
+		justify-self: center;
+	}
+
+`;
+
+export const ListAvailableQuestionairesContainer = styled.div`
+	padding: 16pt;
+
+	h3 {
+		font-weight: normal;
+		color: ${PRIMARY_COLOR};
+	}
+	.content {
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+	}
 `;

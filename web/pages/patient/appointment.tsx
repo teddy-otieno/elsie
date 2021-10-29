@@ -10,7 +10,7 @@ import { PrimaryButton, SecondaryButton } from "../../components/styles/componen
 import { DashboardLayout } from '../../components/dashboard';
 import { AppointmentPageContainer, AppointmentCardContainer, CreateAppointmentDialogContainer } from '../../components/styles/dashboard';
 import {SERVER_URL} from '../../utils';
-import {PatientDashboardProps, Psychiatrist, Patient} from './index';
+import {PatientDashboardProps, Psychiatrist, Patient, User} from './index';
 import UserAvatar from "../../assets/user.jpg";
 
 import 'react-calendar/dist/Calendar.css';
@@ -35,7 +35,7 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 			return (
 				<div className="title">
 					<Image className="avatar" src={UserAvatar} width={100} height={100} alt="Avatar"/>
-					<span><span className="color-text">Dr.</span> {`${with_who.user.f_name} ${with_who.user.l_name}`}</span>
+					<span><span className="color-text">Dr.</span> {`${with_who.user_data.f_name} ${with_who.user_data.l_name}`}</span>
 				</div>
 					)
 		}
@@ -75,6 +75,7 @@ type AppointmentComponentState = {
 
 type AppointmentComponentProps = {
 	token: string;
+	current_user: User;
 	show_dialog: boolean;
 	set_show_dialog: (value: boolean) => void;
 	router: any;
@@ -85,10 +86,14 @@ type CreateAppointmentState = {
 	hour: string;
 	minute: string;
 	date: Date,
+	amount: number
+	disable_create: boolean
+	transaction_status: string
 }
 
 type CreateAppointmentDialogProps = {
 	token: string;
+	user: User,
 	router: any;
 	close_dialog: () => void;
 	on_cancel: () => void;
@@ -102,7 +107,10 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 		this.state = {
 			hour: "",
 			minute: "",
-			date: new Date()
+			date: new Date(),
+			amount: 2000,
+			disable_create: true,
+			transaction_status: "Proceed"
 		};
 	}
 
@@ -111,7 +119,11 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 		new_date.setHours(parseInt(this.state.hour), parseInt(this.state.minute));
 
 		let request_data = {
-			time: new_date.toISOString()
+			time: new_date.toISOString(),
+			transaction: {
+				t_id: "PC12AX32",
+				amount: this.state.amount
+			}
 		}
 
 		let config = {
@@ -121,11 +133,20 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 		};
 
 		try {
-			let response = axios.post<Appointment>(`${SERVER_URL}/api/patient/appointment/`, request_data, config);
+			let response = await axios.post<Appointment>(`${SERVER_URL}/api/patient/appointment/`, request_data, config);
 			this.props.close_dialog();
 		} catch(e) {
 			console.log("")
 		}
+	}
+
+	proceed_click = (e: any) => {
+		e.preventDefault(); 
+		this.setState({...this.state, transaction_status: "Processing..."})
+
+		setTimeout(() => {
+			this.setState({...this.state, disable_create: false, transaction_status: "Complete"})
+		}, 500)
 	}
 
 	render() {
@@ -158,9 +179,14 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 							/>
 						</div>
 					</div>
+					<div className="payment">
+						<span>{`Billing request for KES ${this.state.amount} has been sent to`}</span>
+						<span style={{fontWeight: 500, }}>{`+${this.props.user.phone_number}`}</span>
+						<SecondaryButton onClick={(e) => {this.proceed_click(e)}}>{this.state.transaction_status}</SecondaryButton>
+					</div>
 
 					<div className="action">
-						<PrimaryButton onClick={this.create_new_appointment}>Book Appointment</PrimaryButton>
+						<PrimaryButton disable={this.state.disable_create}  onClick={this.create_new_appointment}>Book Appointment</PrimaryButton>
 						<SecondaryButton onClick={() => this.props.on_cancel()}>Cancel</SecondaryButton>
 					</div>
 				</div>
@@ -213,6 +239,7 @@ class __AppointmentComponent extends React.Component<AppointmentComponentProps, 
 				</div>
 				{ this.props.show_dialog && 
 					<CreateAppointmentDialog 
+						user={this.props.current_user}
 						token={this.props.token} 
 						on_cancel={() => this.props.set_show_dialog(false)} 
 						close_dialog={() => {
@@ -250,7 +277,7 @@ class AppointmentPage extends React.Component<PatientDashboardProps, Appointment
 				primary_action={() => this.setState({...this.state, show_dialog: true})}
 				primary_action_label="Create appointment"
 				title="Dashboard"
-				center={<AppointmentComponent set_show_dialog={(value) => this.setState({...this.state, show_dialog: value})} token={token} show_dialog={this.state.show_dialog}/>}
+				center={<AppointmentComponent current_user={this.props.user_data} set_show_dialog={(value) => this.setState({...this.state, show_dialog: value})} token={token} show_dialog={this.state.show_dialog}/>}
 				prefix={"patient"}
 			/>
 				)
@@ -272,6 +299,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	try {
 		let response = await axios.get<PatientDashboardProps>(`${SERVER_URL}/api/auth/is_auth/`, config);
+		console.log(response.data)
 		return {props: {...response.data, token: auth_token}};
 
 	} catch(e) {

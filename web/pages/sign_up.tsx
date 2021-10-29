@@ -6,6 +6,7 @@ import Layout, {TextField, TopNavigation} from '../components/layout';
 import {PrimaryButton} from "../components/styles/component";
 import {SERVER_URL, is_not_empty, is_empty} from '../utils';
 import {withRouter, NextRouter} from 'next/router';
+import { PRIMARY_COLOR, ERROR } from '../components/styles/theme';
 
 type SignUpPageState = {
 	username: string;
@@ -74,13 +75,19 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			is_empty(date_of_birth) ||
 			is_empty(l_name)
 		) {
-				this.setState({...this.state, error: "Please fill all the fields"})
+				this.setState({...this.state, error: "Please fill all the fields"});
+				return;
 		}
 
-		if(password !== confirm_password) {
-			this.setState({...this.state, error: "passwords dont match"})
+		if(password.length < 8) {
+			this.setState({...this.state, error: "Password should have more than 8 characters"})
 			return
 		}
+		if(password !== confirm_password) {
+			this.setState({...this.state, error: "Passwords dont match"})
+			return
+		}
+
 
 		let data;
 		let route_suffix;
@@ -205,7 +212,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 								set_value={(value) => this.setState({...this.state, confirm_password: value})}
 								/>
 							</div>
-							{this.state.error !== "" && <p>{this.state.error}</p>}
+							{this.state.error !== "" && <p style={{color: ERROR}}>{this.state.error}</p>}
 							<PrimaryButton onClick={this.sign_up_user}>Register</PrimaryButton>
 						</form>
 						</SignUpContainer>

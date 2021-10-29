@@ -31,6 +31,7 @@ export type User = {
 	f_name: string;
 	l_name: string;
 	username: string;
+	phone_number: string;
 }
 
 export type Patient = {
@@ -88,15 +89,14 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
 				<span>{`${user.f_name} ${user.l_name}`}</span>
 			</span>
 			<div className="post-content">
-				{/* <h5>{post.title}</h5>
-				<p>{post.text}</p> */}
+				<h5>{post.title}</h5>
 				<h4 className="post-title">{post.text}</h4>
 				<p></p>
 			</div>
 			<div className="actions">
-				<span>Like</span>
+				{/* <span>Like</span>
 				<span>Comment</span>
-				<span>Share</span>
+				<span>Share</span> */}
 			</div>
 
 		</PostCardContainer>
@@ -113,8 +113,8 @@ type PostDetails = {
 }
 
 const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_close}) => {
-	const [title, set_title] = useState("Things will get better")
-	const [text, set_text] = useState("Things will get better someday")
+	const [title, set_title] = useState("")
+	const [text, set_text] = useState("")
 
 	const publish_post = async () => {
 		try {

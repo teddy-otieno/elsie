@@ -348,10 +348,14 @@ export const CommunityMemberContainer = styled.div`
 
 export const AppointmentPageContainer = styled.div`
 	height: 100%; width: 100%;
-
+	padding: 16pt;
+	box-sizing: border-box;
+	
 	h1 {
 		font-weight: 500;
+		color: ${PRIMARY_COLOR};
 	}
+
 	.content {
 		width: 100%;
 		height: 100%;
@@ -487,15 +491,27 @@ export const CreateAppointmentDialogContainer = styled.div`
 		padding: 16pt;
 
 		display: grid;
-		grid-template-rows: 1fr 32pt;
+		grid-template-rows: 1fr 1fr 32pt;
 		grid-template-columns: 150pt 150pt 150pt 150pt;
 
 		grid-template-areas: 
 		"calendar calendar desc desc"
+		"calendar calendar transaction transaction"
 		"calendar calendar action action";
 
 		.react-calendar {
 			grid-area: calendar;
+		}
+
+		.payment {
+			grid-area: transaction;
+			display: flex;
+			flex-direction: column;
+
+			span {
+				display: block;
+				margin-bottom: 8pt;
+			}
 		}
 
 		.desc {
