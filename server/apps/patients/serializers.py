@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apps.account.serializers import PatientSerializer, PsychiatrisSerializer , UserSerializer
 from apps.account.models import Patient
-from .models import Post, Comment, Event, Community, CommunityMember, CommunityMessage, Appointment
+from .models import Post, Comment, Event, Community, CommunityMember, CommunityMessage, Appointment, Transaction
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -93,13 +93,21 @@ class CommunitySerializer(serializers.ModelSerializer):
 
         return community_instance
 
+class TransactionSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Transaction
+        fields = "__all__"
 class AppointmentSerializer(serializers.ModelSerializer):
     with_who = PsychiatrisSerializer(read_only=True)
     starter = PatientSerializer(read_only=True)
+    transaction =  TransactionSerializer()
 
     class Meta:
         model = Appointment
         exclude = ["created_time"]
 
     def create(self, validated_data):
-        return self.Meta.model.objects.create(**validated_data, starter=Patient.objects.get(user=self.context["user"]))
+        transaction_data = validated_data.pop('transaction')
+        instance = Transaction.objects.create(**transaction_data)
+        return self.Meta.model.objects.create(**validated_data, transaction=instance, starter=Patient.objects.get(user=self.context["user"]))

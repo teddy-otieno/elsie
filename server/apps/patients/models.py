@@ -9,6 +9,9 @@ class Post(models.Model):
     patient     = models.ForeignKey('account.Patient', on_delete=models.CASCADE)
 
 
+class Transaction(models.Model):
+    t_id = models.CharField(max_length=1024)
+    amount = models.IntegerField()
 class PostLike(models.Model):
     post        = models.ForeignKey('patients.Post', on_delete=models.CASCADE)
     patient     = models.ForeignKey('account.Patient', on_delete=models.CASCADE)
@@ -57,3 +60,4 @@ class Appointment(models.Model):
     with_who    = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="appointment_with", null=True, blank=True)
     time        = models.DateTimeField()
     created_time = models.DateTimeField(auto_now_add=True)
+    transaction = models.OneToOneField(to="patients.Transaction", on_delete=models.SET_NULL, null=True, blank=False, related_name="transaction")
