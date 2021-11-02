@@ -1,12 +1,15 @@
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import React from 'react'
+import Link from 'next/link';
+
 import { PatientDashboardProps } from '.';
 import { DashboardLayout } from '../../components/dashboard';
 import { CounsellorCardContainer } from '../../components/styles';
 import { ListAvailableQuestionairesContainer, PatientsCardContainer, QuestionnaireCardContainer } from '../../components/styles/psychiatrist';
 import { SERVER_URL } from '../../utils';
 import { Questionnaire } from '../questionaires/create-questionaires';
+import { PrimaryButton, SecondaryButton } from '../../components/styles/component';
 
 
 type AvailableQuestionnairesState = {
@@ -34,7 +37,7 @@ class ListAvailableQuestionaires extends React.Component<AvailableQuestionnaires
 				}
 			}
 
-			let response = await axios.get<Questionnaire[]>(`${SERVER_URL}/api/psychiatrist/questionnaires`, config)
+			let response = await axios.get<Questionnaire[]>(`${SERVER_URL}/api/psychiatrist/patient-questionnaires/`, config)
 
 			this.setState({...this.state, questionnaires: response.data})
 
@@ -53,9 +56,11 @@ class ListAvailableQuestionaires extends React.Component<AvailableQuestionnaires
 			return <QuestionnaireCardContainer key={i} >
 					<h5>Title</h5>
 					<span>{val.title}</span>
-					<span className="status">No filled</span>
+					{!val.is_filled && <Link href={`/questionaires/fill_questionaire/?id=${val.id}`} passHref={true}><SecondaryButton>Fill</SecondaryButton></Link>}
+					{val.is_filled && <span>Filled</span>}
 				</QuestionnaireCardContainer>
 		})
+
 		return <ListAvailableQuestionairesContainer>
 				<h3>Available questionnaires to fill</h3>
 				<div className="content">

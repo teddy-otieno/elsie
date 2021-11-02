@@ -71,6 +71,12 @@ export const CreateQuestionaireComponent = styled.div`
 	align-items: center;
 	min-height: 100vh;
 
+	h2 {
+		font-weight: 500;
+		color: ${PRIMARY_COLOR};
+		text-align: center;
+	}
+
 	.title {
 		width: 50%;
 		box-sizing: border-box;
@@ -164,10 +170,15 @@ export const QuestionComponentContainer = styled(NewQuestionsContainer)`
 		grid-row-end: action
 	}
 
+	.answer {
+		grid-row-end: submit !important;
+	}
+
 	.range {
 		display: flex;
 		justify-content: space-evenly;
 		width: 100%;
+		font-size: 0.95em;
 
 		.range-item {
 			display: flex;
@@ -175,12 +186,17 @@ export const QuestionComponentContainer = styled(NewQuestionsContainer)`
 			align-items: center;
 
 			span:first-child {
-				margin-bottom: 4pt;
+				margin-bottom: 8pt;
+				color: #444444;
 			}
 		}
 
+		.range-item:first-child, .range-item:last-child {
+			font-weight: 500;
+			font-size: 1em;
+			color: inherit;
+		}
 	}
-
 `;
 
 export const RangeContainer = styled.div`
@@ -261,7 +277,6 @@ const DashCardContainer = styled.div`
 
 	&:hover {
 		box-shadow: 4pt 4pt 8pt ${SHADOW_COLOR};
-		transform: translateY(-5pt)
 	}
 
 `;
@@ -283,17 +298,24 @@ export const QuestionnaireCardContainer = styled(DashCardContainer)`
 	cursor: pointer;	
 	height: 200pt;
 	display: grid;
-	grid-template-rows: 48pt 1fr 48pt;
+	grid-template-rows: 48pt 1fr 32pt;
+	margin-right: 16pt;
+	box-sizing: border-box;
 
 	h5 {
 		font-weight: 500;
 		color: ${LIGHT_FONT};
 	}
 
-	.status {
-		color: ${ERROR};
-		align-self: center;
-		justify-self: center;
+	button {
+		padding: 0;
+	}
+
+	span:last-child {
+		padding: 8pt;
+		border: 1pt solid ${LIGHT_GREY};
+		text-align: center;
+		color: #888888;
 	}
 
 `;
@@ -306,8 +328,12 @@ export const ListAvailableQuestionairesContainer = styled.div`
 		color: ${PRIMARY_COLOR};
 	}
 	.content {
-		display: flex;
+		display: flex !important;
 		width: 100%;
 		flex-wrap: wrap;
 	}
 `;
+
+export const FillQuestionnairePage = styled.div`
+
+`

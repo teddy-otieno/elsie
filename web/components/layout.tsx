@@ -126,15 +126,18 @@ export const TextField: React.FC<TextFieldProps> = ({ className, label, value, s
 
 export const TextAreaStyle = styled.textarea`
 	border: 2pt solid ${LIGHT_GREY};
+	font: inherit;
 `;
 
 type TextAreaProps = {
 	value: string;
 	set_value: (val: string) => void;
+	className?: string
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({value, set_value}) => {
+export const TextArea: React.FC<TextAreaProps> = ({className, value, set_value}) => {
 	return <TextAreaStyle 
+		className={className}
 		value={value} 
 		onChange={(event) => set_value(event.target.value)}
 	/>

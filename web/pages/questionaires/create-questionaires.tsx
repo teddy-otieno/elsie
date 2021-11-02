@@ -11,7 +11,8 @@ import { SERVER_URL } from '../../utils';
 import { CounsellorPageProps } from '../counsellor/appointment';
 import { Psychiatrist } from '../patient';
 
-type Question = {
+export type Question = {
+	id?: number
 	question: string
 	type: string
 	min: number
@@ -31,6 +32,7 @@ export type Questionnaire = {
 	owner?: Psychiatrist
 	responses?: QuestionnaireResponse[]
 	created_on?: string
+	is_filled?: boolean
 }
 
 type CreateQuestionaireState = {
@@ -251,7 +253,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({question}) => {
 	let range_items = []
 
 	for(let i=question.min ?? 0; i <= (question.max ); i++) {
-		range_items.push(<RangeItem label={i} is_selected={clicked === i} on_selected={() => set_clicked(i)}/>)
+		range_items.push(<RangeItem label={i.toString()} is_selected={clicked === i} on_selected={() => set_clicked(i)}/>)
 	}
 
 	return <QuestionComponentContainer>
@@ -266,7 +268,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({question}) => {
 }
 
 
-const RangeItem: React.FC<{label: number; on_selected: () => void; is_selected: boolean}> = ({label, is_selected, on_selected}) => {
+export const RangeItem: React.FC<{label: string; on_selected: () => void; is_selected: boolean}> = ({label, is_selected, on_selected}) => {
 	return <span className="range-item">
 		<span>{label}</span>
 		<RadioButton on_click={on_selected} is_clicked={is_selected}/> 
