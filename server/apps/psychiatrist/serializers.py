@@ -4,7 +4,7 @@ from apps.account.serializers import PsychiatrisSerializer, PatientSerializer
 from apps.patients.models import Appointment, Community
 from apps.account.models import Psychiatrist
 
-from .models import Questionnaire, Question, QuestionnaireResponses, ShortAnswer
+from .models import Questionnaire, Question, QuestionnaireResponses, QuestionResponse
 
 class PsychiatristAppointmentSerializer(serializers.ModelSerializer):
     starter = PatientSerializer(read_only=True)
@@ -28,7 +28,7 @@ class CommunitySerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        models = ShortAnswer
+        models = Question
         fields = "__all__"
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -42,6 +42,25 @@ class ResponsesSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionnaireResponses
         fields = "__all__"
+
+class PatientQuestionnaireSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    owner = PsychiatrisSerializer(read_only=True)
+
+    class Meta:
+        model = Questionnaire
+        fields = "__all__"
+
+    def to_representation(self, instance: Questionnaire):
+        data = super().to_representation(instance)
+
+        try:
+            instance = QuestionnaireResponses.objects.get(questionnaire=instance.pk).is_filled
+            data["is_filled"] = True
+        except QuestionnaireResponses.DoesNotExist:
+            data["is_filled"] = False
+
+        return data
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)

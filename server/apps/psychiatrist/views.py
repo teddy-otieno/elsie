@@ -1,15 +1,16 @@
 from datetime import datetime, timedelta, timezone
+from re import T
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.patients.models import Appointment, Community
-from apps.account.models import MyUser, Psychiatrist
-from apps.psychiatrist.models import Questionnaire
-from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer
+from apps.account.models import MyUser, Psychiatrist, Patient
+from apps.psychiatrist.models import Question, QuestionResponse, Questionnaire, QuestionnaireResponses
+from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer, ResponsesSerializer, PatientQuestionnaireSerializer
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -64,6 +65,57 @@ class QuestionaireViewSet(ModelViewSet):
         context =super().get_serializer_context()
         context['user'] = self.request.user
         return context
+
+class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
+    serializer_class = PatientQuestionnaireSerializer
+    authentication_classes = [JWTAuthentication]
+
+    def get_queryset(self):
+        return Questionnaire.objects.all()
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+def save_responses(request):
+
+    questionniare_id = request.data.pop('questionnaire_id')
+    responses = request.data.pop("responses")
+    
+    try:
+        questionnaire_instance = Questionnaire.objects.get(pk=questionniare_id)
+
+        question_response = QuestionnaireResponses.objects.get(
+            questionnaire=questionnaire_instance, 
+            is_filled=True, 
+            patient=Patient.objects.get(user=request.user)
+            )
+    except Questionnaire.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data={"message": "Invalid questionnaire"})
+
+    except QuestionnaireResponses.DoesNotExist:
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+    for response in responses:
+        try:
+            question_instance = Question.objects.get(pk=int(response["question_id"]))
+        except Question.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid question"})
+
+        if question_instance.type == "RANGE":
+            QuestionResponse.objects.create(question=question_instance, range_answer=response["response"])
+
+        elif question_instance.type == "SHORTANSWER":
+            QuestionResponse.objects.create(question=question_instance, short_answer=response["response"])
+
+    #Register a response
+    question_response = QuestionnaireResponses.objects.create(
+        questionnaire=questionnaire_instance, 
+        is_filled=True, 
+        patient=Patient.objects.get(user=request.user)
+        )
+
+    return Response(status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])

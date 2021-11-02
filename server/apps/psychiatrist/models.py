@@ -24,11 +24,12 @@ class Question(models.Model):
 	max_label = models.CharField(max_length=1024 * 3, null=True, blank=True)
 
 
-class ShortAnswer(models.Model):
-	question = models.OneToOneField(to="psychiatrist.Question", on_delete=models.CASCADE, related_name="answer")
-	answer = models.CharField(max_length=5 * 1024)
-
 class QuestionnaireResponses(models.Model):
 	questionnaire = models.ForeignKey("psychiatrist.Questionnaire", on_delete=models.CASCADE, related_name="responses")
 	patient = models.ForeignKey("account.Patient", on_delete=models.CASCADE, related_name="questionnaire_responses")
 	is_filled = models.BooleanField(default=False)
+
+class QuestionResponse(models.Model):
+	question = models.ForeignKey("psychiatrist.Question", on_delete=models.CASCADE)
+	range_answer = models.IntegerField(null=True)
+	short_answer = models.CharField(max_length=1024 * 4)
