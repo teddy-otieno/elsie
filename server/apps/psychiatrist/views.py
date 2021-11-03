@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, timezone
-from re import T
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from apps.patients.models import Appointment, Community
+from apps.patients.models import Appointment, Community, Event
 from apps.account.models import MyUser, Psychiatrist, Patient
 from apps.psychiatrist.models import Question, QuestionResponse, Questionnaire, QuestionnaireResponses
 from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer, ResponsesSerializer, PatientQuestionnaireSerializer
@@ -24,12 +23,28 @@ def get_available_appointments(request):
 def accept_appointment(request, id, *args, **kwargs):
 
     if request.method == "POST":
+        meeting_link = request.data.pop("meeting_link", None)
+        if meeting_link is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Meeting link was not provided"})
+
         try:
             psychiatrist_instance = Psychiatrist.objects.get(user=request.user)
             appointment_instance: Appointment =  Appointment.objects.get(pk=id)
             appointment_instance.status = "BOOKED"
+            appointment_instance.meeting_link = meeting_link
             appointment_instance.with_who = psychiatrist_instance
             appointment_instance.save()
+
+
+            # Create event
+            instance, created = Event.objects.get_or_create(
+                time=appointment_instance.time,
+                title="Appointment",
+                description=f"Appointment with Dr. {psychiatrist_instance.user.f_name} {psychiatrist_instance.user.l_name}",
+                owner = psychiatrist_instance
+            )
+
+            if created: instance.save()
 
             return Response()
 

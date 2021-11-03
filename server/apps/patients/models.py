@@ -24,7 +24,7 @@ class Comment(models.Model):
 
 
 class Event(models.Model):
-    date        = models.DateTimeField()
+    time        = models.DateTimeField()
     title       = models.CharField(max_length=256)
     description = models.CharField(max_length=4096)
     is_public   = models.BooleanField(default=False)
@@ -55,9 +55,10 @@ class Appointment(models.Model):
             ("BOOKED", "BOOKED")
             ]
 
-    starter     = models.ForeignKey(to="account.Patient", on_delete=models.CASCADE, related_name="patient_appointments");
-    status      = models.CharField(max_length=10, choices=APPOINTMENT_STATUS, default="PENDING")
-    with_who    = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="appointment_with", null=True, blank=True)
-    time        = models.DateTimeField()
-    created_time = models.DateTimeField(auto_now_add=True)
-    transaction = models.OneToOneField(to="patients.Transaction", on_delete=models.SET_NULL, null=True, blank=False, related_name="transaction")
+    starter         = models.ForeignKey(to="account.Patient", on_delete=models.CASCADE, related_name="patient_appointments");
+    status          = models.CharField(max_length=10, choices=APPOINTMENT_STATUS, default="PENDING")
+    with_who        = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="appointment_with", null=True, blank=True)
+    time            = models.DateTimeField()
+    meeting_link    = models.CharField(max_length=1024, null=True, blank=True) # Note Meeting link can be provided later before the booking day
+    created_time    = models.DateTimeField(auto_now_add=True)
+    transaction     = models.OneToOneField(to="patients.Transaction", on_delete=models.SET_NULL, null=True, blank=False, related_name="transaction")
