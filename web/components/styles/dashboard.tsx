@@ -204,16 +204,62 @@ export const CalendarContainer = styled.div`
 	top: 45pt;
 	padding: 8pt 4pt;
 
-    .events-container {
-        padding: 4pt;
-    }
+	.events-container {
+			padding: 4pt;
+	}
+
+	.calendar-icon {
+		display: block;
+		height: 8pt; width: 8pt;
+		background-color: ${PRIMARY_COLOR};
+		border-radius: 50%;
+		box-shadow: 0pt 0pt 4pt ${PRIMARY_COLOR};
+	}
+
+	.react-calendar__tile {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border-radius: 20%;
+		height: 40pt;
+		width: 40pt;
+		font: inherit;
+	}
 `;
 
 export const EventCardContainer = styled.div`
-    display: flex;
-    border: 1pt solid ${LIGHT_GREY};
-    padding: 8pt 4pt;
+    border: 1pt solid ${PRIMARY_COLOR};
+    padding: 8pt;
     margin-bottom: 4pt;
+		border-radius: 8pt;
+		width: 90%;
+
+		display: grid;
+		grid-template-columns: 1fr 0.4fr;
+		grid-template-rows: 1fr 1fr;
+
+		grid-template-areas: 
+			"title time"
+			"text text";
+
+		h5 {
+			margin: 0;
+			font-weight: 500;
+			color: ${LIGHT_FONT};
+		}
+
+		h5:first-child {
+			grid-area: title;
+		}
+
+		h5:nth-child(2) {
+			grid-area: time;
+			color: ${PRIMARY_COLOR};
+		}
+		p {
+			font-size: 0.9em;
+			grid-area: text;
+		}
 `;
 
 export const CommunityChatContainer  = styled.div`
@@ -386,7 +432,6 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 
 	&:hover {
 		box-shadow: 2pt 2pt 16pt ${SHADOW_COLOR};
-		transform: translateY(-3pt);
 	}
 
 	grid-template-areas: 
@@ -404,6 +449,9 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 			column-gap: 8pt;
 			align-items: center;
 			width: 100%;
+			cursor: pointer;
+			padding: 4pt;
+			border-radius: 4pt;
 
 			div:first-child {
 				height: 32pt;
@@ -415,6 +463,10 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 
 			}
 		}
+
+		/* .title:hover {
+			background-color: ${LIGHT_GREY};
+		} */
 
 		.empty {
 			text-align: center;
@@ -452,9 +504,28 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 			border-radius: 50%;
 			display: flex;
 			align-items: center; justify-content: center;
+			position: relative;
 
+			.link-toast {
+				position: absolute;
+				background-color: white;
+				border: 1pt solid ${LIGHT_GREY};
+				padding: 4pt;
+				border-radius: 4pt;
+				box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
+				top: 100%;
+				left: 100%;
+				display: none;
+				font-size: 0.8em;
+			}
 			svg {
 				fill: ${(props) => props.is_booked ? "inherit" : "grey"};
+			}
+		}
+
+		.video-call:hover {
+			.link-toast {
+				display: block;
 			}
 		}
 		
@@ -553,21 +624,22 @@ type AvailableAppointmentsContainerProps = {
 
 export const AvailableAppointmentCardContainer = styled.div<AvailableAppointmentsContainerProps>`
 	border: 1pt solid ${(props) => props.is_booked ? PRIMARY_COLOR : LIGHT_GREY};
-	height: 200pt;
-	width: 200pt;
+	height: 248pt;
+	width: 248pt;
 	padding: 16pt;
 	border-radius: 8pt;
 	margin: 4pt;
 
 	display: grid;
 	grid-template-columns: 32pt 1fr 1fr 48pt;
-	grid-template-rows: 32pt 1fr 48pt;
+	grid-template-rows: 32pt 1fr 48pt 48pt;
 	row-gap: 16pt;
 	column-gap: 4pt;
 
 	grid-template-areas: 
 		"avatar name name name"
 		"date date time time"
+		"meeting meeting meeting meeting"
 		"pick pick pick action";
 
 	.avatar {
@@ -577,6 +649,10 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 		width: 24t;
 		border-radius: 50%;
 		align-self: center; justify-self: center;
+	}
+
+	.link {
+		grid-area: meeting;
 	}
 
 	.name {
@@ -745,6 +821,46 @@ export const CreateNewCommunityContainer = styled.div`
 
 		.cancel {
 			grid-area: cancel;
+		}
+	}
+`;
+
+export const ConfirmationDialogContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center; justify-content: center;
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	background-color: #00000033;
+
+	.dialog-content {
+		height: 300pt !important;
+		width: 300pt !important;
+		background-color: white;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: unset;
+
+		div {
+			height: 100pt;
+			width: 100pt;
+			background-color: ${PRIMARY_COLOR};
+			display: flex;
+			align-items: center; justify-content: center;
+			border-radius: 50%;
+			margin-bottom: 50pt;
+
+			svg {
+				height: 32pt;
+				width: 32pt;
+				fill: white;
+			}
 		}
 	}
 `;

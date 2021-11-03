@@ -12,6 +12,7 @@ import { AvailableAppointmentsContainer, AvailableAppointmentCardContainer } fro
 import { Appointment } from "../patient/appointment";
 import UserAvatar from "../../assets/user.jpg";
 import { LIGHT_FONT, PRIMARY_COLOR } from '../../components/styles/theme';
+import { TextField } from '../../components/layout';
 
 
 type AvailableAppointmentCardProp = {
@@ -19,12 +20,20 @@ type AvailableAppointmentCardProp = {
 	token: string;
 }
 
+type AvailableAppointmentCardState = {
+	active: boolean
+	meeting_link: string
+}
+
 const CONFIRM_BUTTON = <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
 
 const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appointment, token}) => {
 	let time_object = new Date(appointment.time);
 
-	const [active, set_active] = useState(appointment.status === "BOOKED");
+	const [state, set_state] = useState<AvailableAppointmentCardState>({
+		active: appointment.status === "BOOKED",
+		meeting_link: appointment.meeting_link ?? ""
+	})
 
 	const router = useRouter();
 
@@ -37,8 +46,13 @@ const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appoi
 				 }
 			}
 
-			let response = await axios.post(`${SERVER_URL}/api/psychiatrist/accept-appointment/${appointment.id}/`, undefined, config);
-			set_active(true);
+			//Note meeting links can be provided later
+			let data = {
+				meeting_link: state.meeting_link
+			}
+
+			let response = await axios.post(`${SERVER_URL}/api/psychiatrist/accept-appointment/${appointment.id}/`, data, config);
+			set_state({...state, active: true})
 			router.reload();
 		} catch(e) {
 
@@ -48,7 +62,7 @@ const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appoi
 
 	let starter = appointment.starter.user;
 	return (
-		<AvailableAppointmentCardContainer is_booked={active}>
+		<AvailableAppointmentCardContainer is_booked={state.active}>
 			<Image className="avatar" src={UserAvatar} height={100} width={100} alt="Appointment Start avatar"/> 
 			<div className="name">
 				<span>{`${starter.f_name} ${starter.l_name}`}</span>
@@ -62,7 +76,8 @@ const AvailableAppointmentCard: React.FC<AvailableAppointmentCardProp> = ({appoi
 				<p>{time_object.toLocaleTimeString('en-US')}</p>
 			</div>
 			<span className="status"><span>{appointment.status}</span></span>
-			<span className="confirm" onClick={() => { if(!active) approve_appointment() }}>
+			<TextField className="link" label="Meeting Link" value={state.meeting_link} set_value={(val) => set_state({...state, meeting_link: val})}/>
+			<span className="confirm" onClick={() => { if(!state.active) approve_appointment() }}>
 				<span>{CONFIRM_BUTTON}</span>
 			</span>
 		</AvailableAppointmentCardContainer>

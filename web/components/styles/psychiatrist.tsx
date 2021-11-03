@@ -337,3 +337,26 @@ export const ListAvailableQuestionairesContainer = styled.div`
 export const FillQuestionnairePage = styled.div`
 
 `
+
+
+export const DoctorsDialogContainer  = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	z-index: 10;
+	background-color: #00000033;
+	display: flex;
+	align-items: center; justify-content: center;
+
+	.dialog-content {
+		display: grid;
+		height: 60%;
+		width: 50%;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 4pt;
+		grid-template-rows: 1fr 1fr 1fr;
+		background-color: white;
+	}
+`;

@@ -60,7 +60,7 @@ type NewsFeedState = {
 export type Psychiatrist = {
 	qualification: string;
 	univerity: string;
-	user_data: User
+	user: User
 }
 
 type Event = {
@@ -71,8 +71,8 @@ type Event = {
 }
 
 type CalendarState = {
-	events: Map<string, Event[]>;
-	selected_date: string;
+	events: Event[] 
+	selected_date: Date
 }
 
 type CalendarProps = {
@@ -208,12 +208,15 @@ class NewFeed extends React.PureComponent<NewsFeedProps, NewsFeedState> {
 type EventCardProps = {
     title?: string;
     text: string;
+		time: Date
 }
 
-const EventCard: React.FC<EventCardProps> = ({title, text}) => {
+const EventCard: React.FC<EventCardProps> = ({title, text, time}) => {
     return (
         <EventCardContainer>
-           {text} 
+					 <h5>{title}</h5>
+					 <h5>{time.toLocaleTimeString()}</h5>
+           <p>{text}</p>
         </EventCardContainer>
    )
 }
@@ -224,9 +227,30 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 		super(props);
 
 		this.state = {
-			events: new Map(),
-			selected_date: ""
+			events: [],
+			selected_date: new Date()
 		}
+	}
+
+	load_all_events = async () => {
+
+		const { token } = this.props;
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+			let response = await axios.get<Event[]>(`${SERVER_URL}/api/patient/event/`, config);
+			this.setState({ ...this.state, events: response.data });
+
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
+	componentDidMount() {
+		this.load_all_events();
 	}
 
 	load_events = async (date: Date) => {
@@ -240,16 +264,8 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 
 			let date_string = date.toISOString().substring(0, 10);
 			let response = await axios.get<Event[]>(`${SERVER_URL}/api/patient/event/?date=${date_string}`, config);
-			let date_map = new Map(this.state.events);
-			let new_events: Event[] = [];
-
-			if(date_map.get(date_string) === undefined) {
-				new_events = response.data;
-			} else {
-				new_events = [...date_map.get(date_string)!!, ...response.data];
-			}
-			date_map.set(date_string, new_events);
-			this.setState({ ...this.state, events: date_map });
+			
+			this.setState({ ...this.state, events: [...response.data] });
 
 		} catch(e) {
 			console.log(e);
@@ -258,32 +274,44 @@ class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
 
 	render() {
 		const {selected_date, events} = this.state;
-		const event_cards = events.get(selected_date)?.map((value: Event, index: number) => {
-			return <EventCard key={index} text={value.title}/>
-		});
+		const event_cards = events
+			.filter((val: Event) => string_to_date(val.time).getDate() === selected_date.getDate())
+			.map((value: Event, index: number) => { return <EventCard key={index} title={value.title} text={value.description} time={string_to_date(value.time)}/> });
 
 		return(
 			<CalendarContainer>
-			    <ReactCalendar
-				onClickDay={(value, _) => {
-					this.load_events(value)
-					this.setState({...this.state, selected_date: value.toISOString().substring(0, 10)});
+				<ReactCalendar
+					onClickDay={(value, _) => {
+					this.setState({...this.state, selected_date: value});
+				}}
+				tileContent={({activeStartDate, date, view}) => {
+					for(let i = 0; i < this.state.events.length; i++) {
+						let i_event = this.state.events[i]
+						if(string_to_date(i_event.time).toDateString() === date.toDateString()) {
+							return <div className="calendar-icon"></div>
+						}
+					}
+
+					return null
 				}}
 				/>	
-                <div>
-                    <h3>Events</h3>
-                    <div className="event-container">
+					<div>
+					<h3>Events</h3>
+					<div className="event-container">
 					{event_cards?.length === 0 || event_cards === undefined ? (
-						<span className="dimmed-text">Not events</span>
-						) : (event_cards)
+							<span className="dimmed-text">Not events</span>
+							) : (event_cards)
 					}
-                    </div>
-                </div>
-			</CalendarContainer>
+				</div>
+					</div>
+					</CalendarContainer>
 		)
 	}
 }
 
+const string_to_date = (date_string: string): Date => {
+	return new Date(date_string)
+}
 class PatientDashboard extends React.Component<PatientDashboardProps> {
 	create_new_appointment = async () => { }
 

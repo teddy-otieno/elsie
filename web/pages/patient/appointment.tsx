@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactCalendar from 'react-calendar';
 import { GetServerSideProps } from 'next';
@@ -8,7 +8,13 @@ import Image from "next/image";
 import {TextField} from '../../components/layout';
 import { PrimaryButton, SecondaryButton } from "../../components/styles/component";
 import { DashboardLayout } from '../../components/dashboard';
-import { AppointmentPageContainer, AppointmentCardContainer, CreateAppointmentDialogContainer } from '../../components/styles/dashboard';
+import { 
+	AppointmentPageContainer, 
+	AppointmentCardContainer, 
+	CreateAppointmentDialogContainer,
+	ConfirmationDialogContainer
+} from '../../components/styles/dashboard';
+import { DoctorsDialogContainer } from '../../components/styles/psychiatrist';	
 import {SERVER_URL} from '../../utils';
 import {PatientDashboardProps, Psychiatrist, Patient, User} from './index';
 import UserAvatar from "../../assets/user.jpg";
@@ -21,25 +27,43 @@ export type Appointment = {
     time: string;
     starter: Patient;
     with_who: Psychiatrist;
+		meeting_link?: string;
+}
+
+export type AppointmentCardState = {
+	show_doctors_dialog: boolean
 }
 
 const VIDEO_CALL_ICON =  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg>
 
-const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with_who}) => {
+const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with_who, meeting_link}) => {
+	const [state, set_state] = useState<AppointmentCardState>({
+		show_doctors_dialog: false,
+	});
+
 	let time_object = new Date(time);
 
+	const show_dialog = () => {
+		set_state({...state, show_doctors_dialog: true})
+	}
+	
 	const show_psychiatrist = () => {
+		console.log(with_who)
 		if(with_who === null) {
 				return <h3 className="empty">Pending Psychiatrist approval</h3>
 		} else {
 			return (
-				<div className="title">
+				<div className="title" onClick={show_dialog}>
 					<Image className="avatar" src={UserAvatar} width={100} height={100} alt="Avatar"/>
-					<span><span className="color-text">Dr.</span> {`${with_who.user_data.f_name} ${with_who.user_data.l_name}`}</span>
+					<span><span className="color-text">Dr.</span> {`${with_who.user.f_name} ${with_who.user.l_name}`}</span>
 				</div>
 					)
 		}
 	};
+
+	const open_video_call = async () => {
+		//Note open link just a few hours before 
+	}
 
 	return (
 		<AppointmentCardContainer is_booked={status === "BOOKED"}>
@@ -61,10 +85,12 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 
 			<div className="status">
 				<span className="status-label">{status}</span>
-				<span className="video-call">
+				<span className="video-call" onClick={open_video_call}>
 					{VIDEO_CALL_ICON}
+					<div className="link-toast">{meeting_link}</div>
 				</span>
 			</div>
+			{ state.show_doctors_dialog && <DoctorsDialog /> }
 		</AppointmentCardContainer>
 			)
 }
@@ -89,6 +115,7 @@ type CreateAppointmentState = {
 	amount: number
 	disable_create: boolean
 	transaction_status: string
+	show_confirmation_dialog: boolean
 }
 
 type CreateAppointmentDialogProps = {
@@ -97,6 +124,18 @@ type CreateAppointmentDialogProps = {
 	router: any;
 	close_dialog: () => void;
 	on_cancel: () => void;
+}
+
+class DoctorsDialog extends React.Component {
+	render() {
+		return <DoctorsDialogContainer>
+			<div className="dialog-content">
+				<Image src={UserAvatar} alt="Avatar" />
+				<p className="title">{`Dr. John Doe`}</p>
+				<p className="bio">{`Dr. John Doe`}</p>
+			</div>
+		</DoctorsDialogContainer>
+	}
 }
 
 class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogProps, CreateAppointmentState> {
@@ -110,7 +149,8 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 			date: new Date(),
 			amount: 2000,
 			disable_create: true,
-			transaction_status: "Proceed"
+			transaction_status: "Proceed",
+			show_confirmation_dialog: false
 		};
 	}
 
@@ -134,7 +174,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 
 		try {
 			let response = await axios.post<Appointment>(`${SERVER_URL}/api/patient/appointment/`, request_data, config);
-			this.props.close_dialog();
+			this.setState({...this.state, show_confirmation_dialog: true})
 		} catch(e) {
 			console.log("")
 		}
@@ -144,9 +184,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 		e.preventDefault(); 
 		this.setState({...this.state, transaction_status: "Processing..."})
 
-		setTimeout(() => {
-			this.setState({...this.state, disable_create: false, transaction_status: "Complete"})
-		}, 500)
+		this.setState({...this.state, disable_create: false, transaction_status: "Complete"})
 	}
 
 	render() {
@@ -189,6 +227,16 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 						<PrimaryButton disable={this.state.disable_create}  onClick={this.create_new_appointment}>Book Appointment</PrimaryButton>
 						<SecondaryButton onClick={() => this.props.on_cancel()}>Cancel</SecondaryButton>
 					</div>
+
+					{
+						this.state.show_confirmation_dialog && 
+						<ConfirmationDialog 
+							message={"Your appointment has been booked"} 
+							on_timeout={() => {
+								this.setState({...this.state, show_confirmation_dialog: false}) 
+								this.props.close_dialog()
+							}}/>
+					}
 				</div>
 			</CreateAppointmentDialogContainer>
 		)
@@ -196,6 +244,28 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 }
 
 const CreateAppointmentDialog = withRouter(__CreateAppointmentDialog);
+
+
+type ConfirmationDialogProps = {
+	message: string
+	on_timeout: () => void;
+}
+
+const DONE_BUTTON = <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, on_timeout }) => {
+
+	useEffect(() => {
+		setTimeout(() => { on_timeout() }, 1200)
+	}, [on_timeout])
+
+	return <ConfirmationDialogContainer>
+		<div className="dialog-content">
+			<div>{DONE_BUTTON}</div>
+			<h3>{message}</h3>
+		</div>
+	</ConfirmationDialogContainer>
+}
 
 class __AppointmentComponent extends React.Component<AppointmentComponentProps, AppointmentComponentState> {
 	constructor(props: AppointmentComponentProps) {
@@ -243,7 +313,6 @@ class __AppointmentComponent extends React.Component<AppointmentComponentProps, 
 						token={this.props.token} 
 						on_cancel={() => this.props.set_show_dialog(false)} 
 						close_dialog={() => {
-							this.props.set_show_dialog(false) 
 							this.props.router.reload()
 							}}
 						/> 

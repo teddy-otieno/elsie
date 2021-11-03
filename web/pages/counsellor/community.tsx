@@ -88,7 +88,7 @@ class CommunityComponent extends React.Component<CommunityPageProps, CommunityPa
 		const { community_id, communities } = this.state;
 		const { psychiatrist, token } = this.props;
 
-		let user_data = psychiatrist.user_data;
+		let user_data = psychiatrist.user;
 
 		return <DashboardLayout 
 			title={"Community"}

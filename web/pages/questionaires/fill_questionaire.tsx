@@ -66,7 +66,6 @@ type ShortAnswerProps = {
 const ShortAnswerQuestion: React.FC<ShortAnswerProps> = ({ question, on_answer }) => {
 
 	const [state, set_state] = useState<ShortAnswerQuestionState>({answer: ""})
-	
 	return <QuestionComponentContainer>
 			<p className="question">{question.question}</p>
 			<TextArea 
@@ -126,8 +125,14 @@ class FillQuestionnaire extends React.PureComponent<FillQuestionnaireProps, Fill
 				responses: responses
 			}
 
+			this.setState({...this.state, sending_state: "Submitting..."})
 			let response = await axios.post(`${SERVER_URL}/api/psychiatrist/save-response/`, data, config)
-			this.props.router.push('/patient/more')
+			
+			this.setState({...this.state, sending_state: "Done"})
+
+			setTimeout(() => {
+				this.props.router.push('/patient/more')
+			}, 400)	
 
 		} catch(e) {
 			console.log(e)
