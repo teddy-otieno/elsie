@@ -150,3 +150,22 @@ def get_patients_stats(request):
     }
 
     return Response(data=data)
+
+
+@api_view(['GET'])
+@authentication_classes({JWTAuthentication})
+def get_questionnaire_stats(request):
+
+    questionnaire_queryset = Questionnaire.objects.filter(is_active=True, owner=Psychiatrist.objects.get(user=request.user))
+    active_questionnaire = len(questionnaire_queryset)
+
+    total_responses = 0
+
+    for questionnaire in questionnaire_queryset:
+        total_responses += len(QuestionnaireResponses.objects.filter(questionnaire=questionnaire))
+
+    data = {
+        "active": active_questionnaire,
+        "responses": total_responses
+    }
+    return Response(data=data)

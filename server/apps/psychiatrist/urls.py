@@ -8,7 +8,8 @@ from .views import (
     get_available_appointments, 
     accept_appointment, 
     CommunityViewset, 
-    get_patients_stats, 
+    get_patients_stats,
+    get_questionnaire_stats, 
     save_responses,
     PatientQuestionnaireViewSet
 )
@@ -25,7 +26,8 @@ urlpatterns = [
         path('available-appointments/', get_available_appointments),
         path('accept-appointment/<int:id>/', accept_appointment),
         path('patients-stats/', get_patients_stats),
-        path('save-response/', save_responses)
+        path('save-response/', save_responses),
+        path('questionnaire-stats', get_questionnaire_stats)
         ] 
 
 urlpatterns += viewset_routes()

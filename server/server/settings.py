@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_extensions',
+    'django_crontab',
     'corsheaders',
     'apps.account',
     'apps.patients',
@@ -76,7 +77,6 @@ TEMPLATES = [
         },
     },
 ]
-
 AUTH_USER_MODEL = "account.MyUser"
 
 REST_FRAMEWORK = {
@@ -133,7 +133,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -149,3 +149,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=2),
 }
+
+CRONJOBS = [ ('0 1 * * *', 'apps.psychiatrist.cron.send_reminders') ]

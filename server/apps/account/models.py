@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 # Create your models here.
@@ -10,13 +11,13 @@ class UserManager(BaseUserManager):
         email = kwargs.pop("email")
         password = kwargs.get("password")
 
-        if email is None or username is None:
-            raise ValueError("User must have an email and username")
+        if email is None:
+            raise ValueError("User must have an email")
 
         if password is None:
             raise ValueError("Password was not provided")
 
-        user = self.model(email=self.normalize_email(email), **kwargs)
+        user = self.model(email=self.normalize_email(email), username=email, **kwargs)
         user.set_password(password)
         user.save()
         return user
@@ -43,7 +44,6 @@ class UserManager(BaseUserManager):
 class MyUser(AbstractUser):
     avatar      	= models.ImageField(null=True)
     email       	= models.EmailField(unique=True, max_length=255)
-    username    	= models.CharField(max_length=8, unique=True)
     f_name      	= models.CharField(max_length=256)
     l_name      	= models.CharField(max_length=256)
     is_active   	= models.BooleanField(default=True)
@@ -51,20 +51,21 @@ class MyUser(AbstractUser):
     is_psychiatrist = models.BooleanField(default=False)
     staff       	= models.BooleanField(default=False)
     admin       	= models.BooleanField(default=False)
-    created_at      = models.DateTimeField(auto_created=True)
+    created_at      = models.DateTimeField(auto_now_add=True)
     date_of_birth   = models.DateField()
     phone_number    = models.CharField(max_length=14, null=True, blank=True)
     
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     objects = UserManager()
 
 class Psychiatrist(models.Model):
-    qualifications = models.CharField(max_length=256)
-    university = models.CharField(max_length=256)
-
-    user = models.OneToOneField(to=MyUser, on_delete=models.CASCADE, related_name="psychiatrist")
+    qualifications  = models.CharField(max_length=256)
+    university      = models.CharField(max_length=256)
+    bio             = models.TextField(default="")
+    rating          = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    user            = models.OneToOneField(to=MyUser, on_delete=models.CASCADE, related_name="psychiatrist")
 
 
 class Patient(models.Model):

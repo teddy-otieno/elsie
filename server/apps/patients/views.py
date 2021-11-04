@@ -60,7 +60,7 @@ class EventsViewSet(ModelViewSet):
     def get_queryset(self):
         date_string = self.request.query_params.get('date', None)
         if date_string is None:
-            return Event.objects.all()
+            return Event.objects.filter()
         
         date = datetime.strptime(date_string, "%Y-%m-%d").date()
         return Event.objects.filter(date=date)
