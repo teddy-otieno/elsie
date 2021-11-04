@@ -63,6 +63,7 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 
 	const open_video_call = async () => {
 		//Note open link just a few hours before 
+		window.open(meeting_link, '_blank')?.focus()
 	}
 
 	return (
