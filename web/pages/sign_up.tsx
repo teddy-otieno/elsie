@@ -56,7 +56,6 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			username,
 			password,
 			email_address,
-			phone_number,
 			f_name,
 			l_name,
 			date_of_birth,
@@ -68,7 +67,6 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 
 
 		if(
-			is_empty(username) || 
 			is_empty(email_address) ||
 			is_empty(f_name) ||
 			is_empty(l_name) ||
@@ -98,7 +96,6 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			email: email_address,
 			f_name: f_name,
 			l_name: l_name,
-			phone_number: phone_number,
 			date_of_birth: date_of_birth
 		}
 
@@ -174,16 +171,6 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 							</div>
 							<div className="double-fields-container">
 								<TextField label={"*Email Address"} value={email_address} set_value={(value) => this.setState({...this.state, email_address: value})}/>
-								<TextField 
-									label={"Phone Number"} 
-									value={phone_number} 
-									set_value={(value) => this.setState({...this.state, phone_number: value})}
-									validation={(value) => (/254\d{9}/).test(value)}
-									on_error_message="Invalid phone number"
-									/>
-							</div>
-							<div className="double-fields-container">
-								<TextField label={"*Username"} value={username} set_value={(value) => this.setState({...this.state, username: value})}/>
 								<TextField 
 									label={"Date Of Birth"} 
 									value={date_of_birth} 

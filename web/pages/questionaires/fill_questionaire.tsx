@@ -69,6 +69,7 @@ const ShortAnswerQuestion: React.FC<ShortAnswerProps> = ({ question, on_answer }
 	return <QuestionComponentContainer>
 			<p className="question">{question.question}</p>
 			<TextArea 
+				label="Short Answer"
 				className="short-answer answer" 
 				value={state.answer} 
 				set_value={(val) => {

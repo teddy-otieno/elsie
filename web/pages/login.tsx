@@ -37,7 +37,7 @@ class LoginPage extends React.PureComponent<LoginPageProps,LoginPageState> {
     if(this.state.username.length === 0 && this.state.password.length === 0) return;
 
     let data = {
-      username: this.state.username,
+      email: this.state.username,
       password: this.state.password
     };
 
@@ -65,7 +65,7 @@ class LoginPage extends React.PureComponent<LoginPageProps,LoginPageState> {
           <form>
             <h4>Welcome Back</h4>
             <TextField 
-              label="Username" 
+              label="Email Address" 
               on_focus={() => this.setState({...this.state, error_message: null})} 
               value={username} 
               set_value={(val) => {this.setState({...this.state, username: val})}} />

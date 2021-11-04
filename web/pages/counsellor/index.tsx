@@ -6,11 +6,47 @@ import { AccessDeniedPage, SERVER_URL } from '../../utils';
 import { CounsellorPageProps } from './appointment';
 import { InfoDashContainer, PatientsCardContainer, YourQuestionnairesContainer } from '../../components/styles/psychiatrist';
 
-const YouQuestionnaires: React.FC = () => {
+
+type YouQuestionnairesProps = {
+	token: string
+}
+
+type YouQuestionnaireStatsState = {
+	active: number
+	responses: number
+}
+
+const YouQuestionnaires: React.FC<YouQuestionnairesProps> = ({ token }) => {
+	const [state, set_state] = useState<YouQuestionnaireStatsState>({active: 0, responses: 0})
+
+	const load_questionnaires_data = async () => {
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+			let response = await axios.get<YouQuestionnaireStatsState>(`${SERVER_URL}/api/psychiatrist/questionnaire-stats`, config);
+			set_state(response.data)
+		}	 catch (e) {
+			console.log(e)
+		}
+	}
+
+	useEffect(() => {
+		load_questionnaires_data()
+	}, [])
+
 	return <YourQuestionnairesContainer>
 		<h4>Questionnaire</h4>
-		<span>Active questionnaires</span>
-		<span>Responses</span>
+		<div className="labeled-text">
+			<span>Active Questionnaires</span>
+			<span>{state.active}</span>
+		</div>
+		<div className="labeled-text">
+			<span>Total Responses</span>
+			<span className="highlight">{`${state.responses}`}</span>
+		</div>
 	</YourQuestionnairesContainer>
 }
 
@@ -63,6 +99,7 @@ class InfoDash extends React.Component<{token: string}> {
 	render() {
 		return <InfoDashContainer>
 			<PatientsCard token={this.props.token}/>
+			<YouQuestionnaires token={this.props.token}/>
 		</InfoDashContainer>
 	}
 }

@@ -39,6 +39,21 @@ export const LayoutContainer = styled.div`
 		}
 	}
 
+	.react-calendar {
+		border: 1pt solid ${LIGHT_GREY};
+		border-radius: 8pt;
+	}
+
+	.react-calendar__tile {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border-radius: 20%;
+		height: 40pt;
+		width: 40pt;
+		font: inherit;
+	}
+
 `;
 
 

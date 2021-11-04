@@ -163,7 +163,7 @@ export const QuestionComponentContainer = styled(NewQuestionsContainer)`
 		font-size: 1.2em;
 	}
 
-	.short-answer, .range{
+	.short-answer, .range, .answer{
 		grid-column-start: answer;
 		grid-column-end: answer;
 		grid-row-start: answer;
@@ -171,7 +171,7 @@ export const QuestionComponentContainer = styled(NewQuestionsContainer)`
 	}
 
 	.answer {
-		grid-row-end: submit !important;
+		align-items: flex-start !important;
 	}
 
 	.range {
@@ -253,6 +253,7 @@ const DashCardContainer = styled.div`
 	padding: 8pt;
 	transition: all .4s ease;
 	font-size: 1.1em;
+	margin-right: 8pt;
 
 	h4 {
 		text-align: center;
@@ -351,12 +352,123 @@ export const DoctorsDialogContainer  = styled.div`
 	align-items: center; justify-content: center;
 
 	.dialog-content {
-		display: grid;
 		height: 60%;
 		width: 50%;
-		grid-template-columns: 1fr 1fr;
-		column-gap: 4pt;
-		grid-template-rows: 1fr 1fr 1fr;
 		background-color: white;
+		border-radius: 8pt;
+		padding: 8pt;
+
+		display: grid;
+		column-gap: 4pt;
+		grid-template-columns: 1fr 0.7fr 0.3fr;
+		grid-template-rows: 32pt 1fr 32pt;
+		grid-template-areas: 
+			"image name name"
+			"image bio bio"
+			"image ratings confirm";
+
+		div:first-child {
+			grid-area: image;
+		}
+
+		p{
+			margin: 0;
+			padding: 8pt;
+
+			 span {
+				 color: ${PRIMARY_COLOR};
+			 }
+		}
+		.title {
+			grid-area: name;
+			font-weight: 500;
+			font-size: 1.2em;
+		}
+
+		.bio {
+			grid-area: bio;
+
+			h5 {
+				font-weight: 500;
+				color: ${LIGHT_FONT};
+			}
+		}
+
+		.ratings{
+			grid-area: ratings;
+		}
+
+		.approve {
+			grid-area: confirm;
+		}
+
+	}
+`;
+
+export const RatingComponentContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 4pt;
+	box-sizing: border-box;
+	justify-content: center;
+
+	div {
+		display: flex;
+		align-items: center;
+	}
+
+	h5 {
+		font-weight: 500;
+		margin: 0;
+		margin-bottom: 4pt;
+		color: ${LIGHT_FONT};
+	}
+
+	.rating-item {
+		display: block;
+		border-radius: 50%;
+		border: 2pt solid ${PRIMARY_COLOR};
+
+		height: 10pt; width: 10pt;
+		margin-right: 4pt;
+	}
+
+	.colored {
+		background-color: ${PRIMARY_COLOR};
+		border: 1pt solid ${PRIMARY_COLOR};
+	}
+`;
+
+
+export const UpdateCounsellorDataContainer = styled.div`
+	width: 100%;
+	min-height: calc(100vh - 45pt);
+	padding: 100pt;
+	box-sizing: border-box;
+
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: 100pt 100pt; 
+	grid-template-areas: 
+		"avatar avatar 	email email email"
+		"bio		bio 		bio 	bio		bio"
+		"password		passwodd 		password 	confirm		confirm";
+
+	div:first-child {
+		grid-area: avatar;
+		width: 100pt;
+		height: 100pt;
+		div {
+			border-radius: 50%;
+		}
+	}
+
+	.email{
+		grid-area: email;
+	}
+
+	.bio {
+		grid-area: bio;
 	}
 `;

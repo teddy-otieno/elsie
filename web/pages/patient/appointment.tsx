@@ -12,9 +12,9 @@ import {
 	AppointmentPageContainer, 
 	AppointmentCardContainer, 
 	CreateAppointmentDialogContainer,
-	ConfirmationDialogContainer
+	ConfirmationDialogContainer,
 } from '../../components/styles/dashboard';
-import { DoctorsDialogContainer } from '../../components/styles/psychiatrist';	
+import { DoctorsDialogContainer, RatingComponentContainer } from '../../components/styles/psychiatrist';	
 import {SERVER_URL} from '../../utils';
 import {PatientDashboardProps, Psychiatrist, Patient, User} from './index';
 import UserAvatar from "../../assets/user.jpg";
@@ -90,7 +90,7 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 					<div className="link-toast">{meeting_link}</div>
 				</span>
 			</div>
-			{ state.show_doctors_dialog && <DoctorsDialog /> }
+			{ state.show_doctors_dialog && <DoctorsDialog pychiatrist={with_who} on_dialog_close={() => set_state({...state, show_doctors_dialog: false})}/> }
 		</AppointmentCardContainer>
 			)
 }
@@ -126,13 +126,62 @@ type CreateAppointmentDialogProps = {
 	on_cancel: () => void;
 }
 
-class DoctorsDialog extends React.Component {
+type RatingComponentProps =  {
+	className?: string	
+	rating: number
+}
+
+const RatingComponent: React.FC<RatingComponentProps> = ({ className, rating }) => {
+		let rating_items = []
+
+		for(let i = 0; i < 5; i++ ) {
+			if(i + 1 <= rating)
+				rating_items.push(<span className="rating-item colored"></span>)
+			else
+				rating_items.push(<span className="rating-item"></span>)
+		}
+	return <RatingComponentContainer className={className}>
+		<h5>Rating</h5>
+		<div>{rating_items}</div>
+	</RatingComponentContainer>
+}
+
+type DoctorDialogProps = {
+	pychiatrist: Psychiatrist
+	on_dialog_close: () => void;
+}
+
+class DoctorsDialog extends React.Component<DoctorDialogProps> {
+
+	approve_appointment = async (e: any) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}
+
 	render() {
-		return <DoctorsDialogContainer>
+		const {pychiatrist, on_dialog_close} = this.props;
+
+		return <DoctorsDialogContainer 
+		onClick={(e) => {
+			e.stopPropagation()
+			on_dialog_close()
+		}}
+		onKeyPress={(key) => {
+			console.log(key)
+			if(key.code === "Escape") {
+				on_dialog_close()	
+			}
+		}}>
+
 			<div className="dialog-content">
 				<Image src={UserAvatar} alt="Avatar" />
-				<p className="title">{`Dr. John Doe`}</p>
-				<p className="bio">{`Dr. John Doe`}</p>
+				<p className="title"><span>Dr.</span>{` ${pychiatrist.user.f_name} ${pychiatrist.user.l_name}`}</p>
+				<div className="bio">
+					<h5>Bio</h5>
+					<p>{pychiatrist.bio}</p>
+					</div>
+				<RatingComponent className={"ratings"} rating={pychiatrist.rating}/>
+				<PrimaryButton className="approve" onClick={this.approve_appointment}>Approve</PrimaryButton>
 			</div>
 		</DoctorsDialogContainer>
 	}
@@ -219,7 +268,7 @@ class __CreateAppointmentDialog extends React.Component<CreateAppointmentDialogP
 					</div>
 					<div className="payment">
 						<span>{`Billing request for KES ${this.state.amount} has been sent to`}</span>
-						<span style={{fontWeight: 500, }}>{`+${this.props.user.phone_number}`}</span>
+						<span style={{fontWeight: 500, }}>{`${this.props.user.email}`}</span>
 						<SecondaryButton onClick={(e) => {this.proceed_click(e)}}>{this.state.transaction_status}</SecondaryButton>
 					</div>
 

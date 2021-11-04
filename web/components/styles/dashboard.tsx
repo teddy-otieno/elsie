@@ -66,6 +66,22 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 		}
 	}
 
+	.react-calendar {
+		border: 1pt solid ${LIGHT_GREY};
+		border-radius: 8pt;
+	}
+
+	.react-calendar__tile {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border-radius: 20%;
+		height: 36pt;
+		width: 36pt;
+		font: inherit;
+		margin: 2pt;
+	}
+
 	.content {
 		display: grid;
 
@@ -216,15 +232,6 @@ export const CalendarContainer = styled.div`
 		box-shadow: 0pt 0pt 4pt ${PRIMARY_COLOR};
 	}
 
-	.react-calendar__tile {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		border-radius: 20%;
-		height: 40pt;
-		width: 40pt;
-		font: inherit;
-	}
 `;
 
 export const EventCardContainer = styled.div`

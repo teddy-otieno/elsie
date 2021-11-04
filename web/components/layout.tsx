@@ -124,23 +124,32 @@ export const TextField: React.FC<TextFieldProps> = ({ className, label, value, s
 			);
 }
 
-export const TextAreaStyle = styled.textarea`
-	border: 2pt solid ${LIGHT_GREY};
-	font: inherit;
+export const TextAreaStyle = styled(TextFieldContainer)`
+	display: flex;
+	flex-direction: column;
+
+	textarea {
+		border: 2pt solid ${LIGHT_GREY};
+		font: inherit;
+		width: 100%;
+	}
 `;
 
 type TextAreaProps = {
+	label: string
 	value: string;
 	set_value: (val: string) => void;
 	className?: string
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({className, value, set_value}) => {
-	return <TextAreaStyle 
-		className={className}
-		value={value} 
-		onChange={(event) => set_value(event.target.value)}
-	/>
+export const TextArea: React.FC<TextAreaProps> = ({className, label, value, set_value}) => {
+	return <TextAreaStyle className={className}>
+		<p>{label}</p>
+		<textarea 
+			value={value} 
+			onChange={(event) => set_value(event.target.value)}
+		/>
+	</TextAreaStyle>
 }
 
 

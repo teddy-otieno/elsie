@@ -67,6 +67,9 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 					<li>
 						<Link href={`/${prefix}/more`}>Questionaires</Link>
 					</li>
+					<li>
+						<Link href={`/${prefix}/profile`}>Profile</Link>
+					</li>
 				</ul>
 			</SideNavigationContainer>
 		)
@@ -232,7 +235,7 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps> {
 
 			console.log(messages);
 			let community_messsage_bubble = messages.map((value: Message, index: number) => {
-				return <MessageBubble message={value} key={index} is_owner={value.sender.username === this.props.current_user.username}/>
+				return <MessageBubble message={value} key={index} is_owner={value.sender.email === this.props.current_user.email}/>
 				})
 		return (
 			<CommunityChatContainer>
@@ -263,7 +266,7 @@ type MessageBubbleProps = {
 const MessageBubble: React.FC<MessageBubbleProps> = ({message, is_owner}) => {
 	return <MessageBubbleContainer is_sender={is_owner}>
 		<div className="message">
-			<span>{`~${!is_owner ? message.sender.username: "you"}`}</span>
+			<span>{`~${!is_owner ? message.sender.email: "you"}`}</span>
 			<span>{message.message}</span>
 		</div>
 	</MessageBubbleContainer>
@@ -307,7 +310,7 @@ type CommunityMemberState = {
 class __CommunityMembers extends React.PureComponent<CommunityMemberProps, CommunityMemberState> {
 
 	is_member = (): boolean => {
-		return this.props.members.find((member: Member) => this.props.current_user.username === member.member.username) != undefined
+		return this.props.members.find((member: Member) => this.props.current_user.email === member.member.email) != undefined
 	}
 
 	render() {
