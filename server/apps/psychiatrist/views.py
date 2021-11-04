@@ -103,33 +103,33 @@ def save_responses(request):
             is_filled=True, 
             patient=Patient.objects.get(user=request.user)
             )
+
+        return Response(status=status.HTTP_202_ACCEPTED)
     except Questionnaire.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND, data={"message": "Invalid questionnaire"})
 
     except QuestionnaireResponses.DoesNotExist:
-        return Response(status=status.HTTP_202_ACCEPTED)
 
+        for response in responses:
+            try:
+                question_instance = Question.objects.get(pk=int(response["question_id"]))
+            except Question.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid question"})
 
-    for response in responses:
-        try:
-            question_instance = Question.objects.get(pk=int(response["question_id"]))
-        except Question.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid question"})
+            if question_instance.type == "RANGE":
+                QuestionResponse.objects.create(question=question_instance, range_answer=response["response"])
 
-        if question_instance.type == "RANGE":
-            QuestionResponse.objects.create(question=question_instance, range_answer=response["response"])
+            elif question_instance.type == "SHORTANSWER":
+                QuestionResponse.objects.create(question=question_instance, short_answer=response["response"])
 
-        elif question_instance.type == "SHORTANSWER":
-            QuestionResponse.objects.create(question=question_instance, short_answer=response["response"])
+        #Register a response
+        question_response = QuestionnaireResponses.objects.create(
+            questionnaire=questionnaire_instance, 
+            is_filled=True, 
+            patient=Patient.objects.get(user=request.user)
+            )
 
-    #Register a response
-    question_response = QuestionnaireResponses.objects.create(
-        questionnaire=questionnaire_instance, 
-        is_filled=True, 
-        patient=Patient.objects.get(user=request.user)
-        )
-
-    return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
