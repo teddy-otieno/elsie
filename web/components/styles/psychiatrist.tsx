@@ -444,31 +444,66 @@ export const RatingComponentContainer = styled.div`
 export const UpdateCounsellorDataContainer = styled.div`
 	width: 100%;
 	min-height: calc(100vh - 45pt);
-	padding: 100pt;
+	padding: 40pt 200pt;
 	box-sizing: border-box;
 
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
-	grid-template-rows: 100pt 100pt; 
+	grid-template-columns: 200pt repeat(4, 1fr);
+	grid-template-rows: 32pt 200pt 100pt 100pt 32pt; 
 	grid-template-areas: 
-		"avatar avatar 	email email email"
-		"bio		bio 		bio 	bio		bio"
-		"password		passwodd 		password 	confirm		confirm";
+		"title title title title title"
+		"avatar email email email email"
+		"bio bio bio bio bio"
+		"password	password password	confirm confirm"
+		"update	update update update update ";
+	column-gap: 10pt;
+	row-gap: 10pt;
 
-	div:first-child {
+	.image {
 		grid-area: avatar;
-		width: 100pt;
-		height: 100pt;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
 		div {
+			grid-area: avatar;
+			width: 100%;
+			height: 100%;
+			cursor: pointer;
 			border-radius: 50%;
 		}
 	}
 
+	h3 {
+		grid-area: title;
+		text-align: center;
+		font-weight: normal;
+		color: ${PRIMARY_COLOR};
+	}
+
 	.email{
 		grid-area: email;
+		align-self: center;
+		box-sizing: border-box;
 	}
 
 	.bio {
 		grid-area: bio;
+		height: 100%;
+		width: 100%;
+	}
+
+	.password {
+		grid-area: password;
+	}
+
+	.confirm-password {
+		grid-area: confirm;
+	}
+
+	button {
+		align-self: center;
+		justify-self: center;
+		grid-area: update;
+		width: 50%;
 	}
 `;

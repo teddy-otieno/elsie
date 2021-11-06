@@ -93,6 +93,7 @@ type TextFieldProps = {
 	label: string;
 	value: string;
 	className?: string;
+	placeholder?: string;
 	input_type?: string;
 	set_value: (val: string) => void;
 	validation?: (val: string) => boolean;
@@ -100,7 +101,7 @@ type TextFieldProps = {
 	on_focus?: () => void;
 };
 
-export const TextField: React.FC<TextFieldProps> = ({ className, label, value, set_value, validation, on_error_message, input_type, on_focus  }: TextFieldProps) => {
+export const TextField: React.FC<TextFieldProps> = ({ placeholder, className, label, value, set_value, validation, on_error_message, input_type, on_focus  }: TextFieldProps) => {
 	const [error, set_error] = useState<string|undefined>("");
 
 	return (
@@ -108,6 +109,7 @@ export const TextField: React.FC<TextFieldProps> = ({ className, label, value, s
 				<p>{label}</p>
 				<input
 					value={value}
+					placeholder={placeholder}
 					onChange={(event) => set_value(event.target.value) } 
 					type={input_type === undefined ? "text" : input_type}
 					onFocus={on_focus}
@@ -125,8 +127,9 @@ export const TextField: React.FC<TextFieldProps> = ({ className, label, value, s
 }
 
 export const TextAreaStyle = styled(TextFieldContainer)`
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-rows: 24pt 1fr;
+
 
 	textarea {
 		border: 2pt solid ${LIGHT_GREY};
@@ -140,14 +143,16 @@ type TextAreaProps = {
 	value: string;
 	set_value: (val: string) => void;
 	className?: string
+	placeholder?: string
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({className, label, value, set_value}) => {
+export const TextArea: React.FC<TextAreaProps> = ({placeholder, className, label, value, set_value}) => {
 	return <TextAreaStyle className={className}>
 		<p>{label}</p>
 		<textarea 
 			value={value} 
 			onChange={(event) => set_value(event.target.value)}
+			placeholder={placeholder}
 		/>
 	</TextAreaStyle>
 }
