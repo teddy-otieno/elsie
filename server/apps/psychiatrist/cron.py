@@ -1,4 +1,5 @@
-
+from apps.patients.models import Appointment
 
 def send_reminders():
-    print("Hello world")
+
+    appointments = Appointment.objects.filter()

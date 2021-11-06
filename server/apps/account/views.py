@@ -14,11 +14,43 @@ from .serializers import (
         get_account
         )
 
+from .models import Psychiatrist, Patient
 # Create your views here.
 class AccessTokenObtainPairView(TokenObtainPairView):
 	serializer_class = ObtainAccessTokenSerializer
 
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+def update_psychiatrist(request, *args, **kwargs):
 
+    serializer = PsychiatrisSerializer(
+        instance=Psychiatrist.objects.get(user=request.user), 
+        data=request.data, 
+        partial=True
+        )
+    
+    if serializer.is_valid():
+        instance = serializer.save()
+
+        updated_user_data = PsychiatrisSerializer(instance=instance).data
+        return Response(status=status.HTTP_200_OK, data=updated_user_data)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def get_user_data(request, *args, **kwargs):
+
+    data = None
+    if request.user.is_psychiatrist:
+        data = PsychiatrisSerializer(instance=Psychiatrist.objects.get(user=request.user)).data
+
+    if request.user.is_patient:
+        data = PatientSerializer(instance=Patient.objects.get(user=request.user))
+
+    return Response(data=data)
+    
 @api_view(['POST'])
 def create_patient_account(request, **kwargs):
     serializer = PatientSerializer(data=request.data)
