@@ -5,11 +5,12 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from apps.account.serializers import PatientSerializer
 
 from apps.patients.models import Appointment, Community, Event
 from apps.account.models import MyUser, Psychiatrist, Patient
-from apps.psychiatrist.models import Question, QuestionResponse, Questionnaire, QuestionnaireResponses
-from .serializers import PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer, ResponsesSerializer, PatientQuestionnaireSerializer
+from apps.psychiatrist.models import BlogPost, Question, QuestionResponse, Questionnaire, QuestionnaireResponses
+from .serializers import BlogPostSerializer, PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer, ResponsesSerializer, PatientQuestionnaireSerializer
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -88,6 +89,17 @@ class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         return Questionnaire.objects.all()
 
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def get_responses(request, q_id, p_id, *args, **kwargs):
+
+    response_instance = QuestionnaireResponses.objects.get(patient=Patient.objects.get(pk=p_id), pk=q_id)
+
+    answers_query_set=  QuestionResponse.objects.filter(response=response_instance)
+
+    return Response()
+
+
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 def save_responses(request):
@@ -110,6 +122,12 @@ def save_responses(request):
 
     except QuestionnaireResponses.DoesNotExist:
 
+        question_response = QuestionnaireResponses.objects.create(
+            questionnaire=questionnaire_instance, 
+            is_filled=True, 
+            patient=Patient.objects.get(user=request.user)
+            )
+
         for response in responses:
             try:
                 question_instance = Question.objects.get(pk=int(response["question_id"]))
@@ -117,17 +135,12 @@ def save_responses(request):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Invalid question"})
 
             if question_instance.type == "RANGE":
-                QuestionResponse.objects.create(question=question_instance, range_answer=response["response"])
+                QuestionResponse.objects.create(question=question_instance, range_answer=response["response"], response=question_response)
 
             elif question_instance.type == "SHORTANSWER":
-                QuestionResponse.objects.create(question=question_instance, short_answer=response["response"])
+                QuestionResponse.objects.create(question=question_instance, short_answer=response["response"], response=question_response)
 
         #Register a response
-        question_response = QuestionnaireResponses.objects.create(
-            questionnaire=questionnaire_instance, 
-            is_filled=True, 
-            patient=Patient.objects.get(user=request.user)
-            )
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -153,7 +166,7 @@ def get_patients_stats(request):
 
 
 @api_view(['GET'])
-@authentication_classes({JWTAuthentication})
+@authentication_classes([JWTAuthentication])
 def get_questionnaire_stats(request):
 
     questionnaire_queryset = Questionnaire.objects.filter(is_active=True, owner=Psychiatrist.objects.get(user=request.user))
@@ -169,3 +182,27 @@ def get_questionnaire_stats(request):
         "responses": total_responses
     }
     return Response(data=data)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def terminate_questionnaire(request, id, *args, **kwargs):
+    try:
+        questionnaire_instance: Questionnaire = Questionnaire.objects.get(pk=id)
+        questionnaire_instance.is_active = False
+        questionnaire_instance.save()
+        return Response()
+    except Questionnaire.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data={"message": "Questionnaire does not exist"})
+
+
+class BlogPostsViewSet(ModelViewSet):
+    serializer_class = BlogPostSerializer
+    authentication_classes = [JWTAuthentication]
+
+    def get_queryset(self):
+        return BlogPost.objects.filter(author=Psychiatrist.objects.get(user=self.request.user))
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context

@@ -31,5 +31,13 @@ class QuestionnaireResponses(models.Model):
 
 class QuestionResponse(models.Model):
 	question = models.ForeignKey("psychiatrist.Question", on_delete=models.CASCADE)
+	response = models.ForeignKey("psychiatrist.QuestionnaireResponses", on_delete=models.CASCADE)
 	range_answer = models.IntegerField(null=True)
 	short_answer = models.CharField(max_length=1024 * 4)
+
+
+class BlogPost(models.Model):
+	title = models.CharField(max_length=1024 * 3)
+	content = models.TextField()
+	is_active = models.BooleanField(default=True)
+	author = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="blog_posts")

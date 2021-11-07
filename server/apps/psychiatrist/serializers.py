@@ -1,10 +1,11 @@
 from rest_framework import serializers
+from rest_framework.response import Response
 
 from apps.account.serializers import PsychiatrisSerializer, PatientSerializer
 from apps.patients.models import Appointment, Community
 from apps.account.models import Psychiatrist
 
-from .models import Questionnaire, Question, QuestionnaireResponses, QuestionResponse
+from .models import BlogPost, Questionnaire, Question, QuestionnaireResponses, QuestionResponse
 
 class PsychiatristAppointmentSerializer(serializers.ModelSerializer):
     starter = PatientSerializer(read_only=True)
@@ -26,19 +27,13 @@ class CommunitySerializer(serializers.ModelSerializer):
                 )
 
 
-class AnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        models = Question
-        fields = "__all__"
-
 class QuestionSerializer(serializers.ModelSerializer):
-    answer = AnswerSerializer
     class Meta:
         model = Question
         fields = "__all__"
         read_only_fields = ["questionnaire"]
-
 class ResponsesSerializer(serializers.ModelSerializer):
+    patient = PatientSerializer()
     class Meta:
         model = QuestionnaireResponses
         fields = "__all__"
@@ -79,3 +74,14 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         [Question.objects.create(**question, questionnaire=questionnaire_instance) for question in questions]
 
         return questionnaire_instance
+
+
+class BlogPostSerializer(serializers.ModelSerializer):
+    author = PsychiatrisSerializer(read_only=True)
+    class Meta:
+        model = BlogPost
+        fields = "__all__"
+        read_only_fields = ["author"]
+
+    def create(self, validated_data):
+        return self.Meta.model.objects.create(**validated_data, author=Psychiatrist.objects.get(user=self.context['user']))
