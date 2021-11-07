@@ -104,7 +104,6 @@ class UpdateCounsellorData extends React.Component<UpdateCounsellorProps, Update
 			confirm_password, 
 			bio, 
 			previous_records,
-			passwords_error
 		} = this.state;
 
 

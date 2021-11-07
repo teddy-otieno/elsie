@@ -9,7 +9,7 @@ import { PrimaryButton, SecondaryButton } from '../../components/styles/componen
 import { CreateQuestionaireComponent, NewQuestionsContainer, QuestionComponentContainer, RangeContainer } from '../../components/styles/psychiatrist';
 import { SERVER_URL } from '../../utils';
 import { CounsellorPageProps } from '../counsellor/appointment';
-import { Psychiatrist } from '../patient';
+import { Patient, Psychiatrist } from '../patient';
 
 export type Question = {
 	id?: number
@@ -22,7 +22,9 @@ export type Question = {
 }
 
 export type QuestionnaireResponse = {
-
+	id: number
+	is_filled: boolean
+	patient: Patient
 }
 
 export type Questionnaire = {
@@ -33,6 +35,7 @@ export type Questionnaire = {
 	responses?: QuestionnaireResponse[]
 	created_on?: string
 	is_filled?: boolean
+	is_active?: boolean
 }
 
 type CreateQuestionaireState = {
