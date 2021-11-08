@@ -24,6 +24,11 @@ class CommunityPage extends React.PureComponent<PatientDashboardProps, Community
 		}
 	}
 
+	load_community = (val: Community) => {
+
+	}
+
+
 	render() {
 		const { community_id, communities } = this.state;
 		const { user_data, token } = this.props;

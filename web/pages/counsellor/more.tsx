@@ -38,7 +38,7 @@ class __Options extends React.PureComponent<OptionsProps> {
 	}
 
 	view_questionairre = async (questionnaire: Questionnaire) => {
-		this.props.router.push(`/questionaires/view-questionnaire/${questionnaire.id}`)
+		// this.props.router.push(`/questionaires/view-questionnaire/${questionnaire.id}`)
 	}
 
 	render() {

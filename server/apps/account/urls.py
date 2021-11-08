@@ -3,6 +3,7 @@ from django.urls import path
 
 from .views import (
     AccessTokenObtainPairView,
+    add_user_to_community,
     create_counsellor_account,
     create_patient_account,
     get_user_data,

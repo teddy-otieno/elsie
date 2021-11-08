@@ -326,7 +326,7 @@ type MessageBubbleProps = {
 
 export const MessageBubbleContainer = styled.div<MessageBubbleProps>`
 	display: grid;
-	grid-template-column: 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
 	grid-template-areas: "left right";
 	width: 100%;
 	margin-bottom: 4pt;
@@ -352,7 +352,7 @@ export const MessageBubbleContainer = styled.div<MessageBubbleProps>`
 
 export const CommunityCardContainer = styled.div`
 	display: grid;
-	grid-template-columns: 32pt 1fr;
+	grid-template-columns: 32pt 1fr 24pt;
 	column-gap: 4pt;
 	border-bottom: 1pt solid ${LIGHT_GREY};
 	padding: 4pt;

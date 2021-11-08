@@ -183,6 +183,23 @@ def get_questionnaire_stats(request):
     }
     return Response(data=data)
 
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def get_blog_stats(request):
+
+    blogs_queryset = BlogPost.objects.filter(author=Psychiatrist.objects.get(user=request.user))
+    no_of_blogs = len(blogs_queryset)
+    total_view = 0
+
+    for blog in blogs_queryset:
+        total_view += blog.views
+
+    return Response(data={
+        "total_views": total_view,
+        "blogs": no_of_blogs
+    })
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 def terminate_questionnaire(request, id, *args, **kwargs):
@@ -206,3 +223,23 @@ class BlogPostsViewSet(ModelViewSet):
         context = super().get_serializer_context()
         context['user'] = self.request.user
         return context
+
+class PublicBlogViewSet(ReadOnlyModelViewSet):
+    serializer_class = BlogPostSerializer
+
+    def get_queryset(self):
+        return BlogPost.objects.all()
+
+
+@api_view(['GET'])
+def update_view(request, id, *args, **kwargs):
+
+    try:
+        blog_instance: BlogPost = BlogPost.objects.get(pk=id)
+        blog_instance.views = blog_instance.views + 1
+        blog_instance.save()
+        return Response()
+
+    except BlogPost.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "Blog Post not present"})
+

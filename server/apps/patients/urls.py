@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    ContactUsViewSet,
     EventsViewSet, 
     PatientPostViewSet, 
     PublicEventViewSet, 
@@ -19,6 +20,7 @@ def _router_urls():
     router.register('event', EventsViewSet, basename="event")
     router.register('community', CommunityViewSet, basename="community")
     router.register('appointment', AppointmentViewsSet, basename="appointnment")
+    router.register('contact-us', ContactUsViewSet, "contact-us")
     return router.urls
 
 urlpatterns = [

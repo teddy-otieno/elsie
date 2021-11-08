@@ -62,3 +62,11 @@ class Appointment(models.Model):
     meeting_link    = models.CharField(max_length=1024, null=True, blank=True) # Note Meeting link can be provided later before the booking day
     created_time    = models.DateTimeField(auto_now_add=True)
     transaction     = models.OneToOneField(to="patients.Transaction", on_delete=models.SET_NULL, null=True, blank=False, related_name="transaction")
+
+
+class ContactUs(models.Model):
+    name            = models.CharField(max_length=256)
+    email           = models.EmailField()
+    phone_number    = models.CharField(max_length=11)
+    message         = models.TextField()
+    sent_on         = models.DateTimeField(auto_now_add=True)

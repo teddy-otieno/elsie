@@ -57,6 +57,9 @@ export class TopNavigation extends React.PureComponent<{}, TopNavState> {
 								<Link href='/contact'>Contact Us</Link>
 							</li>
 							<li>
+								<Link href='/blog'>Blog</Link>
+							</li>
+							<li>
 								<Link href='/donate'>Donate</Link>
 							</li>
 							<li>

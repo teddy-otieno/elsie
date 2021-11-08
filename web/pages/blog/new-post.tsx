@@ -98,7 +98,7 @@ type SuccessDialogProps = {
 	title: string
 }
 
-const SuccessDialog: React.FC<SuccessDialogProps> = ({title}) => {
+export const SuccessDialog: React.FC<SuccessDialogProps> = ({title}) => {
 	return <SuccessDialogStyles>
 		<div className="dialog">
 			<div className="icon">
@@ -205,6 +205,7 @@ const BlogWritePadStyles = styled.div`
 export const SuccessDialogStyles = styled.div`
 	position: fixed;
 	top: 0;
+	left: 0;
 	height: 100vh;
 	width: 100%;
 	background-color: #00000043;

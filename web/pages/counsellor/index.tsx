@@ -4,7 +4,8 @@ import axios from 'axios';
 import { DashboardLayout } from '../../components/dashboard';
 import { AccessDeniedPage, SERVER_URL } from '../../utils';
 import { CounsellorPageProps } from './appointment';
-import { InfoDashContainer, PatientsCardContainer, YourQuestionnairesContainer } from '../../components/styles/psychiatrist';
+import { BlogCardContainer, InfoDashContainer, PatientsCardContainer, YourQuestionnairesContainer } from '../../components/styles/psychiatrist';
+import Renderer from 'markdown-it/lib/renderer';
 
 
 type YouQuestionnairesProps = {
@@ -94,12 +95,58 @@ const PatientsCard: React.FC<{token: string}> = ({token}) => {
 		</div>
 	</PatientsCardContainer>
 }
+
+type BlogPostState = {
+	total_views: number
+	blogs: number
+}
+
+const BlogPostCardComponent: React.FC<{token: string}> = ({token}) => {
+	const [state, set_state] = useState<BlogPostState>({
+		total_views: 0,
+		blogs: 0
+	});
+
+	const load_blog_stats = async () => {
+
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+
+			let response = await axios.get<BlogPostState>(`${SERVER_URL}/api/psychiatrist/blog-stats`, config)
+			set_state(response.data)
+
+		} catch(e) {
+			console.log(e)
+		}
+	}
+	useEffect(() => {
+		load_blog_stats()
+	}, [])
+
+	return <BlogCardContainer>
+		<h4>Your Blogs</h4>
+		<div className="labeled-text">
+			<span>Your Blogs</span>
+			<span>{state.blogs}</span>
+		</div>
+		<div className="labeled-text">
+			<span>Total Views</span>
+			<span className="highlight">{`${state.total_views}`}</span>
+		</div>
+	</BlogCardContainer>
+}
+
 class InfoDash extends React.Component<{token: string}> {
 
 	render() {
 		return <InfoDashContainer>
 			<PatientsCard token={this.props.token}/>
 			<YouQuestionnaires token={this.props.token}/>
+			<BlogPostCardComponent token={this.props.token}/>
 		</InfoDashContainer>
 	}
 }

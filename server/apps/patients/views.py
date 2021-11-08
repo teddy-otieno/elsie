@@ -8,6 +8,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import (
     AppointmentSerializer,
     CommunityMessageSerializer,
+    ContactUsSerializer,
     EventSerailizer, 
     FeedPostSerailizer, 
     PostSerializer, 
@@ -15,6 +16,7 @@ from .serializers import (
     AppointmentSerializer
         )
 from .models import (
+    ContactUs,
     Post, 
     Event, 
     Community, 
@@ -122,3 +124,10 @@ def register_member_to_community(request, community_id: int, *args, **kwargs):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response()
+
+
+class ContactUsViewSet(ModelViewSet):
+    serializer_class = ContactUsSerializer
+
+    def get_queryset(self):
+        return ContactUs.objects.all()

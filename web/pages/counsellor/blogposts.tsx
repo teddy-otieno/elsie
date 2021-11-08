@@ -2,10 +2,85 @@ import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { withRouter } from 'next/router';
 import React from 'react'
+import styled from 'styled-components';
 import { DashboardLayout } from '../../components/dashboard';
+import { LIGHT_GREY } from '../../components/styles/theme';
 import { AccessDeniedPage, SERVER_URL } from '../../utils';
 import { CounsellorPageProps } from './appointment';
+import { DashCardContainer } from '../../components/styles/psychiatrist';
+import { Psychiatrist } from '../patient';
 
+export type Blog = {
+	id?: number
+	title: string
+	subtitle: string
+	content: string
+	views: string
+	author: Psychiatrist
+	created_on: string
+}
+
+type BlogContentState = {
+	blogs: Blog[]
+}
+
+type BlogContentProps = {
+	token: string
+}
+
+class BlogPostPageContent extends React.Component<BlogContentProps,BlogContentState> {
+
+	constructor(props: BlogContentProps) {
+		super(props)
+
+		this.state = {
+			blogs: []
+		}
+	}
+	load_blogs = async () => {
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`
+				}
+			}
+
+			let response = await axios.get<Blog[]>(`${SERVER_URL}/api/psychiatrist/blog-posts`, config)
+
+			this.setState({...this.state, blogs: response.data})
+		} catch(e) {
+			console.log(e)
+		}
+	}
+
+	componentDidMount() {
+		this.load_blogs()
+	}
+
+	render() {
+
+		let blog_cards = this.state.blogs.map((val: Blog, i: number) => {
+			return <BlogCard key={i} blog={val}/>
+		})
+		return <BlogContentStyles>
+			{blog_cards}
+		</BlogContentStyles>
+	}
+}
+
+type BlogCardProps = {
+	blog: Blog
+}
+
+const BlogCard: React.FC<BlogCardProps> = ({blog}) => {
+	return <BlogCardStyles>
+		<h4>{blog.title}</h4>
+		<div className="labeled-text">
+			<span>Views</span>
+			<span>{blog.views}</span>
+		</div>
+	</BlogCardStyles>
+}
 interface BlogPostPageProps extends CounsellorPageProps {
 	router: any
 }
@@ -14,7 +89,7 @@ class BlogPostPage extends React.Component<BlogPostPageProps> {
 	render () {
 		if(this.props.is_valid) {
 			return <DashboardLayout
-				center={<div></div>} 
+				center={<BlogPostPageContent token={this.props.token}/>} 
 				title="More"
 				prefix="counsellor"
 				primary_action={() => {this.props.router.push('/blog/new-post/')}}
@@ -53,3 +128,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 
+
+/// ------------------------------------------- Styles -----------------------------------------------
+
+
+const BlogContentStyles = styled.div`
+	display: flex;
+	height: 100%;
+	width: 100%;
+	padding: 16pt;
+`;
+
+const BlogCardStyles = styled(DashCardContainer)`
+	width: 200pt;
+	height: 100pt;
+	border: 1pt solid ${LIGHT_GREY};
+	border-radius: 8pt;	
+`;

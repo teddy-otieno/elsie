@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apps.account.serializers import PatientSerializer, PsychiatrisSerializer , UserSerializer
 from apps.account.models import Patient
-from .models import Post, Comment, Event, Community, CommunityMember, CommunityMessage, Appointment, Transaction
+from .models import ContactUs, Post, Comment, Event, Community, CommunityMember, CommunityMessage, Appointment, Transaction
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,3 +111,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         transaction_data = validated_data.pop('transaction')
         instance = Transaction.objects.create(**transaction_data)
         return self.Meta.model.objects.create(**validated_data, transaction=instance, starter=Patient.objects.get(user=self.context["user"]))
+
+
+class ContactUsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContactUs
+        fields = "___all__"
+        read_only_fields = ["sent_on"]

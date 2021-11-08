@@ -14,6 +14,9 @@ import {
 import { PrimaryButton, SecondaryButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
 import { User } from "../pages/patient/index";
+import { Icons } from './styles/theme';
+import { withRouter } from 'next/router';
+import { SuccessDialog } from '../pages/blog/new-post';
 
 type DashboardProps = {
 	center: any
@@ -52,6 +55,16 @@ type SideNavigationProps = {
 class SideNavigation extends React.PureComponent<SideNavigationProps> {
 	render() {
 		const { prefix } = this.props;
+
+		let custom_urls: any[] = []
+
+
+		if(prefix === "counsellor") {
+			custom_urls = [
+				<li key={10}><Link href={`/${prefix}/blogposts`}>Blog Posts</Link></li>,
+			]
+		}
+
 		return (
 			<SideNavigationContainer>
 				<ul>
@@ -67,6 +80,7 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 					<li>
 						<Link href={`/${prefix}/more`}>Questionaires</Link>
 					</li>
+					{custom_urls}
 					<li>
 						<Link href={`/${prefix}/profile`}>Profile</Link>
 					</li>
@@ -121,17 +135,20 @@ export type Message = {
 
 type CommunityCardProps = {
 	community: Community
-	on_click: (community_id: number) => void;
+	on_click: (community: Community) => void;
+	is_member: boolean;
+	add_user_to_community: (community: Community) => void;
 }
 
-const CommunityCard: React.FC<CommunityCardProps> = ({community, on_click}) => {
+const CommunityCard: React.FC<CommunityCardProps> = ({community, is_member, on_click, add_user_to_community}) => {
 	const avatar = community.avatar === null ? 
 		(<div className="avatar"></div>)
 		: (<Image src={community.avatar} width={20} height={20} alt="Community Avatar"/>)
 	return (
-		<CommunityCardContainer onClick={() => community.id !== undefined && on_click(community.id)}>
+		<CommunityCardContainer onClick={() => community.id !== undefined && on_click(community)}>
 			{avatar}
 			<span>{community.name}</span>
+			{ !is_member && <span onClick={() => add_user_to_community(community)}>{Icons.ADD}</span>}
 		</CommunityCardContainer>
    )
 }
@@ -146,9 +163,21 @@ type CommunityChatProps = {
 	create_community?: () => void;
 	communities: Community[],
 	set_communities: (a: Community[]) => void;
+	router: any;
 }
 
-class __CommunityChat extends React.PureComponent<CommunityChatProps> {
+type CommunityChatState = {
+	show_join_dialog: boolean
+}
+
+class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityChatState> {
+	constructor(props: CommunityChatProps) {
+		super(props);
+
+		this.state = {
+			show_join_dialog: false
+		}
+	}
 	load_communities = async () => {
 		const { community_id } = this.props;
 
@@ -224,14 +253,54 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps> {
 		}
 	}
 
+	add_user_to_community = async (community: Community) => {
+
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`
+				}
+			}
+
+			let response = await axios.get(`${SERVER_URL}/api/patient/register_member/${community.id!}`, config)
+
+			this.setState({
+				...this.state, 
+				show_join_dialog: true
+			});
+
+			setTimeout(() => {
+				this.setState({...this.state, show_join_dialog: false})
+				this.props.set_community_id(community.id!)
+				this.props.router.reload()
+			}, 1000)
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	render() {
 		const { messages, community_id, communities} = this.props;
 
 		let communities_list = communities
-			.map((value: Community, index: number) => 
-			<CommunityCard community={value} key={index}  on_click={(val) => {
-				this.props.set_community_id(val)
-				}}/>)
+			.map((value: Community, index: number) => {
+				let is_member = value.community_members.find((val: Member) => {
+					return val.member.email === this.props.current_user.email
+				}) !== undefined
+
+				return <CommunityCard 
+					community={value} 
+					key={index} 
+					is_member={is_member}
+					add_user_to_community={this.add_user_to_community}
+					on_click={(val) => {
+						if(!is_member) {
+							this.add_user_to_community(val)
+							return
+						}
+						this.props.set_community_id(val.id!)
+				}}/>
+			})
 
 			console.log(messages);
 			let community_messsage_bubble = messages.map((value: Message, index: number) => {
@@ -248,15 +317,17 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps> {
 					{ communities_list }
 				</div>
 				<div className="chat">
-					<div className="prev-messages">{community_messsage_bubble}</div>
-					<MessageInput on_new_message={this.send_message} />
+					{this.props.community_id > 0 && (<div className="prev-messages">{community_messsage_bubble}</div>)}
+					{this.props.community_id > 0 && (<MessageInput on_new_message={this.send_message} />)}
 				</div>
+
+				{this.state.show_join_dialog && <SuccessDialog title="You have successfully joined" />}
 			</CommunityChatContainer>
 	   )
 	}
 }
 
-export const CommunityChat = __CommunityChat;
+export const CommunityChat = withRouter(__CommunityChat);
 
 type MessageBubbleProps = {
 	message: Message,

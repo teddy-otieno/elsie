@@ -92,3 +92,9 @@ def is_auth(request):
         "user_data": dict(get_account(request.user))
     }
     return Response(data=response_data)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def add_user_to_community(request, id):
+    return Response()

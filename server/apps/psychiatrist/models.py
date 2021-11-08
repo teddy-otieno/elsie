@@ -41,3 +41,5 @@ class BlogPost(models.Model):
 	content = models.TextField()
 	is_active = models.BooleanField(default=True)
 	author = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="blog_posts")
+	created_on = models.DateTimeField(auto_now=True)
+	views = models.IntegerField(default=0)

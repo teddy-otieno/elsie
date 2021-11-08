@@ -245,7 +245,7 @@ export const InfoDashContainer = styled.div`
 	display: flex;
 `;
 
-const DashCardContainer = styled.div`
+export const DashCardContainer = styled.div`
 	min-height: 200pt;
 	width: 200pt;
 	border: 1pt solid ${SHADOW_COLOR};
@@ -254,6 +254,7 @@ const DashCardContainer = styled.div`
 	transition: all .4s ease;
 	font-size: 1.1em;
 	margin-right: 8pt;
+	background-color: ${SURFACE};
 
 	h4 {
 		text-align: center;
@@ -292,6 +293,10 @@ export const YourQuestionnairesContainer = styled(DashCardContainer)`
 `;
 
 export const PatientsCardContainer = styled(DashCardContainer)`
+
+`;
+
+export const BlogCardContainer = styled(DashCardContainer)`
 
 `;
 
