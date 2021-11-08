@@ -59,6 +59,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			f_name,
 			l_name,
 			date_of_birth,
+			phone_number,
 			confirm_password,
 			qualificatoin,
 			university
@@ -96,7 +97,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			email: email_address,
 			f_name: f_name,
 			l_name: l_name,
-			date_of_birth: date_of_birth
+			phone_number: phone_number
 		}
 
 		let acc = this.props.router.query["acc"];
@@ -172,10 +173,10 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 							<div className="double-fields-container">
 								<TextField label={"*Email Address"} value={email_address} set_value={(value) => this.setState({...this.state, email_address: value})}/>
 								<TextField 
-									label={"Date Of Birth"} 
-									value={date_of_birth} 
-									set_value={(value) => this.setState({...this.state, date_of_birth: value})}
-									validation={(value) => (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])/).test(value)}
+									label={"Phone Number"} 
+									value={phone_number} 
+									set_value={(value) => this.setState({...this.state, phone_number: value})}
+									validation={(value) => (/([+]254|0)\d{9}/).test(value)}
 									on_error_message={"Expected YYYY-MM-dd format"}
 								/>
 							</div>
