@@ -127,6 +127,7 @@ export type Community = {
 }
 
 export type Message = {
+	id?: number
 	message: string;
 	sent_at: string;
 	sender: User;
@@ -279,6 +280,24 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 		}
 	}
 
+	remove_message = async (message: Message) => {
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`
+				}
+			}
+			let response = await axios.get(`${SERVER_URL}/api/patient/delete_message/${message.id}`, config)
+
+			let new_messages = this.props.messages.filter((val: Message) => {
+				return val.id! !== message.id!
+			})
+			this.props.set_messages(new_messages)
+		} catch(e) {
+			console.log(e)
+		}
+	}
+
 	render() {
 		const { messages, community_id, communities} = this.props;
 
@@ -304,7 +323,12 @@ class __CommunityChat extends React.PureComponent<CommunityChatProps, CommunityC
 
 			console.log(messages);
 			let community_messsage_bubble = messages.map((value: Message, index: number) => {
-				return <MessageBubble message={value} key={index} is_owner={value.sender.email === this.props.current_user.email}/>
+				return <MessageBubble
+					message={value} 
+					key={index} 
+					is_owner={value.sender.email === this.props.current_user.email}
+					remove_message={this.remove_message}
+				/>
 				})
 		return (
 			<CommunityChatContainer>
@@ -332,13 +356,17 @@ export const CommunityChat = withRouter(__CommunityChat);
 type MessageBubbleProps = {
 	message: Message,
 	is_owner: boolean
+	remove_message: (message: Message) => void;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({message, is_owner}) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({message, is_owner, remove_message}) => {
 	return <MessageBubbleContainer is_sender={is_owner}>
 		<div className="message">
 			<span>{`~${!is_owner ? message.sender.email: "you"}`}</span>
 			<span>{message.message}</span>
+			<div className="actions" onClick={() => remove_message(message)}>
+				{Icons.DELETE}
+			</div>
 		</div>
 	</MessageBubbleContainer>
 }

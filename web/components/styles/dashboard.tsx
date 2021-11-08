@@ -341,12 +341,32 @@ export const MessageBubbleContainer = styled.div<MessageBubbleProps>`
 		width: fit-content;
 		display: flex;
 		flex-direction: column;
+		position: relative;
 
 		span:first-child {
 			font-size: 0.7em;
 			color: ${LIGHT_GREY};
 			text-align: ${(props) => props.is_sender ? "right" : "left"};
 		 }
+	}
+
+	&:hover {
+		.actions {
+			display: block;
+		}
+	}
+
+	.actions {
+		position: absolute;
+		left: -20pt;
+		display: none;
+		cursor: pointer;
+
+		svg {
+			height: 16pt;
+			width: 16pt;
+			fill: ${ERROR};
+		}
 	}
 `;
 
