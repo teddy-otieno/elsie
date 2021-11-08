@@ -131,3 +131,13 @@ class ContactUsViewSet(ModelViewSet):
 
     def get_queryset(self):
         return ContactUs.objects.all()
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+def delete_message(request, id, *args, **kwargs):
+
+    try:
+        CommunityMessage.objects.get(pk=id).delete()
+        return Response()
+    except CommunityMessage.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "Failed to delete community message"})

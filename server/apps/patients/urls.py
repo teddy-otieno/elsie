@@ -8,6 +8,7 @@ from .views import (
     PublicEventViewSet, 
     CommunityViewSet,
     AppointmentViewsSet,
+    delete_message,
     generate_newsfeed,
     messages_view,
     register_member_to_community
@@ -26,7 +27,8 @@ def _router_urls():
 urlpatterns = [
         path('news_feed/', generate_newsfeed),
         path('messages/<int:id>/', messages_view),
-        path('register_member/<int:community_id>/', register_member_to_community)
+        path('register_member/<int:community_id>/', register_member_to_community),
+        path('delete_message/<int:id>', delete_message)
         ]
 
 urlpatterns += _router_urls()

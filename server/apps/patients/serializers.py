@@ -65,8 +65,8 @@ class CommunityMessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
     class Meta:
         model = CommunityMessage
-        fields = ["message", "sent_at", "sender", "community"]
-        read_only_fields = ["sent_at", "community"]
+        fields = ["message", "sent_at", "sender", "community", "id"]
+        read_only_fields = ["sent_at", "community", "id"]
 
     def create(self, validated_data):
         return CommunityMessage.objects.create(**validated_data, sender=self.context["user"], community=self.context["community"])
