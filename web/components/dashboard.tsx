@@ -62,6 +62,7 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 		if(prefix === "counsellor") {
 			custom_urls = [
 				<li key={10}><Link href={`/${prefix}/blogposts`}>Blog Posts</Link></li>,
+				<li key={11}><Link href={`/${prefix}/profile`}>Profile</Link> </li> ,
 			]
 		}
 
@@ -81,9 +82,6 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 						<Link href={`/${prefix}/more`}>Questionaires</Link>
 					</li>
 					{custom_urls}
-					<li>
-						<Link href={`/${prefix}/profile`}>Profile</Link>
-					</li>
 				</ul>
 			</SideNavigationContainer>
 		)
