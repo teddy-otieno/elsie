@@ -71,7 +71,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 			is_empty(email_address) ||
 			is_empty(f_name) ||
 			is_empty(l_name) ||
-			is_empty(date_of_birth) ||
+			is_empty(phone_number) ||
 			is_empty(l_name)
 		) {
 				this.setState({...this.state, error: "Please fill all the fields"});
@@ -177,7 +177,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 									value={phone_number} 
 									set_value={(value) => this.setState({...this.state, phone_number: value})}
 									validation={(value) => (/([+]254|0)\d{9}/).test(value)}
-									on_error_message={"Expected YYYY-MM-dd format"}
+									on_error_message={"Invalid phone number"}
 								/>
 							</div>
 							<div className="double-fields-container">

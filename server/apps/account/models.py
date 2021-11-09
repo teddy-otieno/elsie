@@ -52,7 +52,7 @@ class MyUser(AbstractUser):
     staff       	= models.BooleanField(default=False)
     admin       	= models.BooleanField(default=False)
     created_at      = models.DateTimeField(auto_now_add=True)
-    date_of_birth   = models.DateField()
+    date_of_birth   = models.DateField(null=True, blank=True)
     phone_number    = models.CharField(max_length=14, null=True, blank=True)
     
     USERNAME_FIELD = 'email'
