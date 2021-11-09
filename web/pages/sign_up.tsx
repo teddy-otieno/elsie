@@ -175,6 +175,7 @@ class SignUpPage extends React.Component<SignUpProps, SignUpPageState> {
 								<TextField 
 									label={"Phone Number"} 
 									value={phone_number} 
+									placeholder="+254123456789"
 									set_value={(value) => this.setState({...this.state, phone_number: value})}
 									validation={(value) => (/([+]254|0)\d{9}/).test(value)}
 									on_error_message={"Invalid phone number"}

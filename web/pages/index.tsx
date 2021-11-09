@@ -69,7 +69,6 @@ const Home: NextPage = () => {
               <p className="dimmed-text">All our cuncellors have minimum qualificaton of Masters in Psychology of Psychiatry</p>
             </span>
             <span>
-              <SecondaryButton>See all</SecondaryButton>
             </span>
           </div>
           <div className="content">
