@@ -115,7 +115,6 @@ const ListCard: React.FC<ListCardProps> = ({icon, title, text} : ListCardProps) 
       <span className="label">
         <h4>{title}</h4>
         <p className="dimmed-text">{text}</p>
-		<p>{title}</p>
       </span>
     </ListCardContainer>
   )
