@@ -170,6 +170,12 @@ const NewQuestion: React.FC<NewQuestionProps> = ({on_create}) => {
 		};
 
 		on_create(new_question)
+		set_question("")
+		set_answer_type("shortanswer")
+		set_min_label("")
+		set_max_label("")
+		set_min(0)
+		set_max(5)
 	}
 
 	return <NewQuestionsContainer>
