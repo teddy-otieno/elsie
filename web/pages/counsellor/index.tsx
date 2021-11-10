@@ -168,6 +168,7 @@ export default class MorePage extends React.PureComponent<CounsellorPageProps> {
 				center={<InfoDash token={this.props.token} />} 
 				title="More"
 				prefix="counsellor"
+				token={this.props.token}
 				/>
 		} else {
 			return <AccessDeniedPage />

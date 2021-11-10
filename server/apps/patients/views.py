@@ -1,4 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from django.utils import timezone
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -167,3 +169,31 @@ def update_doctors_ratings(request):
 
     except (Patient.DoesNotExist, Psychiatrist.DoesNotExist):
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+def get_upcoming_appointments(request, *args, **kwargs):
+
+    user_filter = None
+    appointments = None
+
+    if request.user.is_patient:
+        user_filter = Patient.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(starter=user_filter)
+    else:
+        user_filter = Psychiatrist.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(with_who=user_filter)
+
+
+    count = 0
+    for appointment in appointments:
+
+        diff: timedelta = appointment.time - timezone.now()
+        if diff.total_seconds() / (60 * 60) < 2:
+            count += 1
+
+    
+    return Response(data={
+        "upcoming_appointments": count
+    })

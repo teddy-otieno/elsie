@@ -91,6 +91,7 @@ class BlogPostPage extends React.Component<BlogPostPageProps> {
 	render () {
 		if(this.props.is_valid) {
 			return <DashboardLayout
+				token={this.props.token}
 				center={<BlogPostPageContent router={this.props.router} token={this.props.token}/>} 
 				title="More"
 				prefix="counsellor"

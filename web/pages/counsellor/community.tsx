@@ -91,6 +91,7 @@ class CommunityComponent extends React.Component<CommunityPageProps, CommunityPa
 		let user_data = (psychiatrist as any).user_data;
 
 		return <DashboardLayout 
+			token={this.props.token}
 			title={"Community"}
 			center={<CommunityChat 
 					set_community_id={(id) => this.setState({...this.state, community_id: id})} 

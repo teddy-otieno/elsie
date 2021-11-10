@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
@@ -15,8 +15,9 @@ import { PrimaryButton, SecondaryButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
 import { User } from "../pages/patient/index";
 import { Icons } from './styles/theme';
-import { withRouter } from 'next/router';
+import { useRouter, withRouter } from 'next/router';
 import { SuccessDialog } from '../pages/blog/new-post';
+import { Appointment } from '../pages/patient/appointment';
 
 type DashboardProps = {
 	center: any
@@ -26,16 +27,24 @@ type DashboardProps = {
 	primary_action_label?: string;
 	prefix: string
 	dialog?: any
+	token: string
 };
 
 //TODO center should fill the available space if no end component is provided
+
 class __DashboardLayout extends React.Component<DashboardProps> {
 	render() {
 		const {prefix, center, end, title, primary_action, primary_action_label} = this.props;
-
+		// let upcoming_appointments = this.props.appointments.filter((val: Appointment) => true)
 		return (
 			<DashboardContainer show_end={end !== undefined}>
-				<DashboardTopNavigation title={title} primary_action={primary_action} action_label={primary_action_label} />
+				<DashboardTopNavigation 
+					token={this.props.token}
+					title={title} 
+					primary_action={primary_action} 
+					action_label={primary_action_label}  
+					prefix={prefix}
+				/>
 				<div className="content">
 					<SideNavigation prefix={prefix} />
 					<div>{center}</div>
@@ -92,25 +101,51 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 type DashboardTopNavigationProps = {
 	primary_action?: () => void;
 	action_label?: string;
-	title: string; 
+	title: string;
+	token: string
+	prefix: string
 };
 
-const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, action_label, primary_action}) => {
-		return (
-			<DashboardTopNavigationContainer>
-				<div>
-					<h3>{title}</h3>
+const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, action_label, primary_action, token, prefix}) => {
+
+	const [upcoming_appointments, set_upcoming_appointments] = useState(0);
+	const router =  useRouter()
+
+	const get_available_appointments = async () => {
+
+		try {
+
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+
+			let response = await axios.get(`${SERVER_URL}/api/patient/upcoming-appointments/`, config)
+		} catch(e) {
+			console.log(e)
+		}
+	}
+
+	useEffect(() => {
+		get_available_appointments()
+	}, [])
+
+	return (
+		<DashboardTopNavigationContainer>
+			<div>
+				<h3>{title}</h3>
+			</div>
+			<div>
+				<div className="upcoming-events" onClick={() => router.push(`/${prefix}/appointment`)}>
+					<span>You have <span className="highlight">{upcoming_appointments}</span> upcoming appointments</span><span>{Icons.NOTIFICATION}</span>
 				</div>
-				<div>
-					<div className="upcoming-events">
-						<span>You have <span className="highlight">0</span> upcoming appointments</span><span>{Icons.NOTIFICATION}</span>
-					</div>
-					{
-						(action_label !== undefined && primary_action !== undefined) && <SecondaryButton onClick={(e) => { e.preventDefault(); primary_action?.(); }}>{action_label}</SecondaryButton> 
-					}
-				</div>
-			</DashboardTopNavigationContainer>
-		);
+				{
+					(action_label !== undefined && primary_action !== undefined) && <SecondaryButton onClick={(e) => { e.preventDefault(); primary_action?.(); }}>{action_label}</SecondaryButton> 
+				}
+			</div>
+		</DashboardTopNavigationContainer>
+	);
 }
 
 

@@ -345,6 +345,7 @@ class PatientDashboard extends React.Component<PatientDashboardProps> {
 					end={calendar} 
 					title="Dashboard"
 					prefix={"patient"}
+					token={this.props.token}
 				/>
 			);
 		} else {

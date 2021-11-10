@@ -169,6 +169,7 @@ export default class MorePage extends React.PureComponent<CounsellorPageProps, Q
 				center={<Options token={this.props.token} questionnaires={this.state.questionnaires} />} 
 				title="More"
 				prefix="counsellor"
+				token={this.props.token}
 				/>
 		} else {
 			return <AccessDeniedPage />

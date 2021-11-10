@@ -167,6 +167,7 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 				center={<UpdateCounsellorData router={router} token={this.props.token}/>}
 				title="Profile"
 				prefix={"counsellor"}
+				token={this.props.token}
 			/>
 		} else {
 			return <AccessDeniedPage />

@@ -77,6 +77,7 @@ class Questionaires extends React.Component<PatientDashboardProps> {
 			center={<ListAvailableQuestionaires token={this.props.token}/>}
 			title="Questionnaires"
 			prefix="patient"
+			token={this.props.token}
 		/>
 	}
 }

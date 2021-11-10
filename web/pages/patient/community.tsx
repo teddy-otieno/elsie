@@ -34,6 +34,7 @@ class CommunityPage extends React.PureComponent<PatientDashboardProps, Community
 		const { user_data, token } = this.props;
 
 		return <DashboardLayout 
+			token={this.props.token}
 			title={"Community"}
 			center={<CommunityChat 
 					set_community_id={(id) => this.setState({...this.state, community_id: id})} 

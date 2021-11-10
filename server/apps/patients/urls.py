@@ -10,6 +10,7 @@ from .views import (
     AppointmentViewsSet,
     delete_message,
     generate_newsfeed,
+    get_upcoming_appointments,
     messages_view,
     register_member_to_community,
     update_doctors_ratings
@@ -30,7 +31,8 @@ urlpatterns = [
         path('messages/<int:id>/', messages_view),
         path('register_member/<int:community_id>/', register_member_to_community),
         path('delete_message/<int:id>', delete_message),
-        path('rate-doctor/', update_doctors_ratings)
+        path('rate-doctor/', update_doctors_ratings),
+        path('upcoming-appointments/', get_upcoming_appointments)
         ]
 
 urlpatterns += _router_urls()

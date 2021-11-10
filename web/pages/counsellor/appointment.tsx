@@ -205,6 +205,7 @@ class CounsellorPage extends React.Component<CounsellorPageProps> {
 
 		if(is_valid) {
 			return <DashboardLayout 
+			token={this.props.token}
 				center={ 
 					<CounsellorPageContainer>
 						<AvailableAppointments token={this.props.token}/> 
