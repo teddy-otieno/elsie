@@ -11,7 +11,8 @@ from .views import (
     delete_message,
     generate_newsfeed,
     messages_view,
-    register_member_to_community
+    register_member_to_community,
+    update_doctors_ratings
 )
 
 def _router_urls():
@@ -28,7 +29,8 @@ urlpatterns = [
         path('news_feed/', generate_newsfeed),
         path('messages/<int:id>/', messages_view),
         path('register_member/<int:community_id>/', register_member_to_community),
-        path('delete_message/<int:id>', delete_message)
+        path('delete_message/<int:id>', delete_message),
+        path('rate-doctor/', update_doctors_ratings)
         ]
 
 urlpatterns += _router_urls()

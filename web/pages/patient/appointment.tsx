@@ -28,6 +28,8 @@ export type Appointment = {
     starter: Patient;
     with_who: Psychiatrist;
 		meeting_link?: string;
+
+		token: string
 }
 
 export type AppointmentCardState = {
@@ -36,7 +38,7 @@ export type AppointmentCardState = {
 
 const VIDEO_CALL_ICON =  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></svg>
 
-const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with_who, meeting_link}) => {
+const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with_who, meeting_link, token}) => {
 	const [state, set_state] = useState<AppointmentCardState>({
 		show_doctors_dialog: false,
 	});
@@ -91,7 +93,7 @@ const AppointmentCard: React.FC<Appointment> = ({id, status, time, starter, with
 					<div className="link-toast">{meeting_link}</div>
 				</span>
 			</div>
-			{ state.show_doctors_dialog && <DoctorsDialog pychiatrist={with_who} on_dialog_close={() => set_state({...state, show_doctors_dialog: false})}/> }
+			{ state.show_doctors_dialog && <DoctorsDialog token={token} pychiatrist={with_who} on_dialog_close={() => set_state({...state, show_doctors_dialog: false})}/> }
 		</AppointmentCardContainer>
 			)
 }
@@ -130,16 +132,17 @@ type CreateAppointmentDialogProps = {
 type RatingComponentProps =  {
 	className?: string	
 	rating: number
+	on_click: (rating: number) => void
 }
 
-const RatingComponent: React.FC<RatingComponentProps> = ({ className, rating }) => {
+const RatingComponent: React.FC<RatingComponentProps> = ({ className, rating, on_click }) => {
 		let rating_items = []
 
 		for(let i = 0; i < 5; i++ ) {
 			if(i + 1 <= rating)
-				rating_items.push(<span className="rating-item colored"></span>)
+				rating_items.push(<span key={i} className="rating-item colored" onClick={() => on_click(i)}></span>)
 			else
-				rating_items.push(<span className="rating-item"></span>)
+				rating_items.push(<span key={i} className="rating-item" onClick={() => on_click(i)}></span>)
 		}
 	return <RatingComponentContainer className={className}>
 		<h5>Rating</h5>
@@ -150,6 +153,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({ className, rating }) 
 type DoctorDialogProps = {
 	pychiatrist: Psychiatrist
 	on_dialog_close: () => void;
+	token: string
 }
 
 class DoctorsDialog extends React.Component<DoctorDialogProps> {
@@ -157,22 +161,32 @@ class DoctorsDialog extends React.Component<DoctorDialogProps> {
 	approve_appointment = async (e: any) => {
 		e.preventDefault()
 		e.stopPropagation()
+		this.props.on_dialog_close()
+	}
+
+	update_doctors_ratings = async (rating: number) => {
+
+		try {
+			let config = {
+				headers: {
+					Authorization: `Bearer ${this.props.token}`
+				}
+			}
+
+			let data = {
+				doc_id: this.props.pychiatrist.id,
+				rating: rating
+			}
+			let response = await axios.post(`${SERVER_URL}/api/patient/rate-doctor/`, data, config)
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	render() {
 		const {pychiatrist, on_dialog_close} = this.props;
 
-		return <DoctorsDialogContainer 
-		onClick={(e) => {
-			e.stopPropagation()
-			on_dialog_close()
-		}}
-		onKeyPress={(key) => {
-			console.log(key)
-			if(key.code === "Escape") {
-				on_dialog_close()	
-			}
-		}}>
+		return <DoctorsDialogContainer>
 
 			<div className="dialog-content">
 				<Image src={UserAvatar} alt="Avatar" />
@@ -181,8 +195,8 @@ class DoctorsDialog extends React.Component<DoctorDialogProps> {
 					<h5>Bio</h5>
 					<p>{pychiatrist.bio}</p>
 					</div>
-				<RatingComponent className={"ratings"} rating={pychiatrist.rating}/>
-				<PrimaryButton className="approve" onClick={this.approve_appointment}>Approve</PrimaryButton>
+				<RatingComponent on_click={(rating) => this.update_doctors_ratings(rating)} className={"ratings"} rating={pychiatrist.rating}/>
+				<SecondaryButton className="approve" onClick={this.approve_appointment}>Close</SecondaryButton>
 			</div>
 		</DoctorsDialogContainer>
 	}
@@ -348,7 +362,7 @@ class __AppointmentComponent extends React.Component<AppointmentComponentProps, 
 	render() {
 
 		let appointments_cards = this.state.appointments.map((value, index) => {
-			return <AppointmentCard key={index} {...value} />
+			return <AppointmentCard key={index} {...value} token={this.props.token} />
 			});
 
 		return(

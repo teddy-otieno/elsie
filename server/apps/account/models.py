@@ -64,7 +64,6 @@ class Psychiatrist(models.Model):
     qualifications  = models.CharField(max_length=256)
     university      = models.CharField(max_length=256)
     bio             = models.TextField(default="")
-    rating          = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     user            = models.OneToOneField(to=MyUser, on_delete=models.CASCADE, related_name="psychiatrist")
 
 

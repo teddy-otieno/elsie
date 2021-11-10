@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from apps.account.models import Patient, Psychiatrist
+
 from .serializers import (
     AppointmentSerializer,
     CommunityMessageSerializer,
@@ -17,6 +19,7 @@ from .serializers import (
         )
 from .models import (
     ContactUs,
+    PatientDoctorsRating,
     Post, 
     Event, 
     Community, 
@@ -140,3 +143,27 @@ def delete_message(request, id, *args, **kwargs):
         return Response()
     except CommunityMessage.DoesNotExist:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "Failed to delete community message"})
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+def update_doctors_ratings(request):
+
+    doctor_id = request.data["doc_id"]
+    rating = request.data['rating']
+
+    try:
+        psychiatrist_instance = Psychiatrist.objects.get(pk=doctor_id)
+        patient_instance = Patient.objects.get(user=request.user)
+
+        doc_instance: PatientDoctorsRating = PatientDoctorsRating.objects.get(doctor=psychiatrist_instance)
+        doc_instance.rating = rating
+        doc_instance.save()
+        return Response()
+    
+    except PatientDoctorsRating.DoesNotExist:
+        PatientDoctorsRating.objects.create(doctor=psychiatrist_instance, rating=rating, patient=patient_instance)
+        return Response(status=status.HTTP_201_CREATED)
+
+    except (Patient.DoesNotExist, Psychiatrist.DoesNotExist):
+        return Response(status=status.HTTP_400_BAD_REQUEST)

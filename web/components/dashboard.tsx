@@ -102,6 +102,9 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 					<h3>{title}</h3>
 				</div>
 				<div>
+					<div className="upcoming-events">
+						<span>You have <span className="highlight">0</span> upcoming appointments</span><span>{Icons.NOTIFICATION}</span>
+					</div>
 					{
 						(action_label !== undefined && primary_action !== undefined) && <SecondaryButton onClick={(e) => { e.preventDefault(); primary_action?.(); }}>{action_label}</SecondaryButton> 
 					}

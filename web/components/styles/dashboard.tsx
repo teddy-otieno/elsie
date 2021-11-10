@@ -13,7 +13,7 @@ import { BACKGROUND,
 
 export const DashboardTopNavigationContainer = styled.header`
 	display: grid;
-	grid-template-columns: 1fr 0.25fr;
+	grid-template-columns: 1fr 0.5fr;
 	position: sticky;
 	top: 0pt;
 	height: 45pt;
@@ -21,7 +21,6 @@ export const DashboardTopNavigationContainer = styled.header`
 	border-bottom: 1pt solid ${LIGHT_GREY};
 	width: 100%;
 	z-index: 2;
-	box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
 
 	div:first-child {
 		display: flex;
@@ -41,6 +40,24 @@ export const DashboardTopNavigationContainer = styled.header`
 
 		justify-content: flex-end;
 		padding: 6pt 8pt;
+
+		.upcoming-events {
+			font-size: 0.8em;
+			color: ${LIGHT_FONT};
+			background-color: ${BACKGROUND_ALT};
+			border-radius: 8pt;
+			margin-right: 8pt;
+			cursor: pointer;
+			transition: all .4s ease;
+
+			.highlight {
+				color: ${PRIMARY_COLOR};
+			}
+		}
+
+		.upcoming-events:hover {
+			background-color: ${LIGHT_GREY};
+		}
 
 		button {
 			padding: 8pt 12pt;

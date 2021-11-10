@@ -70,3 +70,9 @@ class ContactUs(models.Model):
     phone_number    = models.CharField(max_length=11)
     message         = models.TextField()
     sent_on         = models.DateTimeField(auto_now_add=True)
+
+
+class PatientDoctorsRating(models.Model):
+    rating = models.IntegerField()
+    patient = models.ForeignKey('account.Patient', on_delete=models.CASCADE)
+    doctor = models.ForeignKey('account.Psychiatrist', on_delete=models.CASCADE)

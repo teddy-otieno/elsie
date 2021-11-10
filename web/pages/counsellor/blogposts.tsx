@@ -26,6 +26,7 @@ type BlogContentState = {
 
 type BlogContentProps = {
 	token: string
+	router: any
 }
 
 class BlogPostPageContent extends React.Component<BlogContentProps,BlogContentState> {
@@ -60,7 +61,7 @@ class BlogPostPageContent extends React.Component<BlogContentProps,BlogContentSt
 	render() {
 
 		let blog_cards = this.state.blogs.map((val: Blog, i: number) => {
-			return <BlogCard key={i} blog={val}/>
+			return <BlogCard key={i} blog={val} on_click={(blog: Blog) => this.props.router.push(`/blog/${blog.id}`)}/>
 		})
 		return <BlogContentStyles>
 			{blog_cards}
@@ -70,10 +71,11 @@ class BlogPostPageContent extends React.Component<BlogContentProps,BlogContentSt
 
 type BlogCardProps = {
 	blog: Blog
+	on_click: (blog: Blog) => void;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({blog}) => {
-	return <BlogCardStyles>
+const BlogCard: React.FC<BlogCardProps> = ({blog, on_click}) => {
+	return <BlogCardStyles onClick={() => on_click(blog)}>
 		<h4>{blog.title}</h4>
 		<div className="labeled-text">
 			<span>Views</span>
@@ -89,7 +91,7 @@ class BlogPostPage extends React.Component<BlogPostPageProps> {
 	render () {
 		if(this.props.is_valid) {
 			return <DashboardLayout
-				center={<BlogPostPageContent token={this.props.token}/>} 
+				center={<BlogPostPageContent router={this.props.router} token={this.props.token}/>} 
 				title="More"
 				prefix="counsellor"
 				primary_action={() => {this.props.router.push('/blog/new-post/')}}
@@ -137,11 +139,16 @@ const BlogContentStyles = styled.div`
 	height: 100%;
 	width: 100%;
 	padding: 16pt;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	box-sizing: border-box;
 `;
 
 const BlogCardStyles = styled(DashCardContainer)`
 	width: 200pt;
-	height: 100pt;
+	height: 100pt !important;
+	min-height: 0pt;
 	border: 1pt solid ${LIGHT_GREY};
 	border-radius: 8pt;	
+	cursor: pointer;
 `;

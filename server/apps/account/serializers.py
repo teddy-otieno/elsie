@@ -2,6 +2,8 @@ from typing import Dict, Any
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from apps.patients.models import PatientDoctorsRating
+
 from .models import MyUser, Psychiatrist, Patient
 
 def is_who(user: MyUser) -> str:
@@ -74,6 +76,23 @@ class PsychiatrisSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+
+        # Load ratings
+        # Divide by the average
+
+        ratings_queryset = PatientDoctorsRating.objects.filter(doctor=instance)
+        total_rating = 0
+        for rating in ratings_queryset:
+            total_rating += rating.rating
+
+        avg_rating = total_rating / (len(ratings_queryset) if len(ratings_queryset) > 0 else 1)
+
+        result["rating"] = avg_rating
+
+        return result
 
 class PatientSerializer(serializers.ModelSerializer):
     user = UserSerializer()

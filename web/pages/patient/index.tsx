@@ -63,6 +63,7 @@ export type Psychiatrist = {
 	user: User
 	bio: string
 	rating: number
+	id?: number
 }
 
 type Event = {
