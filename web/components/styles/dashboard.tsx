@@ -764,7 +764,7 @@ export const CreatePostComponentContainer = styled.div`
 
 		display: grid;
 		grid-template-columns: 1fr 100pt 100pt;
-		grid-template-rows: 32pt 54pt 1fr 32pt;
+		grid-template-rows: 32pt 54pt  100pt 32pt;
 
 		row-gap: 4pt;
 		column-gap: 4pt;
@@ -782,13 +782,14 @@ export const CreatePostComponentContainer = styled.div`
 			color: ${PRIMARY_COLOR}
 		}
 
-		span:first-child {
+		.title {
 			grid-area: title;
 		 }
 
-		 textarea {
+		 .content {
 			 grid-area: content;
 			 font: inherit;
+			 width: 100%;
 		 }
 
 			button:first-child {

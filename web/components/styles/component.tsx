@@ -216,11 +216,12 @@ export const InputWithActionContainer = styled.button`
 
 export const TextFieldContainer = styled.span`
   padding: 4pt;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   margin-bottom: 4pt;
   width: 95%;
   box-sizing: border-box;
+  height: fit-content;
 
   input {
     font: inherit;

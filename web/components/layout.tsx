@@ -129,7 +129,8 @@ export const TextField: React.FC<TextFieldProps> = ({ placeholder, className, la
 export const TextAreaStyle = styled(TextFieldContainer)`
 	display: grid;
 	grid-template-rows: 24pt 1fr;
-
+	min-height: 32pt;
+	width: 100%;
 
 	textarea {
 		border: 2pt solid ${LIGHT_GREY};

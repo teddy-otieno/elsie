@@ -12,6 +12,7 @@ import { NewPost, NewsFeedContainer, PostCardContainer, CalendarContainer, Event
 import { SecondaryButton, PrimaryButton } from "../../components/styles/component";
 import { SERVER_URL, AccessDeniedPage } from '../../utils';
 import UserAvatar from "../../assets/user.jpg";
+import { SuccessDialog } from '../blog/new-post'
 
 
 export interface PatientDashboardProps {
@@ -116,6 +117,7 @@ type PostDetails = {
 const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_close}) => {
 	const [title, set_title] = useState("")
 	const [text, set_text] = useState("")
+	const [show_dialog, set_show_dialog] = useState(false)
 
 	const publish_post = async () => {
 		try {
@@ -131,7 +133,13 @@ const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_clos
 			}
 
 			let response = await axios.post(`${SERVER_URL}/api/patient/post/`, data, config)
-			on_close();
+
+			set_show_dialog(true)
+
+			setTimeout(() => {
+				set_show_dialog(false)
+				on_close()
+			}, 1500);
 		} catch(e) {
 			console.log(e)
 		}
@@ -145,11 +153,13 @@ const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_clos
 					value={title} 
 					set_value={(value) => set_title(value)}
 					label={"Title"}
+					className="title"
 				/>
-				<TextArea label={"Post content"} value={text} set_value={(val) => set_text(val)}/>
+				<TextArea className="content" label={"Post content"} value={text} set_value={(val) => set_text(val)}/>
 				<SecondaryButton onClick={(e) => {e.preventDefault(); on_close()}} style={{gridArea: "cancel"}}>Cancel</SecondaryButton>
 				<PrimaryButton style={{gridArea: "post"}} onClick={ (e) => {e.preventDefault(); publish_post();} }>Post</PrimaryButton>
 			</form>
+			{show_dialog && <SuccessDialog  title={"Successfully created a post"}/>}
 		</CreatePostComponentContainer>
 	)
 }
