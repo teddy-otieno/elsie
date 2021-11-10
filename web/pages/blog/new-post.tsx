@@ -166,7 +166,6 @@ const BlogWritePadStyles = styled.div`
 		align-items: center;
 		position: sticky;
 		top: 0;
-		box-shadow: 4pt 4pt 16pt ${SHADOW_COLOR};
 		border-bottom: 1pt solid ${LIGHT_GREY};
 		background-color: ${SURFACE};
 		z-index: 2;	

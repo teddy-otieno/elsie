@@ -407,6 +407,7 @@ class AppointmentPage extends React.Component<PatientDashboardProps, Appointment
 
 		return (
 			<DashboardLayout
+				token={this.props.token}
 				primary_action={() => this.setState({...this.state, show_dialog: true})}
 				primary_action_label="Create appointment"
 				title="Dashboard"
