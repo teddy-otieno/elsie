@@ -18,6 +18,7 @@ import { PrimaryButton, SecondaryButton } from '../components/styles/component';
 import OasisImage from '../assets/oasis.jpg';
 import Psychiatris1 from '../assets/psychatrist_1.jpg';
 import SampleUserImage from "../assets/user.jpg";
+import HoldImage from "../assets/hold.jpg";
 
 const Home: NextPage = () => {
 
@@ -45,6 +46,7 @@ const Home: NextPage = () => {
             </aside>
             <section>
               <Image className="image" src={OasisImage} alt="Oasis Logo" width={500} height={500}/>
+              <Image height={500} className="image" width={500} alt="Sample Image" src={HoldImage}/>
             </section>
           </IntroPage>
         </HomePageLayout>

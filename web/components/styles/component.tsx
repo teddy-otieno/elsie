@@ -76,6 +76,12 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
   border-bottom: 1pt solid ${LIGHT_GREY};
   z-index: 2;
 
+  h3 {
+    font-family: 'Lora', serif;
+    font-weight: 500;
+    margin: 0;
+    color: ${PRIMARY_COLOR};
+  }
 	.color-text {
 		color: ${PRIMARY_COLOR};
 	}
@@ -87,7 +93,7 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
     list-style: none;
     display: flex;
     li {
-      padding: 8pt;
+      padding: 4pt;
       margin-right: 8pt;
 			position: relative;
       display: flex;
@@ -105,8 +111,8 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
   }
 
 	.avatar {
-		height: 32pt;
-		width: 32pt;
+		height: 24pt;
+		width: 24pt;
 		background-color: ${PRIMARY_COLOR};
 		border-radius: 50%;
 		position: relative;
@@ -133,7 +139,7 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
 		box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
 		padding: 4pt;
 		border-radius: 4pt;
-		left: -300%;
+		left: -450%;
     top: 100%;
 		${(props) => props.show_url ? "display: flex" : "display: none"};
 		flex-direction: column;

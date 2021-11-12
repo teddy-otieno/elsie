@@ -212,6 +212,7 @@ export const PostCardContainer = styled.div`
 	border-radius: 8pt;
 	box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
 	margin-bottom: 8pt;
+	background-color: ${SURFACE};
 
 	.user {
 		padding: 4pt;

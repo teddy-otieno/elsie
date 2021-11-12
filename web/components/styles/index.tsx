@@ -14,6 +14,7 @@ export const IntroPage = styled.section`
   grid-template-columns: 1fr 1fr;
   align-items: center;
   height: calc(100vh - 40pt);
+  border-bottom: 1pt solid ${SHADOW_COLOR};
 
   aside {
     display: flex;
@@ -26,6 +27,7 @@ export const IntroPage = styled.section`
       font-family:  'Playfair Display SC', serif;
       font-size: 3em;
       width: 60%;
+      text-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
     }
     .actions {
       display: flex;
@@ -41,8 +43,14 @@ export const IntroPage = styled.section`
     justify-content: center;
     height: 100%;
     
-    .image {
+    div {
       border-radius: 50%;
+      border: 4pt solid ${SURFACE};
+      box-shadow: 2pt 2pt 8pt ${SHADOW_COLOR};
+    }
+
+    div:nth-child(2) {
+      transform: translate(-100pt, 50pt) scale(.8);
     }
   }
 `;
