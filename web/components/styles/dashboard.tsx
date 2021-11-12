@@ -35,6 +35,11 @@ export const DashboardTopNavigationContainer = styled.header`
 
 		.title {
 			font-family: 'Lora', serif; 
+			font-weight: 500;
+			margin-right: 200pt;
+			background-color: ${PRIMARY_VARIANT};
+			padding: 4pt;
+			border-radius: 4pt;
 		}
 
 		h5 {
@@ -125,7 +130,7 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 	.content {
 		display: grid;
 		background-color: ${BACKGROUND_ALT};
-		${(props) => props.show_end ? "grid-template-columns: 200pt 1fr 300pt" : "grid-template-columns: 200pt 1fr"};
+		${(props) => props.show_end ? "grid-template-columns: 160pt 1fr 200pt" : "grid-template-columns: 200pt 1fr"};
 		min-height: calc(100vh - 40pt);
 	}
 `;
@@ -260,6 +265,8 @@ export const CalendarContainer = styled.div`
 	height: calc(100vh - 40pt);
 	top: 40pt;
 	padding: 8pt 4pt;
+	width: 100%;
+	box-sizing: border-box;
 
 	.events-container {
 			padding: 4pt;
@@ -273,14 +280,20 @@ export const CalendarContainer = styled.div`
 		box-shadow: 0pt 0pt 4pt ${PRIMARY_COLOR};
 	}
 
+	.react-calendar {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
 `;
 
 export const EventCardContainer = styled.div`
-    border: 1pt solid ${PRIMARY_COLOR};
+    border: 1pt solid ${SHADOW_COLOR};
     padding: 8pt;
     margin-bottom: 4pt;
 		border-radius: 8pt;
 		width: 90%;
+		background-color: ${SURFACE};
 
 		display: grid;
 		grid-template-columns: 1fr 0.4fr;
@@ -312,7 +325,7 @@ export const EventCardContainer = styled.div`
 
 export const CommunityChatContainer  = styled.div`
 	display: grid;
-	grid-template-columns: 200pt 1fr;
+	grid-template-columns: 240pt 1fr;
 
 	.communities {
 		border-right: 1pt solid ${LIGHT_GREY};
@@ -321,6 +334,9 @@ export const CommunityChatContainer  = styled.div`
 		flex-direction: column;
 		align-items: center;
 		padding: 4pt 0;
+		background-color: ${SURFACE};
+		padding: 8pt;
+		box-sizing: border-box;
 
 		.create {
 			color: ${PRIMARY_COLOR};
@@ -332,7 +348,7 @@ export const CommunityChatContainer  = styled.div`
 
 	.chat {
 		flex-direction: column;
-		background-color: #eeeeee;
+		background-color: ${"#f1f1f1"};
 		width: 100%;
 		display: grid;
 		grid-template-rows: 1fr 48pt;
@@ -348,13 +364,11 @@ export const CommunityChatContainer  = styled.div`
 		.message-input {
 			display: grid;
 			grid-template-columns: 1fr;
-			background-color: ${PRIMARY_VARIANT};
 			padding: 5pt;
 
 			input {
 				font: inherit;
 				border: 1pt solid ${LIGHT_GREY};
-				border-radius: 32pt;
 				padding: 0 8pt;
 			}
 		}
@@ -415,23 +429,26 @@ export const CommunityCardContainer = styled.div`
 	display: grid;
 	grid-template-columns: 32pt 1fr 24pt;
 	column-gap: 4pt;
-	border-bottom: 1pt solid ${LIGHT_GREY};
-	padding: 4pt;
-	height: 36pt;
+	padding: 12pt 4pt;
 	align-items: center;
 	cursor: pointer;
 	width: 100%;
 	box-sizing: border-box;
+	border-bottom: 1pt solid #f1f1f1;
 
 	.avatar {
-		background-color: ${LIGHT_GREY};
-		height: 100%;
-		width: 100%;
+		background-color: ${SHADOW_COLOR};
+		height: 24pt;
+		width: 24pt;
 		border-radius: 50%;
 	}
 
+	span:first-child {
+		height: 100%;
+	}
+
 	&:hover {
-		background-color: ${PRIMARY_VARIANT};
+		background-color: ${"#f1f1f1"};
 	}
 `;
 
@@ -441,6 +458,8 @@ export const CommunityMemberContainer = styled.div`
 	padding: 4pt;
 	overflow-y: auto;
 	box-sizing: border-box;
+	background-color: ${SURFACE};
+	color: #555555;
 
 	display: flex;
 	flex-direction: column;
@@ -492,6 +511,7 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 	padding: 16pt;
 	border-radius: 8pt;
 	margin-right: 4pt;
+	background-color: ${SURFACE};
 
 	display: grid;
 	grid-template-columns: 32pt 1fr 1fr;

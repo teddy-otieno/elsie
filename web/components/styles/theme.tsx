@@ -6,7 +6,7 @@ export const BACKGROUND = "#";
 export const BACKGROUND_ALT = "#f9f9f9";
 export const SHADOW_COLOR = "#00000018";
 export const LIGHT_FONT = "#9fa6ae"
-export const LIGHT_GREY = "#dee2e6";
+export const LIGHT_GREY = "#e2e7eb";
 export const SURFACE = "#FFFFFF";
 export const ERROR = "#ff4d6d"
 

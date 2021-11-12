@@ -190,7 +190,7 @@ export const SecondaryButton = styled.button`
   background: none;
   background-color: ${SURFACE};
   color: ${PRIMARY_COLOR};
-  border: 1pt solid ${PRIMARY_COLOR};
+  border: 1pt solid ${SHADOW_COLOR};
 
   &:hover {
     ${button_hover_styles}
