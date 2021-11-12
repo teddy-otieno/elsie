@@ -131,6 +131,7 @@ export const TextAreaStyle = styled(TextFieldContainer)`
 	grid-template-rows: 24pt 1fr;
 	min-height: 32pt;
 	width: 100%;
+	height: 64pt;
 
 	textarea {
 		border: 2pt solid ${LIGHT_GREY};

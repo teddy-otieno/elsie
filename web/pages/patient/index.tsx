@@ -156,7 +156,7 @@ const CreatePostComponent: React.FC<CreatePostComponentPros> = ({ token, on_clos
 					label={"Title"}
 					className="title"
 				/>
-				<TextArea className="content" label={"Post content"} value={text} set_value={(val) => set_text(val)}/>
+				<TextArea label={"Post content"} value={text} set_value={(val) => set_text(val)}/>
 				<SecondaryButton onClick={(e) => {e.preventDefault(); on_close()}} style={{gridArea: "cancel"}}>Cancel</SecondaryButton>
 				<PrimaryButton style={{gridArea: "post"}} onClick={ (e) => {e.preventDefault(); publish_post();} }>Post</PrimaryButton>
 			</form>
