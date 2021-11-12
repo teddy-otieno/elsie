@@ -3,7 +3,7 @@ import { BACKGROUND_ALT, LIGHT_FONT, LIGHT_GREY, PRIMARY_COLOR, PRIMARY_VARIANT,
 
 export const HomePageLayout = styled.main`
 	width: 100%;
-  min-height: calc(100vh - 45pt);
+  min-height: calc(100vh - 40pt);
 
 `;
 
@@ -13,7 +13,7 @@ export const IntroPage = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  height: calc(100vh - 45pt);
+  height: calc(100vh - 40pt);
 
   aside {
     display: flex;
@@ -146,7 +146,7 @@ export const BestCounselorPage = styled.section`
   display: flex;
   flex-direction: column;
   width: 80%;
-  height: calc(100vh - 45pt);
+  height: calc(100vh - 40pt);
 
 
   .content {
@@ -187,7 +187,7 @@ export const FeedbackPage = styled.section`
   flex-direction: column;
   width: 100%;
   padding: 20pt 10%;
-  /* height: calc(100vh - 45pt); */
+  /* height: calc(100vh - 40pt); */
   background-color: ${BACKGROUND_ALT};
   box-sizing: border-box;
   .content {

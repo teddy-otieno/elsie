@@ -68,7 +68,7 @@ class __Options extends React.PureComponent<OptionsProps> {
 				</div>
 			</div>
 			<div className="questionnaire-list">
-				<h3>All your questionnaires</h3>
+				<h3 className="category-title">All your questionnaires</h3>
 				<QuestionnaireCardStyle style={{borderTop: `1pt solid ${LIGHT_GREY}`}}>
 					<span>Title</span>
 					<span>Responses</span>
@@ -92,6 +92,7 @@ const QuestionnaireCardStyle = styled.div`
 	grid-template-columns: 1fr 0.5fr 1fr 0.5fr 0.5fr;
 	column-gap: 4pt;
 	cursor: pointer;
+	box-sizing: border-box;
 
 	.terminate {
 

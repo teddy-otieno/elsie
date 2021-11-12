@@ -65,7 +65,7 @@ export const TopNavigationContainer = styled.header<TopNavigationContainerProps>
   position: sticky;
   top: 0;
   width: 100%;
-  height: 45pt;
+  height: 40pt;
   padding: 0pt 12pt;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -189,6 +189,18 @@ export const SecondaryButton = styled.button`
   &:hover {
     ${button_hover_styles}
   }
+`;
+
+type TextButtonProps = {
+  color?: string
+}
+
+export const TextButton = styled.button<TextButtonProps>`
+  ${common_styles}
+  border: none;
+  background: none;
+  color: ${(props) => props.color == undefined ? PRIMARY_COLOR : props.color};
+  font-size: 0.9em;
 `;
 
 export const InputWithActionContainer = styled.button`

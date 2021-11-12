@@ -62,7 +62,7 @@ export const SignUpContainer = styled.div`
 	.title {
 		background-color: green;
 		display: grid;
-		grid-template-rows: 45pt 1fr;
+		grid-template-rows: 40pt 1fr;
 		background-color: #0000008f;
 		background-image: url(/smile.jpg);
 		background-size: cover;

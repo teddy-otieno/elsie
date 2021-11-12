@@ -20,8 +20,9 @@ export const OptionsContainer = styled.div`
 			text-align: center;
 		}
 
-		div:nth-child(2n + 1) {
-			background-color: ${LIGHT_GREY};
+		div {
+			background-color: ${SURFACE};
+			border-bottom: 1pt solid ${BACKGROUND_ALT};
 		}
 	}
 
@@ -31,9 +32,11 @@ export const OptionsContainer = styled.div`
 		height: 100%;
 		width: 100%;
 		padding: 16pt;
+		box-sizing: border-box;
 
 		.option {
 			border: 1pt solid ${LIGHT_GREY};
+			background-color: ${SURFACE};
 			height: 232pt;
 			width: 200pt;
 			display: grid;
@@ -85,7 +88,7 @@ export const CreateQuestionaireComponent = styled.div`
 	.header {
 		background-color: ${SURFACE};
 		width: 100%;
-		height: 45pt;
+		height: 40pt;
 		margin: 0;
 		text-align: center;
 		margin-bottom: 4pt;
@@ -448,7 +451,7 @@ export const RatingComponentContainer = styled.div`
 
 export const UpdateCounsellorDataContainer = styled.div`
 	width: 100%;
-	min-height: calc(100vh - 45pt);
+	min-height: calc(100vh - 40pt);
 	padding: 40pt 200pt;
 	box-sizing: border-box;
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
+import Cookie from 'js-cookie';
 
 import { SERVER_URL } from "../utils";
 import { 
@@ -11,10 +12,10 @@ import {
 	CommunityChatContainer, 
 	CommunityMemberContainer 
 } from './styles/dashboard';
-import { PrimaryButton, SecondaryButton } from './styles/component';
+import { PrimaryButton, SecondaryButton, TextButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
 import { User } from "../pages/patient/index";
-import { Icons } from './styles/theme';
+import { Icons, ERROR } from './styles/theme';
 import { useRouter, withRouter } from 'next/router';
 import { SuccessDialog } from '../pages/blog/new-post';
 import { Appointment } from '../pages/patient/appointment';
@@ -59,9 +60,20 @@ class __DashboardLayout extends React.Component<DashboardProps> {
 
 type SideNavigationProps = {
 	prefix: string;
+	router: any;
 }
 
-class SideNavigation extends React.PureComponent<SideNavigationProps> {
+
+
+class __SideNavigation extends React.PureComponent<SideNavigationProps> {
+
+	log_out_user = (e: any) => {
+		e.preventDefault()
+
+		Cookie.remove('token')
+		this.props.router.push('/')
+	}
+
 	render() {
 		const { prefix } = this.props;
 
@@ -92,11 +104,12 @@ class SideNavigation extends React.PureComponent<SideNavigationProps> {
 					</li>
 					{custom_urls}
 				</ul>
+				<TextButton color={ERROR} onClick={this.log_out_user}>Logout</TextButton>
 			</SideNavigationContainer>
 		)
 	}
 }
-
+const SideNavigation = withRouter(__SideNavigation)
 
 type DashboardTopNavigationProps = {
 	primary_action?: () => void;
@@ -134,7 +147,8 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 	return (
 		<DashboardTopNavigationContainer>
 			<div>
-				<h3>{title}</h3>
+				<h3 className="title">{"Elsie"}</h3>
+				<h5>{title}</h5>
 			</div>
 			<div>
 				<div className="upcoming-events" onClick={() => router.push(`/${prefix}/appointment`)}>

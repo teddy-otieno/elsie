@@ -124,7 +124,7 @@ class AvailableAppointments extends React.Component<AvailableAppointmentProps, A
 		let appointments_items = this.state.appointments.map((value, index) => <AvailableAppointmentCard token={this.props.token} key={index} appointment={value}/>)
 		return (
 			<div>
-				<h3 style={{fontWeight: 500}}>Pending Appointment</h3>
+				<h3 className="category-title" style={{fontWeight: 500}}>Pending Appointment</h3>
 				<AvailableAppointmentsContainer>
 					{this.state.appointments.length === 0 && <h4>No available appointments</h4>}
 					{appointments_items}
@@ -169,7 +169,7 @@ class PendingAppointments extends React.Component<AvailableAppointmentProps, Ava
 		let appointment_items = this.state.appointments.map((value, index) => <AvailableAppointmentCard token={this.props.token} key={index} appointment={value}/>)
 			return (
 				<div>
-					<h3 style={{fontWeight: 500}}>Your Booked Appointment</h3>
+					<h3 className="category-title" style={{fontWeight: 500}}>Your Booked Appointment</h3>
 					<AvailableAppointmentsContainer>
 						{this.state.appointments.length === 0 && <h4>No available appointments</h4>}
 						{appointment_items}

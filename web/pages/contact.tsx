@@ -84,7 +84,7 @@ const ContactPage = styled.div`
 	.content {
 		display: grid;
 		grid-template-columns: 300pt 1fr;
-		height: calc(100vh - 45pt);
+		height: calc(100vh - 40pt);
 	}
 `;
 

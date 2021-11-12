@@ -16,7 +16,7 @@ export const DashboardTopNavigationContainer = styled.header`
 	grid-template-columns: 1fr 0.5fr;
 	position: sticky;
 	top: 0pt;
-	height: 45pt;
+	height: 40pt;
 	background-color: ${SURFACE};
 	border-bottom: 1pt solid ${LIGHT_GREY};
 	width: 100%;
@@ -27,10 +27,24 @@ export const DashboardTopNavigationContainer = styled.header`
 		align-items: center;
 		padding: 0pt 4pt;
 		
-		h3 {
-			font-weight: 500;
+		.title, h5 {
 			color: ${PRIMARY_COLOR};
+			margin: 0;
+			margin-right: 10pt;
 		}
+
+		.title {
+			font-family: 'Lora', serif; 
+		}
+
+		h5 {
+			color: ${LIGHT_FONT};
+			font-weight: 500;
+			background-color: ${BACKGROUND_ALT};
+			padding: 4pt;
+			border-radius: 4pt;
+		}
+
 	}
 
 	div:nth-child(2) {
@@ -81,6 +95,15 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 		p {
 			justify-self: flex-end;
 		}
+
+	}
+
+	.category-title {
+		background-color: ${SURFACE};
+		padding: 8pt;
+		border-radius: 4pt;
+		margin: 8pt 4pt;
+		color: ${PRIMARY_COLOR};
 	}
 
 	.react-calendar {
@@ -101,20 +124,20 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 
 	.content {
 		display: grid;
-
+		background-color: ${BACKGROUND_ALT};
 		${(props) => props.show_end ? "grid-template-columns: 200pt 1fr 300pt" : "grid-template-columns: 200pt 1fr"};
-		min-height: calc(100vh - 45pt);
+		min-height: calc(100vh - 40pt);
 	}
 `;
 
 export const SideNavigationContainer = styled.nav`
-	display: flex;
-	flex-direction: column;
-	background-color: ${BACKGROUND};
-	border-right: 1pt solid ${LIGHT_GREY};
+	display: grid;
+	grid-template-rows: 1fr 32pt;
+	background-color: ${SURFACE};
+	border-right: 1pt solid ${BACKGROUND_ALT};
 	position: sticky;
-	top: 45pt;
-	height: calc(100vh - 45pt);
+	top: 40pt;
+	height: calc(100vh - 40pt);
 
 	ul {
 		padding: 0;
@@ -233,8 +256,8 @@ export const PostCardContainer = styled.div`
 export const CalendarContainer = styled.div`
 	display: grid;
 	position: sticky;
-	height: calc(100vh - 45pt);
-	top: 45pt;
+	height: calc(100vh - 40pt);
+	top: 40pt;
 	padding: 8pt 4pt;
 
 	.events-container {
@@ -292,7 +315,7 @@ export const CommunityChatContainer  = styled.div`
 
 	.communities {
 		border-right: 1pt solid ${LIGHT_GREY};
-		height: calc(100vh - 45pt);
+		height: calc(100vh - 40pt);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -312,7 +335,7 @@ export const CommunityChatContainer  = styled.div`
 		width: 100%;
 		display: grid;
 		grid-template-rows: 1fr 48pt;
-		height: calc(100vh- 45pt);
+		height: calc(100vh- 40pt);
 
 		.prev-messages {
 			padding: 8pt;
@@ -589,9 +612,9 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 `;
 
 export const CreateAppointmentDialogContainer = styled.div`
-	height: calc(100vh - 45pt); width: 100%;
+	height: calc(100vh - 40pt); width: 100%;
 	background-color: #00000023;
-	top: 45pt;
+	top: 40pt;
 	left: 0;
 	position: absolute;
 	z-index: 3;
@@ -673,6 +696,8 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 	padding: 16pt;
 	border-radius: 8pt;
 	margin: 4pt;
+	background-color: ${SURFACE};
+	transition: all .4s ease;
 
 	display: grid;
 	grid-template-columns: 32pt 1fr 1fr 48pt;
@@ -686,6 +711,9 @@ export const AvailableAppointmentCardContainer = styled.div<AvailableAppointment
 		"meeting meeting meeting meeting"
 		"pick pick pick action";
 
+	&:hover {
+		box-shadow: 2pt 2pt 4pt ${SHADOW_COLOR};
+	}
 	.avatar {
 		grid-area: avatar;
 		background-color: grey;

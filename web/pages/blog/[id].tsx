@@ -73,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const BlogView = styled.div`
 	width: 100%;
-	min-height: calc(100vh - 45pt);
+	min-height: calc(100vh - 40pt);
 	.content {
 		height: 100%;
 		width: 60%;
