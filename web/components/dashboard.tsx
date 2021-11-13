@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
 import Cookie from 'js-cookie';
+import styled from 'styled-components'
+import { useRouter, withRouter } from 'next/router';
 
 import { SERVER_URL } from "../utils";
 import { 
@@ -14,11 +16,11 @@ import {
 } from './styles/dashboard';
 import { PrimaryButton, SecondaryButton, TextButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
-import { User } from "../pages/patient/index";
+import { Patient, User } from "../pages/patient/index";
 import { Icons, ERROR } from './styles/theme';
-import { useRouter, withRouter } from 'next/router';
 import { SuccessDialog } from '../pages/blog/new-post';
 import { Appointment } from '../pages/patient/appointment';
+import { DashCardContainer } from './styles/psychiatrist';
 
 type DashboardProps = {
 	center: any
@@ -102,6 +104,9 @@ class __SideNavigation extends React.PureComponent<SideNavigationProps> {
 					<li>
 						<Link href={`/${prefix}/more`}>Questionaires</Link>
 					</li>
+					<li>
+						<Link href={`/${prefix}/report`}>Report</Link>
+					</li>
 					{custom_urls}
 				</ul>
 				<TextButton color={ERROR} onClick={this.log_out_user}>Logout</TextButton>
@@ -134,7 +139,8 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 				}
 			}
 
-			let response = await axios.get(`${SERVER_URL}/api/patient/upcoming-appointments/`, config)
+			let response = await axios.get<{upcoming_appointments: number}>(`${SERVER_URL}/api/patient/upcoming-appointments/`, config)
+			set_upcoming_appointments(response.data.upcoming_appointments)
 		} catch(e) {
 			console.log(e)
 		}
@@ -152,7 +158,7 @@ const DashboardTopNavigation: React.FC<DashboardTopNavigationProps>  = ({title, 
 			</div>
 			<div>
 				<div className="upcoming-events" onClick={() => router.push(`/${prefix}/appointment`)}>
-					<span>You have <span className="highlight">{upcoming_appointments}</span> upcoming appointments</span><span>{Icons.NOTIFICATION}</span>
+					<span>You have <span key={0} className="highlight">{upcoming_appointments}</span> upcoming appointments</span><span>{Icons.NOTIFICATION}</span>
 				</div>
 				{
 					(action_label !== undefined && primary_action !== undefined) && <SecondaryButton onClick={(e) => { e.preventDefault(); primary_action?.(); }}>{action_label}</SecondaryButton> 
@@ -479,3 +485,38 @@ class __CommunityMembers extends React.PureComponent<CommunityMemberProps, Commu
 }
 
 export const CommunityMembers = __CommunityMembers;
+
+
+type PatientCardProps = {
+	patient: Patient
+}
+
+const PatientCardContainer = styled(DashCardContainer)`
+	height: 200pt;
+	width: 200pt;
+	background-color: green;
+	margin-right: 4pt;
+	display: grid;
+	grid-template-rows: 1fr 32pt;
+	cursor: pointer;
+
+	.image {
+
+	}
+`;
+
+export const PatientCard: React.FC<PatientCardProps> = ({patient}) => {
+	const router = useRouter()
+	const go_to_write_report = () => {
+		router.push(`/counsellor/write_report/${patient.id}`)
+	}
+
+	return <PatientCardContainer onClick={go_to_write_report}>
+		<div className="image">
+
+		</div>
+		<div className="description">
+			<span>{`${patient.user.f_name} ${patient.user.l_name}`}</span>
+		</div>
+	</PatientCardContainer>
+}

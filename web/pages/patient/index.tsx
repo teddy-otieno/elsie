@@ -37,6 +37,7 @@ export type User = {
 export type Patient = {
 	id: number;
 	user: User
+	avatar?: string;
 }
 
 type Post = {

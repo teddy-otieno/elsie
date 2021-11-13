@@ -15,6 +15,10 @@ type QuestionnaireAnswerComponentProps = {
 	token: string
 }
 
+type QuestionnaireAnswerComponentState = {
+
+}
+
 const QuestionnaireAnswersComponent: React.FC<QuestionnaireAnswerComponentProps> = ({ response_id, patient_id, token }) => {
 	const [answers, set_answers] = useState();
 	const load_answers = async () => {

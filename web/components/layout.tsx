@@ -131,12 +131,13 @@ export const TextAreaStyle = styled(TextFieldContainer)`
 	grid-template-rows: 24pt 1fr;
 	min-height: 32pt;
 	width: 100%;
-	height: 64pt;
+	min-height: 64pt;
 
 	textarea {
 		border: 2pt solid ${LIGHT_GREY};
 		font: inherit;
 		width: 100%;
+		padding: 4pt;
 	}
 `;
 
@@ -146,15 +147,17 @@ type TextAreaProps = {
 	set_value: (val: string) => void;
 	className?: string
 	placeholder?: string
+	rows?: number
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({placeholder, className, label, value, set_value}) => {
+export const TextArea: React.FC<TextAreaProps> = ({placeholder, className, label, value, set_value, rows}) => {
 	return <TextAreaStyle className={className}>
 		<p>{label}</p>
 		<textarea 
 			value={value} 
 			onChange={(event) => set_value(event.target.value)}
 			placeholder={placeholder}
+			rows={rows}
 		/>
 	</TextAreaStyle>
 }
