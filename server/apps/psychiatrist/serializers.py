@@ -5,7 +5,14 @@ from apps.account.serializers import PsychiatrisSerializer, PatientSerializer
 from apps.patients.models import Appointment, Community
 from apps.account.models import Psychiatrist
 
-from .models import BlogPost, Questionnaire, Question, QuestionnaireResponses, QuestionResponse
+from .models import (
+        BlogPost, 
+        Questionnaire, 
+        Question, 
+        QuestionnaireResponses, 
+        QuestionResponse,
+        PatientReport
+        )
 
 class PsychiatristAppointmentSerializer(serializers.ModelSerializer):
     starter = PatientSerializer(read_only=True)
@@ -27,6 +34,8 @@ class CommunitySerializer(serializers.ModelSerializer):
                 )
 
 
+class PerPatientQuestionnaireResponse(serializers.ModelSerializer):
+    pass
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
@@ -50,8 +59,9 @@ class PatientQuestionnaireSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
 
         try:
-            instance = QuestionnaireResponses.objects.get(questionnaire=instance.pk).is_filled
-            data["is_filled"] = True
+            response_instance: QuestionnaireResponses = QuestionnaireResponses.objects.get(questionnaire=instance.pk)
+            data["is_filled"] = response_instance.is_filled
+            data["report_available"] = False
         except QuestionnaireResponses.DoesNotExist:
             data["is_filled"] = False
 
@@ -85,3 +95,15 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return self.Meta.model.objects.create(**validated_data, author=Psychiatrist.objects.get(user=self.context['user']))
+
+
+class PatientReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientReport
+        fields = ["diagnosis", "prescription", "description", "written_on", "patient"]
+        read_only_fields = ["written_on"]
+
+    def create(self, validated_data):
+        author = Psychiatrist.objects.get(user=self.context["user"])
+
+        return self.Meta.model.objects.create(**validated_data, author=author)

@@ -18,4 +18,5 @@ urlpatterns = [
     path('new-counsellor/', create_counsellor_account, name="create-counsellor"),
     path('update-psychiatrist/', update_psychiatrist, name="update-user"),
     path('get-user-data', get_user_data, name="get-user-data"),
+    path('get-user-data/<int:id>/', get_user_data, name="get-user-data"),
 ]

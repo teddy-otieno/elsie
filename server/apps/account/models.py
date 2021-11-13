@@ -69,3 +69,4 @@ class Psychiatrist(models.Model):
 
 class Patient(models.Model):
     user = models.OneToOneField(to=MyUser, on_delete=models.CASCADE, related_name="patient")
+    avatar = models.ImageField(null=True, blank=True)

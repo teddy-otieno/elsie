@@ -42,14 +42,20 @@ def update_psychiatrist(request, *args, **kwargs):
 @authentication_classes([JWTAuthentication])
 def get_user_data(request, *args, **kwargs):
 
-    data = None
-    if request.user.is_psychiatrist:
-        data = PsychiatrisSerializer(instance=Psychiatrist.objects.get(user=request.user)).data
+    id = kwargs.get("id", None)
+    if id is None:
+        data = None
+        if request.user.is_psychiatrist:
+            data = PsychiatrisSerializer(instance=Psychiatrist.objects.get(user=request.user)).data
 
-    if request.user.is_patient:
-        data = PatientSerializer(instance=Patient.objects.get(user=request.user))
+        if request.user.is_patient:
+            data = PatientSerializer(instance=Patient.objects.get(user=request.user)).data
 
-    return Response(data=data)
+        return Response(data=data)
+    else:
+        #Code path will only load patients details
+        data = PatientSerializer(instance=Patient.objects.get(pk=id)).data
+        return Response(data=data)
     
 @api_view(['POST'])
 def create_patient_account(request, **kwargs):

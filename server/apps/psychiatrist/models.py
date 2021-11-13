@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.fields import related
+
+from apps.account.models import Patient
 
 # Create your models here.
 
@@ -10,9 +13,9 @@ class Questionnaire(models.Model):
 
 class Question(models.Model):
 	ANSWER_TYPE_CHOICES = [
-		("RANGE", "RANGE"),
-		("SHORTANSWER", "SHORTANSWER")
-	]
+			("RANGE", "RANGE"),
+			("SHORTANSWER", "SHORTANSWER")
+			]
 	questionnaire = models.ForeignKey("psychiatrist.Questionnaire", on_delete=models.CASCADE, related_name="questions")
 	question = models.CharField(max_length=1024 * 6)
 	type = models.CharField(max_length=20, choices=ANSWER_TYPE_CHOICES)
@@ -43,3 +46,12 @@ class BlogPost(models.Model):
 	author = models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="blog_posts")
 	created_on = models.DateTimeField(auto_now=True)
 	views = models.IntegerField(default=0)
+
+
+class PatientReport(models.Model):
+	diagnosis       = models.CharField(max_length=1024 * 10)
+	description 		= models.TextField()
+	prescription 		= models.TextField()
+	written_on       = models.DateTimeField(auto_now_add=True)
+	patient 	    	= models.ForeignKey(to="account.Patient", on_delete=models.CASCADE, related_name="report")
+	author		    	= models.ForeignKey(to="account.Psychiatrist", on_delete=models.CASCADE, related_name="patient_reports")

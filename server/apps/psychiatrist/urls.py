@@ -18,7 +18,8 @@ from .views import (
     save_responses,
     PatientQuestionnaireViewSet,
     terminate_questionnaire,
-    update_view
+    update_view,
+    patient_report_data
 )
 
 def viewset_routes():
@@ -41,6 +42,7 @@ urlpatterns = [
         path('questionnaire-stats', get_questionnaire_stats),
         path('terminate-questionnaire/<int:id>', terminate_questionnaire),
         path('blog-viewed/<int:id>', update_view),
+        path('patient-reports/', patient_report_data)
         ] 
 
 urlpatterns += viewset_routes()

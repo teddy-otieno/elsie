@@ -9,8 +9,24 @@ from apps.account.serializers import PatientSerializer
 
 from apps.patients.models import Appointment, Community, Event
 from apps.account.models import MyUser, Psychiatrist, Patient
-from apps.psychiatrist.models import BlogPost, Question, QuestionResponse, Questionnaire, QuestionnaireResponses
-from .serializers import BlogPostSerializer, PsychiatristAppointmentSerializer, CommunitySerializer, QuestionnaireSerializer, ResponsesSerializer, PatientQuestionnaireSerializer
+from apps.psychiatrist.models import (
+        BlogPost, 
+        Question, 
+        QuestionResponse, 
+        Questionnaire, 
+        QuestionnaireResponses, 
+        PatientReport
+        )
+from .serializers import (
+        BlogPostSerializer, 
+        PerPatientQuestionnaireResponse, 
+        PsychiatristAppointmentSerializer, 
+        CommunitySerializer, 
+        QuestionnaireSerializer, 
+        ResponsesSerializer, 
+        PatientQuestionnaireSerializer,
+        PatientReportSerializer
+        )
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -39,11 +55,11 @@ def accept_appointment(request, id, *args, **kwargs):
 
             # Create event
             instance, created = Event.objects.get_or_create(
-                time=appointment_instance.time,
-                title="Appointment",
-                description=f"Appointment with Dr. {psychiatrist_instance.user.f_name} {psychiatrist_instance.user.l_name}",
-                owner = psychiatrist_instance
-            )
+                    time=appointment_instance.time,
+                    title="Appointment",
+                    description=f"Appointment with Dr. {psychiatrist_instance.user.f_name} {psychiatrist_instance.user.l_name}",
+                    owner = psychiatrist_instance
+                    )
 
             if created: instance.save()
 
@@ -87,17 +103,16 @@ class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
+    
         return Questionnaire.objects.all()
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 def get_responses(request, q_id, p_id, *args, **kwargs):
-
     response_instance = QuestionnaireResponses.objects.get(patient=Patient.objects.get(pk=p_id), pk=q_id)
-
     answers_query_set=  QuestionResponse.objects.filter(response=response_instance)
-
-    return Response()
+    data = [PerPatientQuestionnaireResponse(instance=instance) for instance in answers_query_set]
+    return Response(data=data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -106,15 +121,15 @@ def save_responses(request):
 
     questionniare_id = request.data.pop('questionnaire_id')
     responses = request.data.pop("responses")
-    
+
     try:
         questionnaire_instance = Questionnaire.objects.get(pk=questionniare_id)
 
         question_response = QuestionnaireResponses.objects.get(
-            questionnaire=questionnaire_instance, 
-            is_filled=True, 
-            patient=Patient.objects.get(user=request.user)
-            )
+                questionnaire=questionnaire_instance, 
+                is_filled=True, 
+                patient=Patient.objects.get(user=request.user)
+                )
 
         return Response(status=status.HTTP_202_ACCEPTED)
     except Questionnaire.DoesNotExist:
@@ -123,10 +138,10 @@ def save_responses(request):
     except QuestionnaireResponses.DoesNotExist:
 
         question_response = QuestionnaireResponses.objects.create(
-            questionnaire=questionnaire_instance, 
-            is_filled=True, 
-            patient=Patient.objects.get(user=request.user)
-            )
+                questionnaire=questionnaire_instance, 
+                is_filled=True, 
+                patient=Patient.objects.get(user=request.user)
+                )
 
         for response in responses:
             try:
@@ -157,10 +172,10 @@ def get_patients_stats(request):
     recent_activity = len(patients_query_set.filter(created_at__gt=last_week))
 
     data = {
-        "recent_logins": recent_activity,
-        "total_patient": total_patients,
-        "percentage": (recent_activity / past_number if past_number > 0 else 1) * 100
-    }
+            "recent_logins": recent_activity,
+            "total_patient": total_patients,
+            "percentage": (recent_activity / past_number if past_number > 0 else 1) * 100
+            }
 
     return Response(data=data)
 
@@ -178,9 +193,9 @@ def get_questionnaire_stats(request):
         total_responses += len(QuestionnaireResponses.objects.filter(questionnaire=questionnaire))
 
     data = {
-        "active": active_questionnaire,
-        "responses": total_responses
-    }
+            "active": active_questionnaire,
+            "responses": total_responses
+            }
     return Response(data=data)
 
 
@@ -198,7 +213,7 @@ def get_blog_stats(request):
     return Response(data={
         "total_views": total_view,
         "blogs": no_of_blogs
-    })
+        })
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -243,3 +258,55 @@ def update_view(request, id, *args, **kwargs):
     except BlogPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "Blog Post not present"})
 
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+def patient_report_data(request, *args, **kwargs):
+    psychiatrist_instance = Psychiatrist.objects.get(user=request.user)
+
+    def patient_exists(item, ref_list):
+        for patient in patients:
+            if patient.user.email == item.user.email:
+                return True
+
+        return False
+
+    if request.method == "GET":
+        # Get the list of patients who have had appointment with this psychiatrist
+        appointments_query_set = Appointment.objects.filter(with_who=psychiatrist_instance)
+
+        # Remove duplicates
+        duplicates_patients_with_appointments = [appointment.starter for appointment in appointments_query_set]
+
+        patients = []
+        for item in duplicates_patients_with_appointments:
+            if not patient_exists(item, patients):
+                patients.append(item)
+
+        # Get there reports
+        patient_reports = []
+        for patient in patients:
+            try:
+                patient_reports.append(PatientReport.objects.get(patient=patient))
+            except PatientReport.DoesNotExist:
+                continue
+
+        report_data = [PatientReportSerializer(instance=report).data for report in patient_reports]
+        patients_data = [PatientSerializer(instance=patient).data for patient in patients]
+
+        result = {
+                "report_data": report_data,
+                "patients": patients_data
+                }
+        return Response(data=result)
+
+    else:
+        serializer = PatientReportSerializer(data=request.data, context={"user": request.user})
+
+        if serializer.is_valid():
+            instance = serializer.save()
+            result_data = PatientReportSerializer(instance=instance).data
+            return Response(data=result_data, status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
