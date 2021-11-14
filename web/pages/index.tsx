@@ -64,7 +64,7 @@ const Home: NextPage = () => {
             </div>
           </div>
         </WhyChooseUspage>
-        <BestCounselorPage>
+        {/* <BestCounselorPage>
           <div className="section-title">
             <span>
               <h1 className="big-sub-title">Best Councellor</h1>
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
             <CounselorCard name="Dr. Wambui Anastacia"/>
             <CounselorCard name="Dr. Sylvia"/>
           </div>
-        </BestCounselorPage>
+        </BestCounselorPage> */}
 {/*        <FeedbackPage>
           <div className="section-title">
             <h1 className="big-sub-title">What do <span>people</span> think of us?</h1>
