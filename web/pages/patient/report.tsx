@@ -29,7 +29,7 @@ class PatientReportContent extends React.Component<PatientReportContentProps> {
 
 	render() {
 		let patients_components = this.props.reports.map((val: PatientReport, i: number) => {
-			return <PatientCard on_click={() => this.open_view_questionnaire(val.id)} key={i} patient={val.author!}/>
+			return <PatientCard title={"Click to view report from"} on_click={() => this.open_view_questionnaire(val.id)} key={i} patient={val.author!}/>
 		})
 
 		return <PatientReportContent.PatientReportPageStyles>

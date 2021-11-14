@@ -104,15 +104,15 @@ class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-    
-        return Questionnaire.objects.all()
+        patient = Patient.objects.get(user=self.request.user)
+        return Questionnaire.objects.filter()
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 def get_responses(request, q_id, p_id, *args, **kwargs):
     response_instance = QuestionnaireResponses.objects.get(patient=Patient.objects.get(pk=p_id), pk=q_id)
     answers_query_set=  QuestionResponse.objects.filter(response=response_instance)
-    data = [PerPatientQuestionnaireResponse(instance=instance) for instance in answers_query_set]
+    data = [PerPatientQuestionnaireResponse(instance=instance).data for instance in answers_query_set]
     return Response(data=data, status=status.HTTP_200_OK)
 
 

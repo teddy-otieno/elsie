@@ -17,7 +17,7 @@ import {
 import { PrimaryButton, SecondaryButton, TextButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
 import { Patient, Psychiatrist, User } from "../pages/patient/index";
-import { Icons, ERROR } from './styles/theme';
+import { Icons, ERROR, PRIMARY_COLOR } from './styles/theme';
 import { SuccessDialog } from '../pages/blog/new-post';
 import { Appointment } from '../pages/patient/appointment';
 import { DashCardContainer } from './styles/psychiatrist';
@@ -489,6 +489,7 @@ export const CommunityMembers = __CommunityMembers;
 
 type PatientCardProps = {
 	patient: Patient | Psychiatrist
+	title: string
 	on_click: (id: number) => void
 }
 
@@ -499,18 +500,21 @@ const PatientCardContainer = styled(DashCardContainer)`
 	display: grid;
 	grid-template-rows: 1fr 32pt;
 	cursor: pointer;
+	justify-content: center;
 
 	.image {
-
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 `;
 
-export const PatientCard: React.FC<PatientCardProps> = ({patient, on_click}) => {
+export const PatientCard: React.FC<PatientCardProps> = ({patient, on_click, title}) => {
 	const router = useRouter()
 
 	return <PatientCardContainer onClick={() => on_click(patient.id!)}>
 		<div className="image">
-
+			<p style={{color: PRIMARY_COLOR}}>{title}</p>
 		</div>
 		<div className="description">
 			<span>{`${patient.user.f_name} ${patient.user.l_name}`}</span>

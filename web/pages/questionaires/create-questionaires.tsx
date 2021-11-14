@@ -199,7 +199,7 @@ const NewQuestion: React.FC<NewQuestionProps> = ({on_create}) => {
 }
 
 
-const ShortAnswer: React.FC = () => {
+export const ShortAnswer: React.FC = () => {
 	return <div className="short-answer"><span>Short Answer</span></div>
 }
 
@@ -254,20 +254,27 @@ const Range: React.FC<RangeProps> = ({
 
 type QuestionProps = {
 	question: Question;
+	short_answer?: string
+	range_answer?: number
 }
 
-const QuestionComponent: React.FC<QuestionProps> = ({question}) => {
+export const QuestionComponent: React.FC<QuestionProps> = ({question, short_answer, range_answer}) => {
 
 	const [clicked, set_clicked] = useState<number | undefined>();
 	let range_items = []
 
 	for(let i=question.min ?? 0; i <= (question.max ); i++) {
-		range_items.push(<RangeItem label={i.toString()} is_selected={clicked === i} on_selected={() => set_clicked(i)}/>)
+
+		if(range_answer === undefined) {
+			range_items.push(<RangeItem label={i.toString()} is_selected={clicked === i} on_selected={() => set_clicked(i)}/>)
+		} else {
+			range_items.push(<RangeItem label={i.toString()} is_selected={range_answer === i} on_selected={() => set_clicked(i)}/>)
+		}
 	}
 
 	return <QuestionComponentContainer>
 		<span className="question">{question.question}</span>
-		{question.type === "SHORTANSWER" && <div className="short-answer"><span>Short Answer</span></div>}
+		{question.type === "SHORTANSWER" && <div className="short-answer"><span>{short_answer === undefined ? "Short Answer" : short_answer}</span></div>}
 		{question.type === "RANGE" && 
 			<div className="range">
 				{range_items}

@@ -532,6 +532,7 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 	.psychiatrist {
 		grid-area: header;
 
+
 		.title {
 			display: grid;
 			grid-template-columns: 32pt 1fr;
@@ -540,6 +541,7 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 			width: 100%;
 			cursor: pointer;
 			padding: 4pt;
+			transition: all .2s ease;
 			border-radius: 4pt;
 
 			div:first-child {
@@ -562,7 +564,11 @@ export const AppointmentCardContainer =  styled.div<AppointmentCardProps>`
 			font-weight: 500;
 			color: ${ERROR};
 		}
+		.title:hover {
+			background-color: ${SHADOW_COLOR}
+		}
 	}
+
 
 	.time {
 		display: grid;

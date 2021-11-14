@@ -5,22 +5,35 @@ import styled from 'styled-components';
 import { GetServerSideProps } from 'next';
 import {CounsellorPageProps} from '../../counsellor/appointment';
 import { SERVER_URL } from '../../../utils';
-import { Questionnaire, QuestionnaireResponse } from '../create-questionaires';
-import { LIGHT_GREY } from '../../../components/styles/theme';
+import { QuestionComponent, Questionnaire, QuestionnaireResponse } from '../create-questionaires';
+import { BACKGROUND_ALT, LIGHT_GREY, PRIMARY_COLOR } from '../../../components/styles/theme';
+import { QuestionResponse } from '../../../types';
+import { NewQuestionsContainer } from '../../../components/styles/psychiatrist';
 
 
 type QuestionnaireAnswerComponentProps = {
 	response_id: number
 	patient_id: number;
 	token: string
+	title: string
 }
 
 type QuestionnaireAnswerComponentState = {
 
 }
 
-const QuestionnaireAnswersComponent: React.FC<QuestionnaireAnswerComponentProps> = ({ response_id, patient_id, token }) => {
-	const [answers, set_answers] = useState();
+const QuestionnaireResponseStyle = styled.div`
+	width: 100%;
+	height: 100%;
+	background-color: ${BACKGROUND_ALT};
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10pt 0;
+`;
+
+const QuestionnaireAnswersComponent: React.FC<QuestionnaireAnswerComponentProps> = ({ response_id, patient_id, token, title }) => {
+	const [answers, set_answers] = useState<QuestionResponse[]>([]);
 	const load_answers = async () => {
 		try {
 			let config = {
@@ -28,7 +41,8 @@ const QuestionnaireAnswersComponent: React.FC<QuestionnaireAnswerComponentProps>
 					Authorization: `Bearer ${token}`
 				}
 			}
-			let response = await axios.get(`${SERVER_URL}/api/psychiatrist/get-responses/${response_id}/${patient_id}/`, config)
+			let response = await axios.get<QuestionResponse[]>(`${SERVER_URL}/api/psychiatrist/get-responses/${response_id}/${patient_id}/`, config)
+			set_answers(response.data)
 		} catch(e) {
 			console.log(e)
 		}
@@ -38,7 +52,18 @@ const QuestionnaireAnswersComponent: React.FC<QuestionnaireAnswerComponentProps>
 		load_answers()
 	}, [response_id, patient_id])
 
-	return null
+	let response_answers = answers.map((val: QuestionResponse, i: number) => {
+		return <QuestionComponent 
+			key={i}
+			question={val.question}
+			short_answer={val.short_answer}
+			range_answer={val.range_answer}
+		/>
+	})
+	return <QuestionnaireResponseStyle>
+		<h2 style={{color: PRIMARY_COLOR, fontWeight: 500}}>{`Response for '${title}'`}</h2>
+			{response_answers}
+	</QuestionnaireResponseStyle>
 }
 
 interface ViewQuestionnaireScreenProps extends CounsellorPageProps {
@@ -76,9 +101,11 @@ class ViewQuestionnaireScreen extends React.Component<ViewQuestionnaireScreenPro
 
 		return <ViewQuestionnaireContainer>
 			<div className="content">
-				<div className="responses">{respones}</div>
+				<div className="responses">
+					{respones}
+					</div>
 				<div className="answers">{
-					selected_response !== undefined && <QuestionnaireAnswersComponent response_id={selected_response.id!} patient_id={selected_response!.patient.id!} token={this.props.token}/>
+					selected_response !== undefined && <QuestionnaireAnswersComponent title={questionnaire.title} response_id={selected_response.id!} patient_id={selected_response!.patient.id!} token={this.props.token}/>
 				}</div>
 			</div>
 		</ViewQuestionnaireContainer>

@@ -35,7 +35,7 @@ class ListPatients extends React.Component<ListPatientsProps> {
 			const go_to_write_report = (id: number) => {
 				this.props.router.push(`/counsellor/write_report/${val.id}`)
 			}
-			return <PatientCard on_click={go_to_write_report} key={i} patient={val}/>
+			return <PatientCard title={"Click to write report for"} on_click={go_to_write_report} key={i} patient={val}/>
 		})
 		return <ListPatients.ListPatientContainer>
 			{patients_components}

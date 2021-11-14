@@ -34,13 +34,18 @@ class CommunitySerializer(serializers.ModelSerializer):
                 )
 
 
-class PerPatientQuestionnaireResponse(serializers.ModelSerializer):
-    pass
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = "__all__"
         read_only_fields = ["questionnaire"]
+
+class PerPatientQuestionnaireResponse(serializers.ModelSerializer):
+    question = QuestionSerializer()
+    class Meta:
+        model = QuestionResponse
+        fields = "__all__"
 class ResponsesSerializer(serializers.ModelSerializer):
     patient = PatientSerializer()
     class Meta:
