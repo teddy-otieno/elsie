@@ -19,6 +19,8 @@ import OasisImage from '../assets/oasis.jpg';
 import Psychiatris1 from '../assets/psychatrist_1.jpg';
 import SampleUserImage from "../assets/user.jpg";
 import HoldImage from "../assets/hold.jpg";
+import styled from 'styled-components';
+import { LIGHT_GREY, PRIMARY_COLOR } from '../components/styles/theme';
 
 const Home: NextPage = () => {
 
@@ -50,6 +52,16 @@ const Home: NextPage = () => {
             </section>
           </IntroPage>
         </HomePageLayout>
+        <MissionVisionPage>
+          <div>
+            <h2 className="big-sub-title title">Mission</h2>
+            <p>To educate help and enlighten about mental health</p>
+          </div>
+          <div>
+            <h2 className="big-sub-title title">Vision</h2>
+            <p>Our vision is to provide mental health services that gurantess confidentiality and accessibility</p>
+          </div>
+        </MissionVisionPage>
         <WhyChooseUspage>
           <div className="section-header">
             <h1 className="big-sub-title">Why Choose Us?</h1>
@@ -88,13 +100,12 @@ const Home: NextPage = () => {
             <FeedbackCard/>
           </div>
         </FeedbackPage> */}
-        <NewsletterSection>
+        {/* <NewsletterSection>
           <h1 className="big-sub-title">Hi, how can we <span>help you?</span></h1>
           <p>Please fill in the start from beside your privacy and confidentiality are safe under the protection of Psychologoical Code of Ethics</p>
 		  <InputWithAction value={""} set_value={() => {
-
 		  }}/>
-        </NewsletterSection>
+        </NewsletterSection> */}
       </Layout>
     </div>
   )
@@ -103,6 +114,25 @@ const Home: NextPage = () => {
 export default Home;
 
 
+const MissionVisionPage = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1pt solid ${LIGHT_GREY};
+  justify-content: center;
+  padding: 48pt 0;
+  font-size: 1.2em;
+
+  .title  {
+    color: ${PRIMARY_COLOR};
+    font-weight: 500;
+  }
+
+  div {
+    width: 60%;
+  }
+`;
 type ListCardProps = {
   icon: any,
   title: string,
