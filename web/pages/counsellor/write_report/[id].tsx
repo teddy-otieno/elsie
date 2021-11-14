@@ -66,9 +66,9 @@ class WriteReportPage extends React.Component<WriteReportPageProps, WriteReportP
 	constructor(props: WriteReportPageProps) {
 		super(props)
 		this.state = {
-			diagnosis: "Depression",
-			prescription: "You're depressed",
-			description: "Get help",
+			diagnosis: "",
+			prescription: "",
+			description: "",
 			error_message: undefined
 		}
 	}		

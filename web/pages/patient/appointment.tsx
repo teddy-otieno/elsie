@@ -140,9 +140,9 @@ const RatingComponent: React.FC<RatingComponentProps> = ({ className, rating, on
 
 		for(let i = 0; i < 5; i++ ) {
 			if(i + 1 <= rating)
-				rating_items.push(<span key={i} className="rating-item colored" onClick={() => on_click(i)}></span>)
+				rating_items.push(<span key={i} className="rating-item colored" onClick={() => on_click(i + 1)}></span>)
 			else
-				rating_items.push(<span key={i} className="rating-item" onClick={() => on_click(i)}></span>)
+				rating_items.push(<span key={i} className="rating-item" onClick={() => on_click(i + 1)}></span>)
 		}
 	return <RatingComponentContainer className={className}>
 		<h5>Rating</h5>
@@ -156,7 +156,19 @@ type DoctorDialogProps = {
 	token: string
 }
 
-class DoctorsDialog extends React.Component<DoctorDialogProps> {
+type DoctorDialogState = {
+	rating_state?: number
+}
+
+class DoctorsDialog extends React.Component<DoctorDialogProps, DoctorDialogState> {
+
+	constructor(props: DoctorDialogProps) {
+		super(props)
+
+		this.state = {
+			rating_state: undefined	
+		}
+	}
 
 	approve_appointment = async (e: any) => {
 		e.preventDefault()
@@ -178,6 +190,8 @@ class DoctorsDialog extends React.Component<DoctorDialogProps> {
 				rating: rating
 			}
 			let response = await axios.post(`${SERVER_URL}/api/patient/rate-doctor/`, data, config)
+
+			this.setState({...this.state, rating_state: rating})
 		} catch (e) {
 			console.log(e)
 		}
@@ -185,6 +199,7 @@ class DoctorsDialog extends React.Component<DoctorDialogProps> {
 
 	render() {
 		const {pychiatrist, on_dialog_close} = this.props;
+		const { rating_state } = this.state;
 
 		return <DoctorsDialogContainer>
 
@@ -195,7 +210,7 @@ class DoctorsDialog extends React.Component<DoctorDialogProps> {
 					<h5>Bio</h5>
 					<p>{pychiatrist.bio}</p>
 					</div>
-				<RatingComponent on_click={(rating) => this.update_doctors_ratings(rating)} className={"ratings"} rating={pychiatrist.rating}/>
+				<RatingComponent on_click={(rating) => this.update_doctors_ratings(rating)} className={"ratings"} rating={rating_state === undefined ? pychiatrist.rating : rating_state}/>
 				<SecondaryButton className="approve" onClick={this.approve_appointment}>Close</SecondaryButton>
 			</div>
 		</DoctorsDialogContainer>

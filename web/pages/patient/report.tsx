@@ -23,17 +23,17 @@ class PatientReportContent extends React.Component<PatientReportContentProps> {
 		width: 100%;
 		`;
 
-	open_view_questionnaire = () => {
-
+	open_view_questionnaire = (report_id: number) => {
+		this.props.router.push(`/counsellor/view_report/${report_id}`)
 	}
 
 	render() {
 		let patients_components = this.props.reports.map((val: PatientReport, i: number) => {
-			return <PatientCard on_click={this.open_view_questionnaire} key={i} patient={val.author!}/>
+			return <PatientCard on_click={() => this.open_view_questionnaire(val.id)} key={i} patient={val.author!}/>
 		})
 
 		return <PatientReportContent.PatientReportPageStyles>
-				{patients_components}
+			{patients_components}
 		</PatientReportContent.PatientReportPageStyles>
 	}
 }
