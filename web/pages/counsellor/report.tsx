@@ -2,24 +2,24 @@ import React from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 
-import { withRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { DashboardLayout, PatientCard } from '../../components/dashboard'
 import { CounsellorPageProps } from './appointment'
 import { AccessDeniedPage, SERVER_URL } from '../../utils'
 import { Patient, Psychiatrist } from '../patient/index';
+import { PatientReport } from '../../types'
+import { LIGHT_FONT, LIGHT_GREY, SHADOW_COLOR, SURFACE } from '../../components/styles/theme'
 
 type PatientReportData = {
 	report_data: any
 	patients: Patient[]
 }
 
-type PatientReport = {
-
-}
 
 type ListPatientsProps = {
 	patients: Patient[]
+	router: any
 }
 
 class ListPatients extends React.Component<ListPatientsProps> {
@@ -29,9 +29,13 @@ class ListPatients extends React.Component<ListPatientsProps> {
 		padding: 8pt;
 	`;
 
+
 	render() {
 		let patients_components = this.props.patients.map((val: Patient, i: number) => {
-			return <PatientCard key={i} patient={val}/>
+			const go_to_write_report = (id: number) => {
+				this.props.router.push(`/counsellor/write_report/${val.id}`)
+			}
+			return <PatientCard on_click={go_to_write_report} key={i} patient={val}/>
 		})
 		return <ListPatients.ListPatientContainer>
 			{patients_components}
@@ -39,18 +43,79 @@ class ListPatients extends React.Component<ListPatientsProps> {
 	}
 }
 
+const ListCardStyles = styled.div`
+	display: grid;
+	padding: 8pt;
+	border-bottom: 1pt solid ${SHADOW_COLOR};
+	grid-template-columns: 160pt 1fr 0.5fr;
+	background-color: ${SURFACE};
+	transition: all .4s ease;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${SHADOW_COLOR}
+	}
+
+`;
+type ReportListCardProps = {
+	report: PatientReport
+	patient: Patient
+}
+
+const ListCard: React.FC<ReportListCardProps> = ({report, patient}) => {
+	const router = useRouter()
+
+	const view_report = () => {
+		router.push(`/counsellor/view_report/${report.id}`)
+	}
+
+	const written_time = new Date(report.written_on)
+	return <ListCardStyles onClick={view_report}>
+		<span>{`${patient.user.f_name} ${patient.user.l_name}`}</span>
+		<span>{report.diagnosis}</span>
+		<span>{written_time.toDateString()}</span>
+	</ListCardStyles>
+}
 type ListReportProps = {
 	reports:  PatientReport[]
+	patients: Patient[]
 }
 
 class ListReport extends React.Component<ListReportProps> {
+	static ListReportStyles = styled.div`
+
+		.header {
+			color: ${LIGHT_FONT};
+			background-color: ${LIGHT_GREY};
+		}
+	`;
 	render() {
-		return null
+		const { reports, patients } = this.props;
+
+		let list_card_components = reports.map((val: PatientReport, i: number) => {
+			let patient = patients.find((patient: Patient) => {
+				return val.patient === patient.id
+			})
+
+			return <ListCard report={val} patient={patient!} key={i}/>
+		})
+
+		//TODO: Add search
+		return <ListReport.ListReportStyles>
+			<h3 className="category-title">Previous Reports</h3>
+			<ListCardStyles className="header">
+				<span>{`Name`}</span>
+				<span>{"Diagnosis"}</span>
+				<span>{"Date"}</span>
+			</ListCardStyles>
+			{list_card_components}
+		</ListReport.ListReportStyles>
 	}
 }
 
 type ReportContentProps = {
 		data: PatientReportData
+		router: any
 }
 
 class ReportContent extends React.Component<ReportContentProps> {
@@ -62,9 +127,12 @@ class ReportContent extends React.Component<ReportContentProps> {
 		`;
 
 	render() {
+
+		const { data } = this.props;
+
 		return <ReportContent.ReportContentContainer>
-			<ListPatients patients={this.props.data.patients} />
-			<ListReport reports={this.props.data.report_data}/>
+			<ListPatients router={this.props.router} patients={data.patients} />
+			<ListReport reports={data.report_data} patients={data.patients}/>
 		</ReportContent.ReportContentContainer>
 	}
 }
@@ -83,7 +151,7 @@ class CounsellorReports extends React.Component<CounsellorReportsProps> {
 	render() {
 		if(this.props.is_valid) {
 			return <DashboardLayout 
-				center={ <ReportContent data={this.props.data} />}
+				center={ <ReportContent router={this.props.router} data={this.props.data} />}
 				prefix="counsellor"
 				title="Reports"
 				token={this.props.token}

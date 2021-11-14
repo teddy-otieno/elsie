@@ -109,6 +109,7 @@ export const DashboardContainer = styled.section<DashContainerProps>`
 		border-radius: 4pt;
 		margin: 8pt 4pt;
 		color: ${PRIMARY_COLOR};
+		font-weight: 500;
 	}
 
 	.react-calendar {

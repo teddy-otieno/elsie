@@ -16,7 +16,7 @@ import {
 } from './styles/dashboard';
 import { PrimaryButton, SecondaryButton, TextButton } from './styles/component';
 import { CommunityCardContainer, MessageBubbleContainer } from "./styles/dashboard";
-import { Patient, User } from "../pages/patient/index";
+import { Patient, Psychiatrist, User } from "../pages/patient/index";
 import { Icons, ERROR } from './styles/theme';
 import { SuccessDialog } from '../pages/blog/new-post';
 import { Appointment } from '../pages/patient/appointment';
@@ -488,13 +488,13 @@ export const CommunityMembers = __CommunityMembers;
 
 
 type PatientCardProps = {
-	patient: Patient
+	patient: Patient | Psychiatrist
+	on_click: (id: number) => void
 }
 
 const PatientCardContainer = styled(DashCardContainer)`
 	height: 200pt;
 	width: 200pt;
-	background-color: green;
 	margin-right: 4pt;
 	display: grid;
 	grid-template-rows: 1fr 32pt;
@@ -505,13 +505,10 @@ const PatientCardContainer = styled(DashCardContainer)`
 	}
 `;
 
-export const PatientCard: React.FC<PatientCardProps> = ({patient}) => {
+export const PatientCard: React.FC<PatientCardProps> = ({patient, on_click}) => {
 	const router = useRouter()
-	const go_to_write_report = () => {
-		router.push(`/counsellor/write_report/${patient.id}`)
-	}
 
-	return <PatientCardContainer onClick={go_to_write_report}>
+	return <PatientCardContainer onClick={() => on_click(patient.id!)}>
 		<div className="image">
 
 		</div>
