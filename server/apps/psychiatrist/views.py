@@ -107,6 +107,11 @@ class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
         patient = Patient.objects.get(user=self.request.user)
         return Questionnaire.objects.filter()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["user"] = self.request.user
+        return context
+
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
 def get_responses(request, q_id, p_id, *args, **kwargs):

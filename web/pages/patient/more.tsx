@@ -52,7 +52,8 @@ class ListAvailableQuestionaires extends React.Component<AvailableQuestionnaires
 
 	render() {
 
-		let questionnaire_cards = this.state.questionnaires.map((val: Questionnaire, i: number) => {
+		let questionnaire_cards = this.state.questionnaires
+		.map((val: Questionnaire, i: number) => {
 			return <QuestionnaireCardContainer key={i} >
 					<h5>Title</h5>
 					<span>{val.title}</span>

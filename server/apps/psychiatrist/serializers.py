@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from apps.account.serializers import PsychiatrisSerializer, PatientSerializer
 from apps.patients.models import Appointment, Community
-from apps.account.models import Psychiatrist
+from apps.account.models import Patient, Psychiatrist
 
 from .models import (
         BlogPost, 
@@ -65,7 +65,7 @@ class PatientQuestionnaireSerializer(serializers.ModelSerializer):
 
         try:
             response_instance: QuestionnaireResponses = QuestionnaireResponses.objects.get(questionnaire=instance.pk)
-            data["is_filled"] = response_instance.is_filled
+            data["is_filled"] = response_instance.is_filled and response_instance.patient == Patient.objects.get(user=self.context["user"])
             data["report_available"] = False
         except QuestionnaireResponses.DoesNotExist:
             data["is_filled"] = False
