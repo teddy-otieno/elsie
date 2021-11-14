@@ -105,7 +105,7 @@ class PatientQuestionnaireViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         patient = Patient.objects.get(user=self.request.user)
-        return Questionnaire.objects.filter()
+        return Questionnaire.objects.filter(is_active=True)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

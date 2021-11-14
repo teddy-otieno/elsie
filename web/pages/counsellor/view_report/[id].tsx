@@ -98,13 +98,6 @@ class ViewReportPage extends React.Component<ViewReportPageProps, ViewReportStat
 	render() {
 		const { report } = this.props
 		return <ViewReportPage.ViewReportPageStyles id="page">
-    { (this.state.show_downloader && !this.props.is_rerender) && 
-			<PDFDownloadLink document={<ViewReportPage report={this.props.report} is_rerender={true}/>} fileName="somename.pdf">
-      {({ blob, url, loading, error }) =>
-        loading ? 'Loading document...' : 'Download now!'
-      }
-    </PDFDownloadLink>
-	}
 			<div className="patient">
 				<div></div>
 					<span>{`${(report.patient as Patient).user.f_name} ${(report.patient as Patient).user.l_name}`}</span>
