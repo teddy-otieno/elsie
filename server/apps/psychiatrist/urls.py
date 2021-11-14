@@ -11,9 +11,11 @@ from .views import (
     get_available_appointments, 
     accept_appointment, 
     CommunityViewset,
-    get_blog_stats, 
+    get_blog_stats,
+    get_patient_report, 
     get_patients_stats,
     get_questionnaire_stats,
+    get_report,
     get_responses, 
     save_responses,
     PatientQuestionnaireViewSet,
@@ -42,7 +44,9 @@ urlpatterns = [
         path('questionnaire-stats', get_questionnaire_stats),
         path('terminate-questionnaire/<int:id>', terminate_questionnaire),
         path('blog-viewed/<int:id>', update_view),
-        path('patient-reports/', patient_report_data)
+        path('patient-reports/', patient_report_data),
+        path('get-report/<int:id>', get_report),
+        path('get-patient-reports/', get_patient_report)
         ] 
 
 urlpatterns += viewset_routes()

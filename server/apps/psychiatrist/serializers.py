@@ -100,7 +100,25 @@ class BlogPostSerializer(serializers.ModelSerializer):
 class PatientReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientReport
-        fields = ["diagnosis", "prescription", "description", "written_on", "patient"]
+        fields = ["id", "diagnosis", "prescription", "description", "written_on", "patient"]
+        read_only_fields = ["written_on"]
+
+    def create(self, validated_data):
+        author = Psychiatrist.objects.get(user=self.context["user"])
+
+        return self.Meta.model.objects.create(**validated_data, author=author)
+
+
+class PatientReportWithPatientDataSerializer(serializers.ModelSerializer):
+    """
+    Serializer is read-only, not to be used in writing
+    """
+
+    patient = PatientSerializer()
+    author = PsychiatrisSerializer()
+    class Meta:
+        model = PatientReport
+        fields = ["id", "diagnosis", "prescription", "description", "written_on", "patient", "author"]
         read_only_fields = ["written_on"]
 
     def create(self, validated_data):

@@ -18,7 +18,8 @@ from apps.psychiatrist.models import (
         PatientReport
         )
 from .serializers import (
-        BlogPostSerializer, 
+        BlogPostSerializer,
+        PatientReportWithPatientDataSerializer, 
         PerPatientQuestionnaireResponse, 
         PsychiatristAppointmentSerializer, 
         CommunitySerializer, 
@@ -310,3 +311,24 @@ def patient_report_data(request, *args, **kwargs):
 
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+def get_report(request, id, *args, **kwargs):
+
+    try:
+        report_instance = PatientReport.objects.get(pk=id)
+        result_data = PatientReportWithPatientDataSerializer(instance=report_instance).data
+        return Response(data=result_data)
+
+    except PatientReport.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "Report not found"})
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+def get_patient_report(request, *args, **kwargs):
+
+    reports_queryset = PatientReport.objects.filter(patient=Patient.objects.get(user=request.user))
+
+    result_data = PatientReportWithPatientDataSerializer(instance=reports_queryset, many=True).data
+    return Response(data=result_data)
